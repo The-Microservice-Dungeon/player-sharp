@@ -26,6 +26,9 @@ namespace Player.Sharp
             // Repositories
             services.AddSingleton<IGameRepository, InMemGameRepository>();
             services.AddSingleton<IPlayerCredentialsRepository, InMemPlayerCredentialsRepository>();
+            services.AddSingleton<IMapRepository, InMemMapRepository>();
+            services.AddSingleton<IRobotRepository, InMemRobotRepository>();
+            services.AddSingleton<ITransactionRepository, InMemTransactionRepository>();
 
             // Clients
             IConfigurationSection refitSection = Configuration.GetSection("Refit:Client");
@@ -44,6 +47,9 @@ namespace Player.Sharp
             // Other services
             services.AddSingleton<IHostedService, PlayerRegistrationService>();
             services.AddSingleton<GameService>();
+            services.AddSingleton<RobotService>();
+            services.AddSingleton<MapService>();
+            services.AddSingleton<TransactionService>();
 
             services.AddControllersWithViews();
         }

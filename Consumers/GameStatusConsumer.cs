@@ -28,10 +28,12 @@ namespace Player.Sharp.Consumers
     {
         private readonly ILogger _logger;
         private readonly GameService _gameService;
-        public GameStatusConsumer(IConfiguration config, ILogger<GameStatusConsumer> logger, GameService gameService) : base("status", config)
+        private readonly TransactionService _transactionService;
+        public GameStatusConsumer(IConfiguration config, ILogger<GameStatusConsumer> logger, GameService gameService, TransactionService transactionService) : base("status", config)
         {
             _logger = logger;
             _gameService = gameService;
+            _transactionService = transactionService;
         }
 
         protected override async void Consume(ConsumeResult<string, GameStatusEvent> cr)
@@ -47,6 +49,7 @@ namespace Player.Sharp.Consumers
             {
                 _logger.LogInformation("The game with ID '{GameID}' has been ended", gameEvent.GameId);
                 _gameService.ForgetGame(gameEvent.GameId);
+                _transactionService.ClearTransactions();
             }
             else if (gameEvent.Status == GameStatus.STARTED)
             {
