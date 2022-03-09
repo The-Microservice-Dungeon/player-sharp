@@ -1,29 +1,26 @@
-﻿using Player.Sharp.Core;
+﻿using Player.Sharp.Consumers;
 
 namespace Player.Sharp.Data
 {
     public class InMemGameRepository : IGameRepository
     {
-        private readonly Dictionary<string, Game> _storage = new();
-
-        public IEnumerable<Game> FindAll()
-        {
-            return _storage.Values;
-        }
-
-        public Game FindById(string id)
-        {
-            return _storage[id];
-        }
+        private Game? _game;
 
         public void Save(Game game)
         {
-            _storage.Add(game.ID, game);
+            _game = game;
         }
 
-        public void RemoveById(string id)
+        public Game Get()
         {
-            _storage.Remove(id);
+            if(_game == null)
+                throw new ApplicationException("Game is null and shouldn't be");
+            return _game;
+        }
+
+        public void Clear()
+        {
+            _game = null;
         }
     }
 }

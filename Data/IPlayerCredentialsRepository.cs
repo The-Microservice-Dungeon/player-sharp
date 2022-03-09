@@ -1,4 +1,4 @@
-﻿using Player.Sharp.Core;
+﻿using Player.Sharp.Consumers;
 
 namespace Player.Sharp.Data
 {

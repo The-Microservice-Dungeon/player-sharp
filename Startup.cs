@@ -1,5 +1,6 @@
 ﻿using Player.Sharp.Client;
-using Player.Sharp.Core;
+using Player.Sharp.Consumers;
+using Player.Sharp.Consumers;
 using Player.Sharp.Data;
 using Player.Sharp.Services;
 using Player.Sharp.Util;
@@ -38,6 +39,7 @@ namespace Player.Sharp
             services.AddSingleton<IHostedService, GamePlayerStatusConsumer>();
             services.AddSingleton<IHostedService, GameStatusConsumer>();
             services.AddSingleton<IHostedService, GameRoundStatusConsumer>();
+            services.AddSingleton<IHostedService, MapGameworldCreatedConsumer>();
 
             // Other services
             services.AddSingleton<IHostedService, PlayerRegistrationService>();

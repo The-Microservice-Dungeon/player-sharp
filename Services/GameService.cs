@@ -1,6 +1,6 @@
 ﻿using Player.Sharp.Client;
 using Player.Sharp.Data;
-using Player.Sharp.Core;
+using Player.Sharp.Consumers;
 
 namespace Player.Sharp.Services
 {
@@ -39,7 +39,7 @@ namespace Player.Sharp.Services
 
         public void ForgetGame(string gameId)
         {
-            _gameRepository.RemoveById(gameId);
+            _gameRepository.Clear();
         }
     }
 }

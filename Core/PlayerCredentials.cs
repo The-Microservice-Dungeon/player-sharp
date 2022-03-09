@@ -1,4 +1,4 @@
-﻿namespace Player.Sharp.Core
+﻿namespace Player.Sharp.Consumers
 {
     public class PlayerCredentials
     {

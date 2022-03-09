@@ -1,5 +1,5 @@
 ﻿using Player.Sharp.Client;
-using Player.Sharp.Core;
+using Player.Sharp.Consumers;
 using Player.Sharp.Data;
 using Refit;
 

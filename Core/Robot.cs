@@ -1,10 +1,10 @@
-﻿namespace Player.Sharp.Consumers
+﻿namespace Player.Sharp.Core
 {
-    public class Game
+    public class Robot
     {
         public readonly string ID;
 
-        public Game(string id)
+        public Robot(string id)
         {
             ID = id;
         }

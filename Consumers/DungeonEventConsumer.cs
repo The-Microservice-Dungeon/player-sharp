@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace Player.Sharp.Core
+namespace Player.Sharp.Consumers
 {
     public class JsonMessageSerde<V> : IDeserializer<V>, ISerializer<V> where V : class
     {

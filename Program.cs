@@ -1,4 +1,4 @@
-using Player.Sharp.Core;
+using Player.Sharp.Consumers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Player.Sharp;
