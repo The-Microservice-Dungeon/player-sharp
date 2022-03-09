@@ -61,7 +61,7 @@ namespace Player.Sharp.Services
                 await Task.Delay(500, cancellationToken);
             }
 
-            _logger.LogInformation("Successful Registered Player, Token: {Token}", _playerCredentialsRepository.Get().ID);
+            _logger.LogInformation("Successful Registered Player, Token: {Token}", _playerCredentialsRepository.Get().Token);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

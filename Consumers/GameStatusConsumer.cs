@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Player.Sharp.Services;
 
 namespace Player.Sharp.Core
 {
@@ -26,15 +27,21 @@ namespace Player.Sharp.Core
     public class GameStatusConsumer : DungeonEventConsumer<string, GameStatusEvent>
     {
         private readonly ILogger _logger;
-        public GameStatusConsumer(IConfiguration config, ILogger<GameStatusConsumer> logger) : base("status", config)
+        private readonly GameService _gameService;
+        public GameStatusConsumer(IConfiguration config, ILogger<GameStatusConsumer> logger, GameService gameService) : base("status", config)
         {
             _logger = logger;
+            _gameService = gameService;
         }
 
-        protected override void Consume(ConsumeResult<string, GameStatusEvent> cr)
+        protected override async void Consume(ConsumeResult<string, GameStatusEvent> cr)
         {
-            Console.WriteLine($"{cr.Message.Key}: {cr.Message.Value}");
-            _logger.LogDebug($"{cr.Message.Key}: {cr.Message.Value}");
+            var gameEvent = cr.Message.Value;
+            if(gameEvent.Status == GameStatus.CREATED)
+            {
+                _logger.LogInformation("A new game with ID '{GameID}' has been created", gameEvent.GameId);
+                await _gameService.RegisterForGame(gameEvent.GameId);
+            }
         }
     }
 }

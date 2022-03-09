@@ -41,6 +41,7 @@ namespace Player.Sharp
 
             // Other services
             services.AddSingleton<IHostedService, PlayerRegistrationService>();
+            services.AddSingleton<GameService>();
 
             services.AddControllersWithViews();
         }

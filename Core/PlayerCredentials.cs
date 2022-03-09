@@ -2,11 +2,11 @@
 {
     public class PlayerCredentials
     {
-        public readonly string ID;
+        public readonly string Token;
 
-        public PlayerCredentials(string id)
+        public PlayerCredentials(string token)
         {
-            ID = id;
+            Token = token;
         }
     }
 }
