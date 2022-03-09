@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace Player.Sharp.Consumers
+namespace Player.Sharp.Core
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum GameStatus { 

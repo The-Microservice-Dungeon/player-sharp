@@ -1,4 +1,4 @@
-﻿namespace Player.Sharp.Consumers
+﻿namespace Player.Sharp.Core
 {
     public class DungeonEventHeaders
     {

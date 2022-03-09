@@ -1,4 +1,9 @@
-﻿using Player.Sharp.Consumers;
+﻿using Player.Sharp.Client;
+using Player.Sharp.Core;
+using Player.Sharp.Data;
+using Player.Sharp.Services;
+using Player.Sharp.Util;
+using Refit;
 
 namespace Player.Sharp
 {
@@ -16,9 +21,27 @@ namespace Player.Sharp
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            // Repositories
+            services.AddSingleton<IGameRepository, InMemGameRepository>();
+            services.AddSingleton<IPlayerCredentialsRepository, InMemPlayerCredentialsRepository>();
+
+            // Clients
+            IConfigurationSection refitSection = Configuration.GetSection("Refit:Client");
+
+            var gameServiceAddress = refitSection.GetValue<string>("GameServiceAddress");
+            var httpClient = new HttpClient(new HttpLoggingHandler()) { BaseAddress = new Uri(gameServiceAddress, UriKind.Absolute) };
+            var gameClient = RestService.For<IGameClient>(httpClient);
+            services.AddSingleton(gameClient);
+
+            // Consumers
             services.AddSingleton<IHostedService, GamePlayerStatusConsumer>();
             services.AddSingleton<IHostedService, GameStatusConsumer>();
             services.AddSingleton<IHostedService, GameRoundStatusConsumer>();
+
+            // Other services
+            services.AddSingleton<IHostedService, PlayerRegistrationService>();
+
             services.AddControllersWithViews();
         }
 
