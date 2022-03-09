@@ -32,5 +32,10 @@ namespace Player.Sharp.Services
         {
             return _robotRepository.Count() > 0;
         }
+
+        public void RemoveRobot(string robotId)
+        {
+            _robotRepository.RemoveById(robotId);
+        }
     }
 }

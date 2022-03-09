@@ -43,6 +43,7 @@ namespace Player.Sharp
             services.AddSingleton<IHostedService, GameStatusConsumer>();
             services.AddSingleton<IHostedService, GameRoundStatusConsumer>();
             services.AddSingleton<IHostedService, MapGameworldCreatedConsumer>();
+            services.AddSingleton<IHostedService, RobotDestroyedEventConsumer>();
 
             // Other services
             services.AddSingleton<IHostedService, PlayerRegistrationService>();

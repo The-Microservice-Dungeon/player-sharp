@@ -24,5 +24,11 @@ namespace Player.Sharp.Data
         {
             _storage.Add(robot.ID, robot);
         }
+
+        public void RemoveById(string id)
+        {
+            if (_storage.ContainsKey(id))
+                _storage.Remove(id);
+        }
     }
 }

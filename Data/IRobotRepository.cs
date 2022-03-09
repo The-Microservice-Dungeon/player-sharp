@@ -8,5 +8,6 @@ namespace Player.Sharp.Data
         Robot FindById(string id);
         uint Count();
         void Save(Robot robot);
+        void RemoveById(string id);
     }
 }
