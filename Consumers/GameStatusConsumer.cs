@@ -37,10 +37,16 @@ namespace Player.Sharp.Core
         protected override async void Consume(ConsumeResult<string, GameStatusEvent> cr)
         {
             var gameEvent = cr.Message.Value;
-            if(gameEvent.Status == GameStatus.CREATED)
+            
+            if (gameEvent.Status == GameStatus.CREATED)
             {
                 _logger.LogInformation("A new game with ID '{GameID}' has been created", gameEvent.GameId);
                 await _gameService.RegisterForGame(gameEvent.GameId);
+            }
+            else if (gameEvent.Status == GameStatus.ENDED)
+            {
+                _logger.LogInformation("The game with ID '{GameID}' has been ended", gameEvent.GameId);
+                _gameService.ForgetGame(gameEvent.GameId);
             }
         }
     }

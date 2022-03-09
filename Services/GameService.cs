@@ -36,5 +36,10 @@ namespace Player.Sharp.Services
             _logger.LogInformation("Successfully registered for Game with ID '{GameID}'", gameId);
             return game;
         }
+
+        public void ForgetGame(string gameId)
+        {
+            _gameRepository.RemoveById(gameId);
+        }
     }
 }
