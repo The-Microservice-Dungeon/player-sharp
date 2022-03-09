@@ -48,6 +48,12 @@ namespace Player.Sharp.Core
                 _logger.LogInformation("The game with ID '{GameID}' has been ended", gameEvent.GameId);
                 _gameService.ForgetGame(gameEvent.GameId);
             }
+            else if (gameEvent.Status == GameStatus.STARTED)
+            {
+                _logger.LogInformation("The game with ID '{GameID}' has started", gameEvent.GameId);
+                // I think the event itself is unecessary for the player implementation as we will get everything
+                // necessary from the round status events. 
+            }
         }
     }
 }
