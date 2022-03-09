@@ -2,6 +2,7 @@
 using Player.Sharp.Consumers;
 using Player.Sharp.Consumers;
 using Player.Sharp.Data;
+using Player.Sharp.Gameplay;
 using Player.Sharp.Services;
 using Player.Sharp.Util;
 using Refit;
@@ -44,6 +45,7 @@ namespace Player.Sharp
             services.AddSingleton<IHostedService, GameRoundStatusConsumer>();
             services.AddSingleton<IHostedService, MapGameworldCreatedConsumer>();
             services.AddSingleton<IHostedService, RobotDestroyedEventConsumer>();
+            services.AddSingleton<IHostedService, TradingTradesBuyRobotEventConsumer>();
 
             // Other services
             services.AddSingleton<IHostedService, PlayerRegistrationService>();
@@ -51,6 +53,8 @@ namespace Player.Sharp
             services.AddSingleton<RobotService>();
             services.AddSingleton<MapService>();
             services.AddSingleton<TransactionService>();
+            services.AddSingleton<CommandService>();
+            services.AddSingleton<IRoundLifecycleHandler, NoRobotLifecycleHandler>();
 
             services.AddControllersWithViews();
         }

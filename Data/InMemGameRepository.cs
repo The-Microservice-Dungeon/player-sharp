@@ -11,6 +11,11 @@ namespace Player.Sharp.Data
             _game = game;
         }
 
+        public bool Exists()
+        {
+            return _game != null;
+        }
+
         public Game Get()
         {
             if(_game == null)

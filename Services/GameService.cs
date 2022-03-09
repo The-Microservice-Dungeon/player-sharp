@@ -1,6 +1,7 @@
 ﻿using Player.Sharp.Client;
 using Player.Sharp.Data;
 using Player.Sharp.Consumers;
+using Player.Sharp.Core;
 
 namespace Player.Sharp.Services
 {
@@ -37,9 +38,26 @@ namespace Player.Sharp.Services
             return game;
         }
 
-        public void ForgetGame(string gameId)
+        public void ForgetGame()
         {
             _gameRepository.Clear();
+        }
+
+        public bool GameIsRunning()
+        {
+            return _gameRepository.Exists();
+        }
+
+        public Game GetCurrentGame()
+        {
+            return _gameRepository.Get();
+        }
+
+        public async Task<string> SendCommand(Command command)
+        {
+            var response = await _gameClient.PostCommand(command);
+
+            return response.TransactionId;
         }
     }
 }

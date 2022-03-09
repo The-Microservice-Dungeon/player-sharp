@@ -6,6 +6,7 @@ namespace Player.Sharp.Data
     {
         Game Get();
         void Save(Game game);
+        bool Exists();
         void Clear();
     }
 }

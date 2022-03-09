@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Player.Sharp.Core;
 using Refit;
 
 namespace Player.Sharp.Client
@@ -34,6 +35,12 @@ namespace Player.Sharp.Client
         }
     }
 
+    public class CommandResponse
+    {
+        [JsonPropertyName("transactionId")]
+        public string TransactionId { get; set; }
+    }
+
     public interface IGameClient
     {
         [Put("/games/{gameId}/players/{playerToken}")]
@@ -44,5 +51,8 @@ namespace Player.Sharp.Client
 
         [Get("/players")]
         Task<PlayerResponse> GetPlayerDetails(string name, [AliasAs("mail")] string email);
+
+        [Post("/commands")]
+        Task<CommandResponse> PostCommand([Body] Command command);
     }
 }

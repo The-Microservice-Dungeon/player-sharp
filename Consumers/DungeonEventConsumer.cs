@@ -34,6 +34,7 @@ namespace Player.Sharp.Consumers
         protected static IConsumer<K, V> BuildConsumer(IConfiguration config)
         {
             var consumerConfig = new ConsumerConfig();
+            consumerConfig.AutoOffsetReset = AutoOffsetReset.Earliest;
             config.GetSection("Kafka:ConsumerSettings").Bind(consumerConfig);
             return new ConsumerBuilder<K, V>(consumerConfig)
                 .SetValueDeserializer(new JsonMessageSerde<V>())

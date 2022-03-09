@@ -48,7 +48,7 @@ namespace Player.Sharp.Consumers
             else if (gameEvent.Status == GameStatus.ENDED)
             {
                 _logger.LogInformation("The game with ID '{GameID}' has been ended", gameEvent.GameId);
-                _gameService.ForgetGame(gameEvent.GameId);
+                _gameService.ForgetGame();
                 _transactionService.ClearTransactions();
             }
             else if (gameEvent.Status == GameStatus.STARTED)
