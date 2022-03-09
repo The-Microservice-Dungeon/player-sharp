@@ -16,4 +16,26 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\Sharp.GameplayTests.csproj.nuget.dgspec.json" />
+  </ItemGroup>
+
 </Project>
