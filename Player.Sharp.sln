@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Core", "src\Sharp.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.GameplayTests", "tests\Sharp.GameplayTests\Sharp.GameplayTests.csproj", "{55DBDD2A-A033-42B7-BF4A-AB2A707BE38B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sharp.Client", "src\Sharp.Client\Sharp.Client.csproj", "{1018B081-D7D0-4995-A028-1F3BAFFD083B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{55DBDD2A-A033-42B7-BF4A-AB2A707BE38B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55DBDD2A-A033-42B7-BF4A-AB2A707BE38B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55DBDD2A-A033-42B7-BF4A-AB2A707BE38B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1018B081-D7D0-4995-A028-1F3BAFFD083B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1018B081-D7D0-4995-A028-1F3BAFFD083B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1018B081-D7D0-4995-A028-1F3BAFFD083B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1018B081-D7D0-4995-A028-1F3BAFFD083B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 		{B72901D3-088E-4DA6-BA18-697734C6AEA6} = {ACCD901B-BC91-4F76-BA36-DD4297E45CEB}
 		{FE3DA760-128A-4476-BD0A-45E32D6EB5BF} = {ACCD901B-BC91-4F76-BA36-DD4297E45CEB}
 		{55DBDD2A-A033-42B7-BF4A-AB2A707BE38B} = {B93C1224-FF9F-44D5-8B5F-B6BBE4A8ED20}
+		{1018B081-D7D0-4995-A028-1F3BAFFD083B} = {ACCD901B-BC91-4F76-BA36-DD4297E45CEB}
 	EndGlobalSection
 EndGlobal

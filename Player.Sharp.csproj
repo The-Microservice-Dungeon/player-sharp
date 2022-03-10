@@ -18,24 +18,40 @@
 
   <ItemGroup>
     <Compile Remove="tests\**" />
+    <Compile Remove="src\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="tests\**" />
+    <EmbeddedResource Remove="src\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="tests\**" />
+    <None Remove="src\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="tests\**" />
+    <Content Remove="src\**" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.assets.json" />
     <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.packagespec.json" />
     <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\Sharp.GameplayTests.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Auth\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Auth\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Auth\obj\Sharp.Auth.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Client\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Client\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Client\obj\Sharp.Client.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Core\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Core\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Core\obj\Sharp.Core.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Gameplay\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Gameplay\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="src\Sharp.Gameplay\obj\Sharp.Gameplay.csproj.nuget.dgspec.json" />
   </ItemGroup>
 
 </Project>
