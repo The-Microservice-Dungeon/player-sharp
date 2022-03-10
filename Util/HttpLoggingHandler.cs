@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Diagnostics;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Player.Sharp.Util;
 
 public class HttpLoggingHandler : DelegatingHandler
 {
+    private readonly string[] types = { "html", "text", "xml", "json", "txt", "x-www-form-urlencoded" };
+
     public HttpLoggingHandler(HttpMessageHandler innerHandler = null)
         : base(innerHandler ?? new HttpClientHandler())
-    { }
-    async protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+    }
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         var req = request;
         var id = Guid.NewGuid().ToString();
@@ -32,13 +31,13 @@ public class HttpLoggingHandler : DelegatingHandler
             foreach (var header in req.Content.Headers)
                 Debug.WriteLine($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
 
-            if (req.Content is StringContent || this.IsTextBasedContentType(req.Headers) || this.IsTextBasedContentType(req.Content.Headers))
+            if (req.Content is StringContent || IsTextBasedContentType(req.Headers) ||
+                IsTextBasedContentType(req.Content.Headers))
             {
                 var result = await req.Content.ReadAsStringAsync();
 
                 Debug.WriteLine($"{msg} Content:");
-                Debug.WriteLine($"{msg} {string.Join("", result.Cast<char>().Take(255))}...");
-
+                Debug.WriteLine($"{msg} {string.Join("", result.Take(255))}...");
             }
         }
 
@@ -56,7 +55,8 @@ public class HttpLoggingHandler : DelegatingHandler
 
         var resp = response;
 
-        Debug.WriteLine($"{msg} {req.RequestUri.Scheme.ToUpper()}/{resp.Version} {(int)resp.StatusCode} {resp.ReasonPhrase}");
+        Debug.WriteLine(
+            $"{msg} {req.RequestUri.Scheme.ToUpper()}/{resp.Version} {(int)resp.StatusCode} {resp.ReasonPhrase}");
 
         foreach (var header in resp.Headers)
             Debug.WriteLine($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
@@ -66,14 +66,15 @@ public class HttpLoggingHandler : DelegatingHandler
             foreach (var header in resp.Content.Headers)
                 Debug.WriteLine($"{msg} {header.Key}: {string.Join(", ", header.Value)}");
 
-            if (resp.Content is StringContent || this.IsTextBasedContentType(resp.Headers) || this.IsTextBasedContentType(resp.Content.Headers))
+            if (resp.Content is StringContent || IsTextBasedContentType(resp.Headers) ||
+                IsTextBasedContentType(resp.Content.Headers))
             {
                 start = DateTime.Now;
                 var result = await resp.Content.ReadAsStringAsync();
                 end = DateTime.Now;
 
                 Debug.WriteLine($"{msg} Content:");
-                Debug.WriteLine($"{msg} {string.Join("", result.Cast<char>().Take(255))}...");
+                Debug.WriteLine($"{msg} {string.Join("", result.Take(255))}...");
                 Debug.WriteLine($"{msg} Duration: {end - start}");
             }
         }
@@ -82,9 +83,7 @@ public class HttpLoggingHandler : DelegatingHandler
         return response;
     }
 
-    readonly string[] types = new[] { "html", "text", "xml", "json", "txt", "x-www-form-urlencoded" };
-
-    bool IsTextBasedContentType(HttpHeaders headers)
+    private bool IsTextBasedContentType(HttpHeaders headers)
     {
         IEnumerable<string> values;
         if (!headers.TryGetValues("Content-Type", out values))

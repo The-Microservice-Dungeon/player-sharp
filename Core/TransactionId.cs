@@ -1,12 +1,11 @@
-﻿namespace Player.Sharp.Core
-{
-    public class Transaction
-    {
-        public readonly string ID;
+﻿namespace Player.Sharp.Core;
 
-        public Transaction(string id)
-        {
-            ID = id;
-        }
+public class Transaction
+{
+    public readonly string ID;
+
+    public Transaction(string id)
+    {
+        ID = id;
     }
 }

@@ -1,22 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Player.Sharp.Controllers
+namespace Player.Sharp.Controllers;
+
+[Route("health")]
+[ApiController]
+public class ServiceHealthController : ControllerBase
 {
-    [Route("health")]
-    [ApiController]
-    public class ServiceHealthController : ControllerBase
+    [HttpGet("status")]
+    public ActionResult<StatusResponse> GetStatus()
     {
-        [HttpGet("status")]
-        public ActionResult<StatusResponse> GetStatus()
-        {
-            return Ok(new StatusResponse("UP"));
-        }
+        return Ok(new StatusResponse("UP"));
+    }
+}
+
+public class StatusResponse
+{
+    public StatusResponse(string status)
+    {
+        Status = status;
     }
 
-    public class StatusResponse
-    {
-        public string Status { get; set; }
-
-        public StatusResponse(string status) => this.Status = status;
-    }
+    public string Status { get; set; }
 }

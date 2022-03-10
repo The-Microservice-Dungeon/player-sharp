@@ -1,26 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>.</DockerfileContext>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Refit" Version="6.3.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="1.8.2"/>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0"/>
+        <PackageReference Include="Refit" Version="6.3.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\bin\Debug\net6.0\Sharp.GameplayTests.deps.json" />
-    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\bin\Debug\net6.0\Sharp.GameplayTests.runtimeconfig.json" />
-    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.assets.json" />
-    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.packagespec.json" />
-    <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\Sharp.GameplayTests.csproj.nuget.dgspec.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\bin\Debug\net6.0\Sharp.GameplayTests.deps.json"/>
+        <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\bin\Debug\net6.0\Sharp.GameplayTests.runtimeconfig.json"/>
+        <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.assets.json"/>
+        <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\project.packagespec.json"/>
+        <_ContentIncludedByDefault Remove="tests\Sharp.GameplayTests\obj\Sharp.GameplayTests.csproj.nuget.dgspec.json"/>
+    </ItemGroup>
 
 </Project>

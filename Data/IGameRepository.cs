@@ -1,12 +1,11 @@
 ﻿using Player.Sharp.Consumers;
 
-namespace Player.Sharp.Data
+namespace Player.Sharp.Data;
+
+public interface IGameRepository
 {
-    public interface IGameRepository
-    {
-        Game Get();
-        void Save(Game game);
-        bool Exists();
-        void Clear();
-    }
+    Game Get();
+    void Save(Game game);
+    bool Exists();
+    void Clear();
 }

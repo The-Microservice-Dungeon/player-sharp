@@ -1,12 +1,11 @@
-﻿namespace Player.Sharp.Core
-{
-    public class Robot
-    {
-        public readonly string ID;
+﻿namespace Player.Sharp.Core;
 
-        public Robot(string id)
-        {
-            ID = id;
-        }
+public class Robot
+{
+    public readonly string ID;
+
+    public Robot(string id)
+    {
+        ID = id;
     }
 }

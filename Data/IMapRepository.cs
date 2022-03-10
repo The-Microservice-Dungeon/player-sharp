@@ -1,10 +1,9 @@
 ﻿using Player.Sharp.Core;
 
-namespace Player.Sharp.Data
+namespace Player.Sharp.Data;
+
+public interface IMapRepository
 {
-    public interface IMapRepository
-    {
-        Map GetActiveMap();
-        void Save(Map map);
-    }
+    Map GetActiveMap();
+    void Save(Map map);
 }

@@ -1,11 +1,10 @@
 ﻿using Player.Sharp.Consumers;
 
-namespace Player.Sharp.Data
+namespace Player.Sharp.Data;
+
+public interface IPlayerCredentialsRepository
 {
-    public interface IPlayerCredentialsRepository
-    {
-        PlayerCredentials Get();
-        bool Exists();
-        void Save(PlayerCredentials playerCredentials);
-    }
+    PlayerCredentials Get();
+    bool Exists();
+    void Save(PlayerCredentials playerCredentials);
 }
