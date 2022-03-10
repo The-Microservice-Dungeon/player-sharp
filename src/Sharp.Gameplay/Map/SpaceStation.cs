@@ -1,8 +1,11 @@
-﻿using Sharp.Core;
+﻿namespace Sharp.Gameplay.Map;
 
-namespace Sharp.Gameplay.Map;
-
-public class SpaceStation
+public class SpaceStation : IFieldLocatable
 {
-    
+    public SpaceStation(Field field)
+    {
+        Location = field;
+    }
+
+    public Field Location { get; }
 }
