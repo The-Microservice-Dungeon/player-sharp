@@ -3,6 +3,9 @@ using Sharp.Core;
 
 namespace Sharp.Gameplay.Map;
 
+/// <summary>
+/// A map (also called "Gameworld"). 
+/// </summary>
 public class Map : IIdentifiable<string>
 {
     private List<Field> _fields = new();

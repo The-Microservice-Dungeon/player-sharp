@@ -3,8 +3,15 @@ using Sharp.Core;
 
 namespace Sharp.Gameplay.Map;
 
+/// <summary>
+/// Field of the map. A field can contain certain objects (e.g. planets, space-stations) and has exactly 4 neighbours
+/// in each direction.
+/// </summary>
 public class Field : IIdentifiable<string>
 {
+    /// <summary>
+    /// A Barrier is a field that is not accessible.
+    /// </summary>
     public static Field BARRIER = new("BARRIER", Int32.MaxValue, Int32.MaxValue);
     
     private Dictionary<Direction, Field> _neighbours = new(); 
