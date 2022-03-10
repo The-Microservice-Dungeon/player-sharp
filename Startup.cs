@@ -12,6 +12,12 @@ namespace Player.Sharp
     public class Startup { 
         public Startup(IConfiguration configuration)
         {
+            // TODO: Hacky Last-Minute hack to include the provided environment variables
+            var gameServiceEnv = Environment.GetEnvironmentVariable("GAME_SERVICE");
+            if (gameServiceEnv != null)
+                configuration["Refit:Client:GameServiceAddress"] = gameServiceEnv;
+            var kafkaAddressEnv = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_ADDRESS");
+                configuration["Kafka:ConsumerSettings:BootstrapServers"] = kafkaAddressEnv;
             Configuration = configuration;
         }
 
@@ -33,8 +39,8 @@ namespace Player.Sharp
 
             // Clients
             IConfigurationSection refitSection = Configuration.GetSection("Refit:Client");
-
             var gameServiceAddress = refitSection.GetValue<string>("GameServiceAddress");
+            
             var httpClient = new HttpClient(new HttpLoggingHandler()) { BaseAddress = new Uri(gameServiceAddress, UriKind.Absolute) };
             var gameClient = RestService.For<IGameClient>(httpClient);
             services.AddSingleton(gameClient);
