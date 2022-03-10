@@ -1,7 +1,4 @@
 ﻿using Confluent.Kafka;
-using Confluent.Kafka.SyncOverAsync;
-using Confluent.SchemaRegistry.Serdes;
-using System.Text.Json;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using Player.Sharp.Gameplay;
