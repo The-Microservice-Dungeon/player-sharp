@@ -2,5 +2,5 @@
 
 public interface IIdentifiable<out T>
 {
-    public T ID { get; }
+    public T Id { get; }
 }

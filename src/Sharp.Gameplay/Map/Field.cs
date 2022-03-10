@@ -16,7 +16,7 @@ public class Field : IIdentifiable<string>
 
     public Field(string id)
     {
-        ID = id;
+        Id = id;
     }
 
     public Field(string id, int movementDifficulty) : this(id)
@@ -24,5 +24,5 @@ public class Field : IIdentifiable<string>
         MovementDifficulty = movementDifficulty;
     }
     
-    public string ID { get; }
+    public string Id { get; }
 }

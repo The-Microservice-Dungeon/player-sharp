@@ -9,10 +9,10 @@ public class Map : IIdentifiable<string>
 {
     public Map(string id)
     {
-        ID = id;
+        Id = id;
     }
 
-    public string ID { get; }
+    public string Id { get; }
 
     public void AddField(Field field)
     {
