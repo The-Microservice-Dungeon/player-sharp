@@ -52,8 +52,8 @@ public class Startup
         services.AddSingleton<IHostedService, GameStatusConsumer>();
         services.AddSingleton<IHostedService, GameRoundStatusConsumer>();
         services.AddSingleton<IHostedService, MapGameworldCreatedConsumer>();
-        services.AddSingleton<IHostedService, RobotDestroyedEventConsumer>();
-        services.AddSingleton<IHostedService, TradingTradesBuyRobotEventConsumer>();
+        //services.AddSingleton<IHostedService, RobotDestroyedEventConsumer>();
+        //services.AddSingleton<IHostedService, TradingTradesBuyRobotEventConsumer>();
 
         // Other services
         services.AddSingleton<IHostedService, PlayerRegistrationService>();
