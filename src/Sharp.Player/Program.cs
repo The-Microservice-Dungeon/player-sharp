@@ -1,8 +1,12 @@
 using Sharp.Player;
+using Sharp.Player.Services;
 
 Host.CreateDefaultBuilder(args)
-    .ConfigureWebHostDefaults(webBuilder =>
+    .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+    .ConfigureServices(s =>
     {
-        webBuilder.UseStartup<Startup>();
-    }).Build()
+        // Should run first.
+        s.AddHostedService<PlayerRegistrationService>();
+    })
+    .Build()
     .Run();
