@@ -17,7 +17,8 @@ public class Startup
         if (gameServiceEnv != null)
             configuration["Refit:Client:GameServiceAddress"] = gameServiceEnv;
         var kafkaAddressEnv = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_ADDRESS");
-        configuration["Kafka:ConsumerSettings:BootstrapServers"] = kafkaAddressEnv;
+        if (kafkaAddressEnv != null)
+            configuration["Kafka:ConsumerSettings:BootstrapServers"] = kafkaAddressEnv;
         Configuration = configuration;
     }
 
