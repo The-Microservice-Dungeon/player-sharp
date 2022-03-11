@@ -45,4 +45,20 @@ public class RestBasedPlayerRegistration : IPlayerRegistration
             throw;
         }
     }
+
+    public PlayerCredentials GetCredentials(PlayerDetails details, bool registerIfNotFound)
+    {
+        try
+        {
+            var response = _playerRegistrationClient.GetPlayerDetails(details.Name, details.Email).GetAwaiter()
+                .GetResult();
+            return new PlayerCredentials(response.BearerToken);
+        }
+        catch (ApiException e)
+        {
+            if (e.StatusCode == HttpStatusCode.NotFound)
+                return Register(details);
+            throw;
+        }
+    }
 }
