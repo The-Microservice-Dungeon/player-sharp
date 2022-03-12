@@ -16,4 +16,19 @@ public interface IGameClient
 
     [Get("/games")]
     Task<List<GameResponse>> GetAllActiveGames();
+
+    async Task<List<GameResponse>> GetAllGamesOpenForRegistration()
+    {
+        return (await GetAllActiveGames())
+            .Where(game => game.GameStatus == GameStatus.Created)
+            .ToList();
+    }
+
+    // Nice method name
+    async Task<List<GameResponse>> GetAllGamesOpenForRegistrationAndPlayerNotYetRegistered(string playerId)
+    {
+        return (await GetAllGamesOpenForRegistration())
+            .Where(game => !game.ParticipatingPlayers.Contains(playerId))
+            .ToList();
+    }
 }
