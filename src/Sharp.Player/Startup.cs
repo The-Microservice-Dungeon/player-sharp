@@ -1,17 +1,15 @@
 ﻿using KafkaFlow;
+using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
 using KafkaFlow.TypedHandler;
 using Microsoft.EntityFrameworkCore;
 using Refit;
 using Sharp.Client.Client;
-using Sharp.Client.Model;
-using Sharp.Core;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.Model;
 using Sharp.Player.Manager;
-using Sharp.Player.Services;
 
 namespace Sharp.Player;
 
@@ -31,10 +29,10 @@ public class Startup
 
         // TODO: Temporarly we will simply put all service configuration here. We should probably split it up in a
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
-        
+
         // Mapper
         services.AddAutoMapper(typeof(GameMappingProfile));
-        
+
         // Register custom configuration
         services.Configure<PlayerDetailsOptions>(
             Configuration.GetSection(PlayerDetailsOptions.PlayerDetails));
@@ -60,58 +58,10 @@ public class Startup
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
             .AddCluster(cluster => cluster
                 .WithBrokers(new[] { networkOptions.KafkaAddress })
-                .AddConsumer(consumer => consumer
-                    .Topic("playerStatus")
-                    .WithGroupId("player-sharp")
-                    .WithWorkersCount(1)
-                    .WithBufferSize(100)
-                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                    .AddMiddlewares(middlewares => middlewares
-                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(PlayerStatusEvent))
-                        .AddTypedHandlers(handlers => handlers
-                            .AddHandler<PlayerStatusMessageHandler>()
-                        )
-                    )
-                )
-                .AddConsumer(consumer => consumer
-                    .Topic("status")
-                    .WithGroupId("player-sharp")
-                    .WithWorkersCount(1)
-                    .WithBufferSize(100)
-                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                    .AddMiddlewares(middlewares => middlewares
-                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(GameStatusEvent))
-                        .AddTypedHandlers(handlers => handlers
-                            .AddHandler<GameStatusMessageHandler>()
-                        )
-                    )
-                )
-                .AddConsumer(consumer => consumer
-                    .Topic("gameworld-created")
-                    .WithGroupId("player-sharp")
-                    .WithWorkersCount(1)
-                    .WithBufferSize(100)
-                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                    .AddMiddlewares(middlewares => middlewares
-                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(GameworldCreatedEvent))
-                        .AddTypedHandlers(handlers => handlers
-                            .AddHandler<GameworldCreatedMessageHandler>()
-                        )
-                    )
-                )
-                .AddConsumer(consumer => consumer
-                    .Topic("spacestation-created")
-                    .WithGroupId("player-sharp")
-                    .WithWorkersCount(1)
-                    .WithBufferSize(100)
-                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                    .AddMiddlewares(middlewares => middlewares
-                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(SpacestationCreatedEvent))
-                        .AddTypedHandlers(handlers => handlers
-                            .AddHandler<SpacestationCreatedMessageHandler>()
-                        )
-                    )
-                )
+                .AddDefaultConsumer<PlayerStatusEvent, PlayerStatusMessageHandler>("playerStatus")
+                .AddDefaultConsumer<GameStatusEvent, GameStatusMessageHandler>("status")
+                .AddDefaultConsumer<GameworldCreatedEvent, GameworldCreatedMessageHandler>("gameworld-created")
+                .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
             )
         );
 
@@ -121,7 +71,8 @@ public class Startup
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SharpDbContext dbContext, IHostApplicationLifetime lifetime)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SharpDbContext dbContext,
+        IHostApplicationLifetime lifetime)
     {
         dbContext.Database.Migrate();
 
@@ -136,5 +87,26 @@ public class Startup
         }
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+    }
+}
+
+public static class KafkaHelper
+{
+    public static IClusterConfigurationBuilder AddDefaultConsumer<T, H>(this IClusterConfigurationBuilder builder,
+        string topic) where H : class, IMessageHandler<T>
+    {
+        return builder.AddConsumer(consumer => consumer
+            .Topic(topic)
+            .WithGroupId("player-sharp")
+            .WithWorkersCount(1)
+            .WithBufferSize(100)
+            .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+            .AddMiddlewares(middlewares => middlewares
+                .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(T))
+                .AddTypedHandlers(handlers => handlers
+                    .AddHandler<H>()
+                )
+            )
+        );
     }
 }
