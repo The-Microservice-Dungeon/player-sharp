@@ -1,0 +1,34 @@
+﻿using Refit;
+using Sharp.Client.Model;
+
+namespace Sharp.Client.Client;
+
+public interface IGameClient
+{
+    [Put("/games/{gameId}/players/{playerToken}")]
+    Task<GameRegistrationResponse> RegisterInGame(string gameId, string playerToken);
+
+    [Head("/games/{gameId}")]
+    Task<IApiResponse> CheckIfGameExists(string gameId);
+
+    [Get("/games/{gameId}")]
+    Task<GameResponse> GetGame(string gameId);
+
+    [Get("/games")]
+    Task<List<GameResponse>> GetAllActiveGames();
+
+    async Task<List<GameResponse>> GetAllGamesOpenForRegistration()
+    {
+        return (await GetAllActiveGames())
+            .Where(game => game.GameStatus == GameStatus.Created)
+            .ToList();
+    }
+
+    // Nice method name
+    async Task<List<GameResponse>> GetAllGamesOpenForRegistrationAndPlayerNotYetRegistered(string playerId)
+    {
+        return (await GetAllGamesOpenForRegistration())
+            .Where(game => !game.ParticipatingPlayers.Contains(playerId))
+            .ToList();
+    }
+}

@@ -1,0 +1,18 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:44801",
+      "sslPort": 44367
+    }
+  },
+  "profiles": {
+    "Sharp.Player": {
+      "commandName": "Project"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress"
+    }
+  }
+}
