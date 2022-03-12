@@ -3,6 +3,7 @@ using Refit;
 using Sharp.Client.Client;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
+using Sharp.Player.Services;
 
 namespace Sharp.Player;
 
@@ -37,6 +38,10 @@ public class Startup
             Configuration.GetSection(DungeonNetworkOptions.DungeonNetwork).Get<DungeonNetworkOptions>();
         var playerRegistrationClient = RestService.For<IPlayerRegistrationClient>(networkOptions.GameServiceAddress);
         services.AddSingleton(playerRegistrationClient);
+        var gameClient = RestService.For<IGameClient>(networkOptions.GameServiceAddress);
+        services.AddSingleton(gameClient);
+
+        services.AddSingleton<IPlayerDetailsProvider, PlayerDetailsProvider>();
 
         services.AddEndpointsApiExplorer();
 
@@ -50,7 +55,7 @@ public class Startup
 
         app.UseDeveloperExceptionPage();
         app.UseRouting();
-
+        
         if (env.IsDevelopment())
         {
         }
