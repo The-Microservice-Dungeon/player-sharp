@@ -7,6 +7,7 @@ using Sharp.Client.Client;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
+using Sharp.Player.Consumers.Model;
 using Sharp.Player.Services;
 
 namespace Sharp.Player;
@@ -53,12 +54,12 @@ public class Startup
                 .WithBrokers(new[] { networkOptions.KafkaAddress })
                 .AddConsumer(consumer => consumer
                     .Topic("playerStatus")
-                    .WithGroupId("player-sharp-1")
+                    .WithGroupId("player-sharp")
                     .WithWorkersCount(1)
                     .WithBufferSize(100)
                     .WithAutoOffsetReset(AutoOffsetReset.Earliest)
                     .AddMiddlewares(middlewares => middlewares
-                        .AddSerializer<JsonCoreSerializer, DungeonMessageTypeResolver>()
+                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(PlayerStatusEvent))
                         .AddTypedHandlers(handlers => handlers
                             .AddHandler<PlayerStatusMessageHandler>()
                         )
