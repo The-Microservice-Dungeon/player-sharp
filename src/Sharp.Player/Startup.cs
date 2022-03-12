@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using KafkaFlow;
+using KafkaFlow.Serializer;
+using KafkaFlow.TypedHandler;
+using Microsoft.EntityFrameworkCore;
 using Refit;
 using Sharp.Client.Client;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
+using Sharp.Player.Consumers;
 using Sharp.Player.Services;
 
 namespace Sharp.Player;
@@ -43,19 +47,42 @@ public class Startup
 
         services.AddSingleton<IPlayerDetailsProvider, PlayerDetailsProvider>();
 
+        // Kafka / Consumers / ...
+        services.AddKafka(kafka => kafka.UseMicrosoftLog()
+            .AddCluster(cluster => cluster
+                .WithBrokers(new[] { networkOptions.KafkaAddress })
+                .AddConsumer(consumer => consumer
+                    .Topic("playerStatus")
+                    .WithGroupId("player-sharp-1")
+                    .WithWorkersCount(1)
+                    .WithBufferSize(100)
+                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddSerializer<JsonCoreSerializer, DungeonMessageTypeResolver>()
+                        .AddTypedHandlers(handlers => handlers
+                            .AddHandler<PlayerStatusMessageHandler>()
+                        )
+                    )
+                )
+            )
+        );
+
         services.AddEndpointsApiExplorer();
 
         services.AddControllersWithViews();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SharpDbContext dbContext)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SharpDbContext dbContext, IHostApplicationLifetime lifetime)
     {
         dbContext.Database.Migrate();
 
+        var kafkaBus = app.ApplicationServices.CreateKafkaBus();
+        lifetime.ApplicationStarted.Register(() => kafkaBus.StartAsync(lifetime.ApplicationStopped));
+
         app.UseDeveloperExceptionPage();
         app.UseRouting();
-        
+
         if (env.IsDevelopment())
         {
         }
