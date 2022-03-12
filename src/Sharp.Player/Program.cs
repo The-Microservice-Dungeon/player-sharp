@@ -7,6 +7,7 @@ Host.CreateDefaultBuilder(args)
     {
         // Should run first.
         s.AddHostedService<PlayerRegistrationService>();
+        s.AddHostedService<GameRegistrationService>();
     })
     .Build()
     .Run();
