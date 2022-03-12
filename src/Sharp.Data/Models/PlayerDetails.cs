@@ -10,6 +10,8 @@ public class PlayerDetails
     public string Email { get; private set; }
     [Required]
     public string Token { get; set; }
+    
+    public string? PlayerId { get; set; }
 
     public PlayerDetails(string name, string email, string token)
     {
