@@ -4,6 +4,8 @@ using KafkaFlow.TypedHandler;
 using Microsoft.EntityFrameworkCore;
 using Refit;
 using Sharp.Client.Client;
+using Sharp.Client.Model;
+using Sharp.Core;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
@@ -29,7 +31,10 @@ public class Startup
 
         // TODO: Temporarly we will simply put all service configuration here. We should probably split it up in a
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
-
+        
+        // Mapper
+        services.AddAutoMapper(typeof(GameMappingProfile));
+        
         // Register custom configuration
         services.Configure<PlayerDetailsOptions>(
             Configuration.GetSection(PlayerDetailsOptions.PlayerDetails));

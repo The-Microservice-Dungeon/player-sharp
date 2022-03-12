@@ -30,23 +30,11 @@ public class GameRegistrationService : BackgroundService
     {
         var playerDetails = _playerManager.Get();
 
-        return GetGameIds(playerDetails.PlayerId).ContinueWith(games =>
+        return _gameManager.GetAvailableGames().ContinueWith(games =>
         {
             var result = games.Result;
             _logger.LogInformation("Retreived {N} open games to register", result.Count);
-            return Task.WhenAll(result.Select(id => _gameManager.PerformRegistration(id, playerDetails)));
+            return Task.WhenAll(result.Select(game => _gameManager.PerformRegistration(game.Id, playerDetails)));
         });
-    }
-
-    private async Task<List<string>> GetGameIds(string? playerId)
-    {
-        Task<List<GameResponse>> gamesToRegister;
-        if (playerId == null)
-            gamesToRegister = _gameClient.GetAllGamesOpenForRegistration();
-        else
-            gamesToRegister =
-                _gameClient.GetAllGamesOpenForRegistrationAndPlayerNotYetRegistered(playerId);
-
-        return (await gamesToRegister).Select(game => game.GameId).ToList();
     }
 }

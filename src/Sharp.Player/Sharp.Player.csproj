@@ -14,6 +14,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="KafkaFlow" Version="2.3.0-beta.1" />
         <PackageReference Include="KafkaFlow.LogHandler.Console" Version="2.3.0-beta.1" />
         <PackageReference Include="KafkaFlow.LogHandler.Microsoft" Version="2.2.4" />

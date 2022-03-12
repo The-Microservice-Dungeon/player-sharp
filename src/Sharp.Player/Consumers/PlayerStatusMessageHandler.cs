@@ -36,7 +36,7 @@ public class PlayerStatusMessageHandler : IMessageHandler<PlayerStatusEvent>
         return Task.CompletedTask;
     }
 
-    public PlayerDetails? ResolveTransactionid(string transactionId)
+    private PlayerDetails? ResolveTransactionid(string transactionId)
     {
         return _db.GameRegistrations
             .Where(registration => registration.TransactionId == transactionId)
