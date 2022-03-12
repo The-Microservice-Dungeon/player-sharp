@@ -6,4 +6,7 @@ public interface IPlayerManager
 {
     PlayerDetails Get();
     Task<PlayerDetails> Init();
+
+    PlayerDetails SetPlayerId(string playerId);
+    PlayerDetails? ResolveRegistrationTransactionId(string transactionId);
 }

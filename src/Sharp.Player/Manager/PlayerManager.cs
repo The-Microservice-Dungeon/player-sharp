@@ -68,6 +68,23 @@ public class PlayerManager : IPlayerManager
         return createdResult;
     }
 
+    public PlayerDetails SetPlayerId(string playerId)
+    {
+        var details = Get();
+        details.PlayerId = playerId;
+        _dbContext.PlayerDetails.Update(details);
+        _dbContext.SaveChanges();
+        return details;
+    }
+
+    public PlayerDetails? ResolveRegistrationTransactionId(string transactionId)
+    {
+        return _dbContext.GameRegistrations
+            .Where(registration => registration.TransactionId == transactionId)
+            .Select(registration => registration.PlayerDetails)
+            .FirstOrDefault();
+    }
+
     private void StoreInDatabase(PlayerDetails playerDetails)
     {
         _dbContext.PlayerDetails.Add(playerDetails);
@@ -104,4 +121,6 @@ public class PlayerManager : IPlayerManager
         _logger.LogDebug("Successfully created player with details: {Details}", details);
         return details;
     }
+    
+    
 }
