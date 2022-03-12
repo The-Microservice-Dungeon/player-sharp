@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Player.Sharp.csproj", "."]
-RUN dotnet restore "./Player.Sharp.csproj"
+COPY ["src", "."]
+RUN dotnet restore "./Sharp.Player/Sharp.Player.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "Player.Sharp.csproj" -c Release -o /app/build
+WORKDIR "/src/Sharp.Player"
+RUN dotnet build "Sharp.Player.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Player.Sharp.csproj" -c Release -o /app/publish
+RUN dotnet publish "Sharp.Player.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Player.Sharp.dll"]
+ENTRYPOINT ["dotnet", "Sharp.Player.dll"]
