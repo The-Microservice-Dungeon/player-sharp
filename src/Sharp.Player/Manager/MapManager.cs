@@ -6,7 +6,7 @@ public class MapManager : IMapManager
 {
     private Map? _map { get; set; } = null;
 
-    public Map Get() => _map!;
+    public Map? Get() => _map;
 
     public Map Create(string id)
     {

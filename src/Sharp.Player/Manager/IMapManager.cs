@@ -4,6 +4,6 @@ namespace Sharp.Player.Manager;
 
 public interface IMapManager
 {
-    Map Get();
+    Map? Get();
     Map Create(string id);
 }

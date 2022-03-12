@@ -15,11 +15,15 @@ public class SpacestationCreatedMessageHandler : IMessageHandler<SpacestationCre
         _mapManager = mapManager;
     }
 
-    public Task Handle(IMessageContext context, SpacestationCreatedEvent message)
+    public async Task Handle(IMessageContext context, SpacestationCreatedEvent message)
     {
         var map = _mapManager.Get();
+        while (map == null)
+        {
+            map = _mapManager.Get();
+            await Task.Delay(50);
+        }
         var field = map.GetField(message.PlanetId) ?? new Field(message.PlanetId);
         field.SpaceStation = new SpaceStation(field);
-        return Task.CompletedTask;
     }
 }
