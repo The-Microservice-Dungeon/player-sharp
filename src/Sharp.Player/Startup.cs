@@ -54,6 +54,7 @@ public class Startup
 
         services.AddSingleton<IPlayerManager, PlayerManager>();
         services.AddSingleton<IGameManager, GameManager>();
+        services.AddSingleton<IMapManager, MapManager>();
 
         // Kafka / Consumers / ...
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
@@ -82,6 +83,32 @@ public class Startup
                         .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(GameStatusEvent))
                         .AddTypedHandlers(handlers => handlers
                             .AddHandler<GameStatusMessageHandler>()
+                        )
+                    )
+                )
+                .AddConsumer(consumer => consumer
+                    .Topic("gameworld-created")
+                    .WithGroupId("player-sharp")
+                    .WithWorkersCount(1)
+                    .WithBufferSize(100)
+                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(GameworldCreatedEvent))
+                        .AddTypedHandlers(handlers => handlers
+                            .AddHandler<GameworldCreatedMessageHandler>()
+                        )
+                    )
+                )
+                .AddConsumer(consumer => consumer
+                    .Topic("spacestation-created")
+                    .WithGroupId("player-sharp")
+                    .WithWorkersCount(1)
+                    .WithBufferSize(100)
+                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(SpacestationCreatedEvent))
+                        .AddTypedHandlers(handlers => handlers
+                            .AddHandler<SpacestationCreatedMessageHandler>()
                         )
                     )
                 )

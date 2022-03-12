@@ -12,7 +12,13 @@ public class Field : IIdentifiable<string>
         Id = id;
     }
     
+    public Field(string id, int movementDifficulty) : this(id)
+    {
+        MovementDifficulty = movementDifficulty;
+    }
+    
     public string Id { get; }
+    public int MovementDifficulty = 0;
     public Planet? Planet { get; set; }
     public SpaceStation? SpaceStation { get; set; }
 }

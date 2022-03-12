@@ -16,9 +16,23 @@ public class Map : IIdentifiable<string>
     }
 
     public string Id { get; }
-    public IImmutableList<Field> Fields => _fields.ToImmutableList();
-    public IImmutableList<Connection> Connections => _connections.ToImmutableList();
 
-    public void AddField(Field field) => _fields.Add(field);
-    public void AddConnection(Connection connection) => _connections.Add(connection);
+    public Field? GetField(string id)
+    {
+        return _fields.Find(f => f.Id == id);
+    }
+    
+    public void AddField(Field field)
+    {
+        if (_fields.Exists(f => f.Id == field.Id))
+            throw new ArgumentException("A field with this Id already exists", nameof(field));
+        _fields.Add(field);
+    }
+
+    public void AddConnection(Connection connection)
+    {
+        if (_connections.Contains(connection))
+            throw new ArgumentException("This connection already exists", nameof(connection));
+        _connections.Add(connection);
+    }
 }
