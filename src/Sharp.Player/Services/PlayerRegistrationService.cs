@@ -46,6 +46,11 @@ public class PlayerRegistrationService : IHostedService
             {
                 _logger.LogWarning(
                     "Player details are already present. It could be invalidated by the game service. Hope for the best!");
+
+                if (details.PlayerId == null)
+                    _logger.LogWarning(
+                        "The Player does not have any PlayerId yet. Hopefully we get one after a game registration.");
+
                 break;
             }
 
@@ -53,7 +58,9 @@ public class PlayerRegistrationService : IHostedService
             try
             {
                 var response = await _playerRegistrationClient.GetPlayerDetails(name, email);
-                _logger.LogInformation("Successfully loaded player details");
+                _logger.LogInformation("Successfully loaded player details from game service");
+                _logger.LogWarning(
+                    "The Player does not have any PlayerId yet. Hopefully we get one after a game registration.");
                 _dbContext.PlayerDetails.Add(new PlayerDetails(response.Name, response.Email, response.BearerToken));
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 break;
@@ -67,6 +74,8 @@ public class PlayerRegistrationService : IHostedService
                     _logger.LogDebug("Register player");
                     var response = await _playerRegistrationClient.CreatePlayer(new PlayerRequest(name, email));
                     _logger.LogInformation("Successfully registered player");
+                    _logger.LogWarning(
+                        "The Player does not have any PlayerId yet. Hopefully we get one after a game registration.");
                     _dbContext.PlayerDetails.Add(new PlayerDetails(response.Name, response.Email,
                         response.BearerToken));
                     await _dbContext.SaveChangesAsync(cancellationToken);
