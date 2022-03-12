@@ -1,8 +1,8 @@
 ﻿using Sharp.Data.Model;
 
-namespace Sharp.Player.Services;
+namespace Sharp.Player.Manager;
 
-public interface IPlayerDetailsProvider
+public interface IPlayerManager
 {
     PlayerDetails Get();
     Task<PlayerDetails> Init();

@@ -6,18 +6,19 @@ using Sharp.Client.Model;
 using Sharp.Data.Context;
 using Sharp.Data.Model;
 using Sharp.Player.Config;
+using Sharp.Player.Services;
 
-namespace Sharp.Player.Services;
+namespace Sharp.Player.Manager;
 
-public class PlayerDetailsProvider : IPlayerDetailsProvider
+public class PlayerManager : IPlayerManager
 {
     private readonly SharpDbContext _dbContext;
     private readonly PlayerDetailsOptions _detailsOptions;
-    private readonly ILogger<PlayerDetailsProvider> _logger;
+    private readonly ILogger<PlayerManager> _logger;
     private readonly IPlayerRegistrationClient _playerRegistrationClient;
 
-    public PlayerDetailsProvider(IPlayerRegistrationClient playerRegistrationClient,
-        IOptions<PlayerDetailsOptions> detailsOptions, ILogger<PlayerDetailsProvider> logger,
+    public PlayerManager(IPlayerRegistrationClient playerRegistrationClient,
+        IOptions<PlayerDetailsOptions> detailsOptions, ILogger<PlayerManager> logger,
         SharpDbContext dbContext)
     {
         _playerRegistrationClient = playerRegistrationClient;

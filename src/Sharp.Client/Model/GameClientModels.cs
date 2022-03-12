@@ -14,8 +14,8 @@ public enum GameStatus
     [EnumMember(Value = "CREATED")] Created,
     [EnumMember(Value = "STARTED")] Started,
 
-    [EnumMember(Value = "COMMAND_INPUT_ENDED")]
-    CommandInputEnded
+    [EnumMember(Value = "ENDED")]
+    Ended
 }
 
 public class GameResponse
@@ -30,5 +30,5 @@ public class GameResponse
     public GameStatus GameStatus { get; set; }
 
     [JsonPropertyName("participatingPlayers")]
-    public string[] ParticipatingPlayers { get; set; }
+    public List<string> ParticipatingPlayers { get; set; } = new();
 }

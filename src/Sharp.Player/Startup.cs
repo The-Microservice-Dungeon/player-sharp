@@ -8,6 +8,7 @@ using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.Model;
+using Sharp.Player.Manager;
 using Sharp.Player.Services;
 
 namespace Sharp.Player;
@@ -46,7 +47,8 @@ public class Startup
         var gameClient = RestService.For<IGameClient>(networkOptions.GameServiceAddress);
         services.AddSingleton(gameClient);
 
-        services.AddSingleton<IPlayerDetailsProvider, PlayerDetailsProvider>();
+        services.AddSingleton<IPlayerManager, PlayerManager>();
+        services.AddSingleton<IGameManager, GameManager>();
 
         // Kafka / Consumers / ...
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
@@ -62,6 +64,19 @@ public class Startup
                         .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(PlayerStatusEvent))
                         .AddTypedHandlers(handlers => handlers
                             .AddHandler<PlayerStatusMessageHandler>()
+                        )
+                    )
+                )
+                .AddConsumer(consumer => consumer
+                    .Topic("status")
+                    .WithGroupId("player-sharp")
+                    .WithWorkersCount(1)
+                    .WithBufferSize(100)
+                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(GameStatusEvent))
+                        .AddTypedHandlers(handlers => handlers
+                            .AddHandler<GameStatusMessageHandler>()
                         )
                     )
                 )
