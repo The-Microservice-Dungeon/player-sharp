@@ -6,7 +6,6 @@ using Sharp.Client.Model;
 using Sharp.Data.Context;
 using Sharp.Data.Model;
 using Sharp.Player.Config;
-using Sharp.Player.Services;
 
 namespace Sharp.Player.Manager;
 
@@ -26,12 +25,10 @@ public class PlayerManager : IPlayerManager
         _logger = logger;
         _dbContext = dbContext;
     }
-    
+
     private string PlayerName => _detailsOptions.Name;
     private string PlayerEmail => _detailsOptions.Email;
 
-    private PlayerDetails? GetFromDb(string name, string email) => _dbContext.PlayerDetails.Find(name, email);  
-    
     public PlayerDetails Get()
     {
         var dbResult = GetFromDb(PlayerName, PlayerEmail);
@@ -39,10 +36,13 @@ public class PlayerManager : IPlayerManager
         if (dbResult == null)
             throw new ApplicationException(
                 $"A Player with the configured Name and Email does not exist yet. (Name: {PlayerName}, Email: {PlayerEmail})");
-        
+
         return dbResult;
     }
 
+    // TODO: it should be replicated by the workflow rather than an explicit call of init. We should maybe make the 
+    // constructor private and provide a static method which returns an instance of the playermanager with initalized
+    // state.
     public async Task<PlayerDetails> Init()
     {
         _logger.LogDebug("Try to load player details from database...");
@@ -54,7 +54,8 @@ public class PlayerManager : IPlayerManager
             return dbResult;
         }
 
-        var fetchedResult = await FetchPlayerDetails(PlayerName, PlayerEmail);;
+        var fetchedResult = await FetchPlayerDetails(PlayerName, PlayerEmail);
+        ;
 
         if (fetchedResult != null)
         {
@@ -85,12 +86,18 @@ public class PlayerManager : IPlayerManager
             .FirstOrDefault();
     }
 
+    private PlayerDetails? GetFromDb(string name, string email)
+    {
+        return _dbContext.PlayerDetails.Find(name, email);
+    }
+
     private void StoreInDatabase(PlayerDetails playerDetails)
     {
         _dbContext.PlayerDetails.Add(playerDetails);
         _dbContext.SaveChanges();
         if (playerDetails.PlayerId == null)
-            _logger.LogWarning("Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
+            _logger.LogWarning(
+                "Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
     }
 
     private async Task<PlayerDetails?> FetchPlayerDetails(string name, string email)
@@ -107,7 +114,7 @@ public class PlayerManager : IPlayerManager
         {
             if (e.StatusCode == HttpStatusCode.NotFound)
                 return null;
-            
+
             throw;
         }
     }
@@ -121,6 +128,4 @@ public class PlayerManager : IPlayerManager
         _logger.LogDebug("Successfully created player with details: {Details}", details);
         return details;
     }
-    
-    
 }
