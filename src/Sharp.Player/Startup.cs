@@ -31,7 +31,7 @@ public class Startup
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
 
         // Mapper
-        services.AddAutoMapper(typeof(GameMappingProfile));
+        services.AddAutoMapper(typeof(GameMappingProfile), typeof(MapMappingProfile));
 
         // Register custom configuration
         services.Configure<PlayerDetailsOptions>(

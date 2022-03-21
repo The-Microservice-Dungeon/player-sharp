@@ -1,11 +1,5 @@
 ﻿namespace Sharp.Gameplay.Map;
 
-public class Planet : IFieldLocatable
+public class Planet
 {
-    public Planet(Field field)
-    {
-        Location = field;
-    }
-
-    public Field Location { get; }
 }

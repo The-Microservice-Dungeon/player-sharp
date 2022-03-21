@@ -6,4 +6,5 @@ public interface IMapManager
 {
     Map? Get();
     Map Create(string id);
+    void AddSpaceStation(string fieldId);
 }

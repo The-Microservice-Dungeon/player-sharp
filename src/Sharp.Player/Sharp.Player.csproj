@@ -34,10 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Controllers" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\Sharp.Client\Sharp.Client.csproj" />
         <ProjectReference Include="..\Sharp.Core\Sharp.Core.csproj" />
         <ProjectReference Include="..\Sharp.Data\Sharp.Data.csproj" />

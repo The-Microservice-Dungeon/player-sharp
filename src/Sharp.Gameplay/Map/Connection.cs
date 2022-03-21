@@ -2,12 +2,10 @@
 
 public struct Connection
 {
-    public Field Source;
     public Field Destination;
-    
-    public Connection(Field source, Field destination)
+
+    public Connection(Field destination)
     {
-        Source = source;
         Destination = destination;
     }
 }

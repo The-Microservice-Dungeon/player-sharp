@@ -8,12 +8,14 @@ namespace Sharp.Gameplay.Map;
 /// </summary>
 public class Map : IIdentifiable<string>
 {
-    private List<Field> _fields = new();
-    private List<Connection> _connections = new();
+    private readonly List<Field> _fields = new();
+
     public Map(string id)
     {
         Id = id;
     }
+
+    public ImmutableList<Field> Fields => _fields.ToImmutableList();
 
     public string Id { get; }
 
@@ -21,18 +23,21 @@ public class Map : IIdentifiable<string>
     {
         return _fields.Find(f => f.Id == id);
     }
-    
-    public void AddField(Field field)
+
+    public Field AddField(Field field)
     {
         if (_fields.Exists(f => f.Id == field.Id))
             throw new ArgumentException("A field with this Id already exists", nameof(field));
         _fields.Add(field);
+        return field;
     }
 
-    public void AddConnection(Connection connection)
+    public Field SetField(Field field)
     {
-        if (_connections.Contains(connection))
-            throw new ArgumentException("This connection already exists", nameof(connection));
-        _connections.Add(connection);
+        var existingField = _fields.Find(f => f.Id == field.Id);
+        if (existingField != null)
+            _fields.Remove(existingField);
+        _fields.Add(field);
+        return field;
     }
 }
