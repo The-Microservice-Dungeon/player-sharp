@@ -2,7 +2,8 @@
 
 > ⚠️**Player is still in the early phase of development. Nothing in this project is fixed, there are many implicit and explicit TODOs and it is most likely that everything will change**
 
-![julian-paolo-dayag-dghknaDZxTA-unsplash](https://user-images.githubusercontent.com/22715034/159365833-bb4b51fa-bf71-42af-9ed7-05c429fac38e.jpg)
+
+![sharp-banner](https://user-images.githubusercontent.com/22715034/159367266-2bbd5630-496a-4f5e-b38b-5fd246125c9b.jpg)
 <sub>(Photo (Modified) by <a href="https://unsplash.com/@wisdomsky?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Julian Paolo Dayag</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>)</sub>
 
 ## 🎯 Concepts / Goals
