@@ -9,7 +9,7 @@
 ## 🎯 Concepts / Goals
 - **No external database:** everything should be kept In-Memory or using a file-based store. At the moment mainly [SQLite](https://www.sqlite.org/) is used, as it gives some insights into the entity framework. Oh, and also it's [faster than the file system](https://www.sqlite.org/fasterthanfs.html).
 Without a external DB the player itself is ephemeral with each deployment unless a persistent claim is used - but that is okay for a player. 
-- **Rich UI:** At least the map should be visualized using a rich UI. Conceptually the map is treated as a graph structure and could also be visualized this way. Libraries like [D3.js](https://d3js.org/) could be used. How the UI will be presented is still unclear. Could be React or Vue (I'm definitely sure it will not be Angular), Blazor or maybe some kind of static webpage using [Graphviz](https://graphviz.org/) would also be fun. 
+- **Rich UI:** At least the map should be visualized using a rich UI. Conceptually the map is treated as a graph structure and could also be visualized this way. Libraries like [D3.js](https://d3js.org/) could be used. How the UI will be presented is still unclear. React is used as UI Framework but I'm also thinking about some kind of static webpage using [Graphviz](https://graphviz.org/) as it would also be fun. 
 - **Websockets:** If the player uses any kind of presentation (Logs, UI or similar) websockets should be used.
 
 ## 🚩 Prerequisites
