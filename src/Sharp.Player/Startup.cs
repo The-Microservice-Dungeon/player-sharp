@@ -83,6 +83,10 @@ public class Startup
 
         app.UseDeveloperExceptionPage();
         app.UseRouting();
+        
+        // Must be called before UseStaticFiels() 
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
 
         if (env.IsDevelopment())
         {
