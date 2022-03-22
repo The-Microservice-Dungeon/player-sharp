@@ -33,6 +33,11 @@
         <Content Include="ClientApp\package.json" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <None Update="ClientApp\.env.production.development">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
+        </None>
+        <None Include="ClientApp\.prettierrc.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -40,6 +45,17 @@
         <ProjectReference Include="..\Sharp.Core\Sharp.Core.csproj" />
         <ProjectReference Include="..\Sharp.Data\Sharp.Data.csproj" />
         <ProjectReference Include="..\Sharp.Gameplay\Sharp.Gameplay.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="ClientApp\.env.local">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ClientApp\src\components" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -28,6 +28,19 @@ public class Startup
     {
         services.AddControllers();
         services.AddSignalR();
+        
+        services.AddCors(options =>
+        {
+            options.AddPolicy("ClientPermission", policy =>
+            {
+                // TODO i think its clear why
+                policy.AllowAnyHeader()
+                    .WithOrigins("http://localhost:3000", "http://localhost")
+                    //.SetIsOriginAllowed((_) => true)
+                    .AllowCredentials()
+                    .AllowAnyMethod();
+            });
+        });
 
         // TODO: Temporarly we will simply put all service configuration here. We should probably split it up in a
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
@@ -83,7 +96,9 @@ public class Startup
 
         app.UseDeveloperExceptionPage();
         app.UseRouting();
-        
+
+        app.UseCors("ClientPermission");
+
         // Must be called before UseStaticFiels() 
         app.UseDefaultFiles();
         app.UseStaticFiles();
@@ -95,7 +110,7 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-            endpoints.MapHub<MapHub>("/map");
+            endpoints.MapHub<MapHub>("socket/map");
         });
     }
 }

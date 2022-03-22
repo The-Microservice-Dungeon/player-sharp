@@ -1,14 +1,22 @@
-import {useNavigate} from 'react-router';
-
+import logo from '../../../assets/logo.svg';
 import {Button} from '../../../components/Elements';
 import {Head} from '../../../components/Head';
-import logo from '../../../assets/logo.svg';
+import {mapConnection} from "../../../client/map.client";
+import React, {useEffect} from 'react';
 
 export const Landing = () => {
-    const navigate = useNavigate();
 
-    const handleStart = () => {
-    };
+    useEffect(() => {
+        mapConnection.start()
+            .then(result => {
+                console.log("Connected");
+
+                mapConnection.on('FieldUpdated', message => {
+                    console.log(message);
+                });
+            })
+            .catch(err => console.error(err));
+    }, [mapConnection]);
 
     return (
         <>
