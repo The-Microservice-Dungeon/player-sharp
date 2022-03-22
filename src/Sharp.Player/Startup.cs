@@ -9,6 +9,7 @@ using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.Model;
+using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 
 namespace Sharp.Player;
@@ -26,6 +27,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        services.AddSignalR();
 
         // TODO: Temporarly we will simply put all service configuration here. We should probably split it up in a
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
@@ -86,7 +88,11 @@ public class Startup
         {
         }
 
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<MapHub>("/map");
+        });
     }
 }
 
