@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Sharp.Core;
+﻿using Sharp.Core;
 
 namespace Sharp.Gameplay.Map;
 
@@ -8,9 +7,6 @@ namespace Sharp.Gameplay.Map;
 /// </summary>
 public class Field : IIdentifiable<string>
 {
-    private readonly List<Connection> _connections = new();
-    public int MovementDifficulty;
-
     public Field(string id)
     {
         Id = id;
@@ -21,16 +17,28 @@ public class Field : IIdentifiable<string>
         MovementDifficulty = movementDifficulty;
     }
 
-    public Planet? Planet { get; set; }
-    public SpaceStation? SpaceStation { get; set; }
-    public ImmutableList<Connection> Connections => _connections.ToImmutableList();
+    public int? MovementDifficulty { get; }
+
+    public Planet? Planet { get; private set; }
+    public SpaceStation? SpaceStation { get; private set; }
+
+    // TODO: We could also use something like this but this would come with additional complexity as we would have to
+    //  deal with polymorphism. Maybe this is not a problem, maybe it is? What is better for extensiblity? Does it make
+    //  more sens to be explicit here?
+    /*private List<IFieldLocatable> _content = new();
+    // We expose a immutable list as public property to ensure every modification will be done over the member
+    // methods
+    public ImmutableList<IFieldLocatable> Content => _content.ToImmutableList();*/
 
     public string Id { get; }
 
-    public void AddConnection(Connection connection)
+    public void SetPlanet(Planet planet)
     {
-        if (_connections.Contains(connection))
-            throw new ArgumentException("This connection already exists", nameof(connection));
-        _connections.Add(connection);
+        Planet = planet;
+    }
+
+    public void SetSpaceStation(SpaceStation spaceStation)
+    {
+        SpaceStation = spaceStation;
     }
 }

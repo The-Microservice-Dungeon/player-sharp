@@ -8,36 +8,27 @@ namespace Sharp.Gameplay.Map;
 /// </summary>
 public class Map : IIdentifiable<string>
 {
-    private readonly List<Field> _fields = new();
+    private readonly Dictionary<Field, List<Connection>> _fields = new();
 
     public Map(string id)
     {
         Id = id;
     }
 
-    public ImmutableList<Field> Fields => _fields.ToImmutableList();
-
+    // We expose a immutable dictonary as public property to ensure every modification will be done over the member
+    // methods
+    public ImmutableDictionary<Field, List<Connection>> Fields => _fields.ToImmutableDictionary();
     public string Id { get; }
 
     public Field? GetField(string id)
     {
-        return _fields.Find(f => f.Id == id);
+        return _fields.Keys.FirstOrDefault(k => k.Id == id);
     }
 
-    public Field AddField(Field field)
+    public void AddField(Field field)
     {
-        if (_fields.Exists(f => f.Id == field.Id))
+        if (_fields.Keys.Any(k => k.Id == field.Id))
             throw new ArgumentException("A field with this Id already exists", nameof(field));
-        _fields.Add(field);
-        return field;
-    }
-
-    public Field SetField(Field field)
-    {
-        var existingField = _fields.Find(f => f.Id == field.Id);
-        if (existingField != null)
-            _fields.Remove(existingField);
-        _fields.Add(field);
-        return field;
+        _fields.Add(field, new List<Connection>());
     }
 }

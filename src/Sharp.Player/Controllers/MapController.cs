@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Sharp.Gameplay.Map;
 using Sharp.Player.Manager;
 
 namespace Sharp.Player.Controllers;
@@ -9,8 +8,8 @@ namespace Sharp.Player.Controllers;
 [Route("map")]
 public class MapController : ControllerBase
 {
-    private IMapper _mapper;
-    private IMapManager _mapManager;
+    private readonly IMapManager _mapManager;
+    private readonly IMapper _mapper;
 
     public MapController(IMapper mapper, IMapManager mapManager)
     {
@@ -31,34 +30,33 @@ public class MapController : ControllerBase
 
 public class MapDto
 {
-    public string Id { get; }
-    public Dictionary<string, FieldDto> Fields { get; }
-
     public MapDto(string id, Dictionary<string, FieldDto> fields)
     {
         Id = id;
         Fields = fields;
     }
+
+    public string Id { get; }
+    public Dictionary<string, FieldDto> Fields { get; }
 }
 
 public class FieldDto
 {
-    public PlanetDto? Planet { get; set; }
-    public SpacestationDto? Spacestation { get; set; }
-    public string[] Connections { get; }
-
     public FieldDto(string[] connections)
     {
         Connections = connections;
     }
+
+    public int? MovementDifficulty { get; set; }
+    public PlanetDto? Planet { get; set; }
+    public SpacestationDto? Spacestation { get; set; }
+    public string[] Connections { get; set; }
 }
 
 public class PlanetDto
 {
-    
 }
 
 public class SpacestationDto
 {
-    
 }

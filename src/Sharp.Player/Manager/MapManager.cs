@@ -12,10 +12,9 @@ public class MapManager : IMapManager
         return _map;
     }
 
-    public Map Create(string id)
+    public void Create(string id)
     {
         _map = new Map(id);
-        return _map;
     }
 
     public void AddSpaceStation(string fieldId)
@@ -23,8 +22,13 @@ public class MapManager : IMapManager
         if (_map == null)
             // Shouldn't happen
             throw new ApplicationException("Map is null.");
+
         var field = _map.GetField(fieldId) ?? new Field(fieldId);
-        field.SpaceStation = new SpaceStation();
-        _map.SetField(field);
+
+        if (field.SpaceStation != null)
+            return;
+
+        field.SetSpaceStation(new SpaceStation());
+        _map.AddField(field);
     }
 }
