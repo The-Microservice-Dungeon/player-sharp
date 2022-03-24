@@ -1,23 +1,8 @@
 import logo from '../../../assets/logo.svg';
 import {Button} from '../../../components/Elements';
-import {Head} from '../../../components/Head';
-import {mapConnection} from "../../../client/map.client";
-import React, {useEffect} from 'react';
-import {ContentLayout} from "../../../components/Layout";
+import React from 'react';
 
 export const Landing = () => {
-
-    useEffect(() => {
-        mapConnection.start()
-            .then(result => {
-                console.log("Connected");
-
-                mapConnection.on('FieldUpdated', message => {
-                    console.log(message);
-                });
-            })
-            .catch(err => console.error(err));
-    }, [mapConnection]);
 
     return (
         <>

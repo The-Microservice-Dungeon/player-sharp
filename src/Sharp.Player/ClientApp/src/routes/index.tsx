@@ -1,6 +1,6 @@
 import { useRoutes } from 'react-router-dom';
 import {Landing} from "../features/misc";
-import {Map} from "../features/map";
+import {MapOutlet} from "../features/map";
 import {ContentLayout} from "../components/Layout";
 
 export const AppRoutes = () => {
@@ -11,7 +11,7 @@ export const AppRoutes = () => {
         },
         {
             path: '/map',
-            element: <Map />
+            element: <MapOutlet />
         }
     ];
 

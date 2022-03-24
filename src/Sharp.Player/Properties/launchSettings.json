@@ -9,6 +9,13 @@
     }
   },
   "profiles": {
+    "Player.Sharp (Without SPA)": {
+      "commandName": "Project",
+      "applicationUrl": "https://localhost:7295;http://localhost:5295",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "Player.Sharp": {
       "commandName": "Project",
       "launchBrowser": true,
