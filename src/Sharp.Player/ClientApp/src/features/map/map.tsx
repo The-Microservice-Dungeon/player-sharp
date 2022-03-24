@@ -29,9 +29,8 @@ export type MapGraphProps = {
 // Percentages dont work
 export const MapGraph = ({ style = { width: "100%", height: "80vh", border: "1px solid red" }, map, ...props}: MapGraphProps) => {
     const container = useRef<HTMLDivElement | null>(null);
-    const [dimensions, setDimensions] = useState({});
-    const [ nodes, setNodes ] = useState<Node[]>(buildNodesFromMap(map));
-    const [ edges, setEdges ] = useState<Edge[]>(buildEdgesFromMap(map));
+    const [ nodes ] = useState<Node[]>(buildNodesFromMap(map));
+    const [ edges ] = useState<Edge[]>(buildEdgesFromMap(map));
     const [ network, setNetwork ] = useState<Network | null>(null);
 
     useEffect(() => {
