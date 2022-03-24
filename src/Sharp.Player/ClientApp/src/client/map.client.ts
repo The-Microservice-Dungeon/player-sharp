@@ -13,7 +13,7 @@ export type Map = {
 export type Field = {
     movementDifficulty?: number;
     planet?: Planet;
-    spaceStation?: SpaceStation;
+    spacestation?: SpaceStation;
     connections: FieldId[];
 };
 

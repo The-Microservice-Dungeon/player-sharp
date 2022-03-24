@@ -1,25 +1,82 @@
-import {getMap, Map, mapConnection} from "../../client";
+import {getMap, Map} from "../../client";
 import {useQuery} from "react-query";
-import {useEffect} from "react";
+import {CSSProperties, useEffect, useRef, useState} from "react";
+import { Edge, Network, Node} from "vis-network";
 
-export type MapProps = {};
+const buildNodesFromMap = (map: Map): Node[] => {
+    return Object.entries(map.fields)
+        .map(([key, value]) => ({
+            id: key,
+            label: !!value.spacestation ? 'Spacestation' : '' + !!value.planet ? 'Planet' : ''
+        }));
+}
 
-export const MapOutlet = (props: MapProps) => {
-    const { isLoading, error, data } = useQuery<Map, Error>('mapData', () => getMap())
+const buildEdgesFromMap = (map: Map): Edge[] => {
+    return Object.entries(map.fields)
+        .map(([key, value]) =>
+            value.connections.map(connection => ({
+                    from: key,
+                    to: connection
+                }))).flat();
+}
+
+export type MapGraphProps = {
+    map: Map;
+    className?: string;
+    style?: CSSProperties;
+};
+
+// Percentages dont work
+export const MapGraph = ({ style = { width: "50vw", height: "50vh", border: "1px solid red" }, map, ...props}: MapGraphProps) => {
+    const container = useRef<HTMLDivElement | null>(null);
+    const [ nodes, setNodes ] = useState<Node[]>(buildNodesFromMap(map));
+    const [ edges, setEdges ] = useState<Edge[]>(buildEdgesFromMap(map));
+    const [ network, setNetwork ] = useState<Network | null>(null);
+
+    useEffect(() => {
+        if(container.current) {
+            setNetwork(new Network(container.current, {nodes: nodes, edges: edges}, {}));
+        }
+    }, []);
+
+    return (
+        <>
+          <div
+              ref={container}
+              className={props.className}
+              style={style}
+          >
+          </div>
+        </>);
+};
+
+export type MapOutletProps = {};
+
+export const MapOutlet = (props: MapOutletProps) => {
+    const { isLoading, error, data } = useQuery<Map, Error>('mapData', () => getMap());
+
+    // TODO: Later
+    /*const [ connection, setConnection ] = useState<HubConnection>();
+
+    useEffect(() => {
+        setConnection(mapConnection);
+    }, []);
 
     useEffect((): () => void => {
-        mapConnection.start()
-            .then(result => {
-                console.log("Connected");
+        if(connection) {
+            connection.start()
+                .then(result => {
+                    console.log("Connected");
 
-                mapConnection.on('FieldUpdated', message => {
-                    console.log(message);
-                });
-            })
-            .catch(err => console.error(err));
-
-        return () => mapConnection.stop();
-    }, [mapConnection]);
+                    connection.on('FieldUpdated', message => {
+                        console.log(message);
+                    });
+                })
+                .catch(err => console.error(err));
+            return () => connection.stop();
+        }
+        return () => {};
+    }, [connection]);*/
 
     if (isLoading) return (
         <span>{'Loading...'}</span>
@@ -30,5 +87,8 @@ export const MapOutlet = (props: MapProps) => {
 
     return (<div>
         <span>{'Map ID: ' + data.id}</span>
+        <div className="w-full h-full">
+            <MapGraph map={data} />
+        </div>
     </div>);
-}
+};
