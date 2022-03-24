@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom';
 import {Landing} from "../features/misc";
 import {MapOutlet} from "../features/map";
 import {ContentLayout} from "../components/Layout";
+import {GameOverview} from "../features/game";
 
 export const AppRoutes = () => {
     const routes = [
@@ -12,6 +13,10 @@ export const AppRoutes = () => {
         {
             path: '/map',
             element: <MapOutlet />
+        },
+        {
+            path: '/games',
+            element: <GameOverview />
         }
     ];
 

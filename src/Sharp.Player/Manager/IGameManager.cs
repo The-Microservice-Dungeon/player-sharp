@@ -8,4 +8,5 @@ public interface IGameManager
     Task PerformRegistration(string gameId, PlayerDetails playerDetails);
 
     Task<List<Game>> GetAvailableGames();
+    Task<List<Game>> GetRegisteredGames();
 }

@@ -113,7 +113,7 @@ export const MapGraph = ({
 export type MapOutletProps = {};
 
 export const MapOutlet = (props: MapOutletProps) => {
-    const {isLoading, error, data} = useQuery<Map, Error>('mapData', () => getMap());
+    const {isLoading, error, data} = useQuery<Map, Error>('mapData', async () => await getMap(), {useErrorBoundary: false});
 
     // TODO: Later
     /*const [ connection, setConnection ] = useState<HubConnection>();
@@ -142,7 +142,9 @@ export const MapOutlet = (props: MapOutletProps) => {
         <span>{'Loading...'}</span>
     );
 
-    if (error) return (<span>{'An error has occurred: ' + error.message}</span>);
+    if (error) {
+        return (<span>{'An error has occurred: ' + error.message}</span>);
+    }
     if (!data) return (<span>{'No Map could be fetched'}</span>);
 
     return (<div>

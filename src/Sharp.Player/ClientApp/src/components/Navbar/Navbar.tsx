@@ -11,7 +11,8 @@ type NavigationItem = {
 const NavigationButtons = () => {
     const navigation = [
         { name: 'Home', to: '.' },
-        { name: 'Map', to: './map' }
+        { name: 'Games', to: './games' },
+        { name: 'Map', to: './map' },
     ] as NavigationItem[];
 
     return (

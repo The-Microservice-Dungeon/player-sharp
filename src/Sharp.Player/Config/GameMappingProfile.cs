@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Sharp.Client.Model;
 using Sharp.Core;
+using Sharp.Data.Model;
+using Sharp.Player.Controllers;
 
 namespace Sharp.Player.Config;
 
@@ -11,5 +13,10 @@ public class GameMappingProfile : Profile
         CreateMap<GameResponse, Game>()
             .ForCtorParam("id", opt => opt.MapFrom(src => src.GameId))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.GameId));
+        CreateMap<GameRegistration, Game>()
+            .ForCtorParam("id", opt => opt.MapFrom(src => src.GameId))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.GameId));
+        CreateMap<Game, GameDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
     }
 }
