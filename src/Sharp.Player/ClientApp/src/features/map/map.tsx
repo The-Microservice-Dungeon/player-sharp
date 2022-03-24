@@ -3,11 +3,33 @@ import {useQuery} from "react-query";
 import {CSSProperties, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {Edge, Network, Node, Options} from "vis-network";
 
-const buildNodesFromMap = (map: Map): Node[] => {
-    const colorSpaceStation = "#FFA701";
-    const colorPlanet = "#86DC3D";
-    const colorUndefined = "#D4D4D4";
+const colorSpaceStation = "#FFA701";
+const colorPlanet = "#86DC3D";
+const colorUndefined = "#D4D4D4";
 
+const buildLegendNodes = (startX: number, startY: number, step: number = 90): Node[] => {
+    const legendEntries: Node[] = [
+        {
+            label: "Spacestation",
+            color: colorSpaceStation
+        },
+        {
+            label: "Planet",
+            color: colorPlanet
+        }
+    ];
+    return legendEntries.map((e, i) => ({
+        ...e,
+        x: startX,
+        y: (e.y ?? startY) + i * step,
+        fixed: true,
+        physics: false,
+        level: 9999,
+        id: `legend-${i}`
+    }));
+};
+
+const buildNodesFromMap = (map: Map): Node[] => {
     return Object.entries(map.fields)
         .map(([key, value]) => ({
             id: key,
@@ -20,9 +42,9 @@ const buildEdgesFromMap = (map: Map): Edge[] => {
     return Object.entries(map.fields)
         .map(([key, value]) =>
             value.connections.map(connection => ({
-                    from: key,
-                    to: connection
-                }))).flat();
+                from: key,
+                to: connection
+            }))).flat();
 }
 
 export type MapGraphProps = {
@@ -32,20 +54,26 @@ export type MapGraphProps = {
 };
 
 // Percentages dont work
-export const MapGraph = ({ style = { width: "100%", height: "80vh", border: "1px solid red" }, map, ...props}: MapGraphProps) => {
+export const MapGraph = ({
+                             style = {width: "100%", height: "80vh", border: "1px solid red"},
+                             map,
+                             ...props
+                         }: MapGraphProps) => {
     const container = useRef<HTMLDivElement | null>(null);
-    const [ nodes ] = useState<Node[]>(buildNodesFromMap(map));
-    const [ edges ] = useState<Edge[]>(buildEdgesFromMap(map));
-    const [ network, setNetwork ] = useState<Network | null>(null);
+    const [nodes] = useState<Node[]>(buildNodesFromMap(map));
+    const [edges] = useState<Edge[]>(buildEdgesFromMap(map));
+    const [ legend, setLegend ] = useState<Node[]>([]);
+    const [network, setNetwork] = useState<Network | null>(null);
 
     const options: Options = {
         nodes: {
-            shape: "dot"
+            shape: "dot",
+            scaling: {
+                min: 16,
+                max: 32
+            }
         },
         edges: {
-            color: {
-                inherit: true
-            },
             smooth: true
         },
         physics: {
@@ -54,26 +82,38 @@ export const MapGraph = ({ style = { width: "100%", height: "80vh", border: "1px
     }
 
     useEffect(() => {
-        if(container.current) {
-            setNetwork(new Network(container.current, {nodes: nodes, edges: edges}, options));
+        if (container.current) {
+            setNetwork(new Network(container.current, {nodes: [...nodes, ...legend], edges: edges}, options));
         }
-    }, []);
+    }, [nodes, legend]);
+
+    useEffect(() => {
+        if(container.current) {
+            const lStartX = -container.current?.clientWidth / 2;
+            const lStartY = -container.current?.clientHeight / 2;
+            console.log({
+                lStartX,
+                lStartY
+            })
+            setLegend(buildLegendNodes(lStartX, lStartY));
+        }
+    }, [])
 
     return (
         <>
-          <div
-              ref={container}
-              className={props.className}
-              style={style}
-          >
-          </div>
+            <div
+                ref={container}
+                className={props.className}
+                style={style}
+            >
+            </div>
         </>);
 };
 
 export type MapOutletProps = {};
 
 export const MapOutlet = (props: MapOutletProps) => {
-    const { isLoading, error, data } = useQuery<Map, Error>('mapData', () => getMap());
+    const {isLoading, error, data} = useQuery<Map, Error>('mapData', () => getMap());
 
     // TODO: Later
     /*const [ connection, setConnection ] = useState<HubConnection>();
@@ -108,7 +148,7 @@ export const MapOutlet = (props: MapOutletProps) => {
     return (<div>
         <span>{'Map ID: ' + data.id}</span>
         <div className="w-full h-full">
-            <MapGraph map={data} />
+            <MapGraph map={data}/>
         </div>
     </div>);
 };
