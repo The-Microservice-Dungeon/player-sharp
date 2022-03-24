@@ -1,13 +1,18 @@
 import {getMap, Map} from "../../client";
 import {useQuery} from "react-query";
 import {CSSProperties, useEffect, useLayoutEffect, useRef, useState} from "react";
-import { Edge, Network, Node} from "vis-network";
+import {Edge, Network, Node, Options} from "vis-network";
 
 const buildNodesFromMap = (map: Map): Node[] => {
+    const colorSpaceStation = "#FFA701";
+    const colorPlanet = "#86DC3D";
+    const colorUndefined = "#D4D4D4";
+
     return Object.entries(map.fields)
         .map(([key, value]) => ({
             id: key,
-            label: !!value.spacestation ? 'Spacestation' : '' + !!value.planet ? 'Planet' : ''
+            color: value.spacestation ? colorSpaceStation : !!value.planet ? colorPlanet : colorUndefined,
+            label: key
         }));
 }
 
@@ -33,9 +38,24 @@ export const MapGraph = ({ style = { width: "100%", height: "80vh", border: "1px
     const [ edges ] = useState<Edge[]>(buildEdgesFromMap(map));
     const [ network, setNetwork ] = useState<Network | null>(null);
 
+    const options: Options = {
+        nodes: {
+            shape: "dot"
+        },
+        edges: {
+            color: {
+                inherit: true
+            },
+            smooth: true
+        },
+        physics: {
+            stabilization: true
+        },
+    }
+
     useEffect(() => {
         if(container.current) {
-            setNetwork(new Network(container.current, {nodes: nodes, edges: edges}, {}));
+            setNetwork(new Network(container.current, {nodes: nodes, edges: edges}, options));
         }
     }, []);
 
