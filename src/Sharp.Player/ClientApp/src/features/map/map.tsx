@@ -1,6 +1,6 @@
 import {getMap, Map} from "../../client";
 import {useQuery} from "react-query";
-import {CSSProperties, useEffect, useRef, useState} from "react";
+import {CSSProperties, useEffect, useLayoutEffect, useRef, useState} from "react";
 import { Edge, Network, Node} from "vis-network";
 
 const buildNodesFromMap = (map: Map): Node[] => {
@@ -27,8 +27,9 @@ export type MapGraphProps = {
 };
 
 // Percentages dont work
-export const MapGraph = ({ style = { width: "50vw", height: "50vh", border: "1px solid red" }, map, ...props}: MapGraphProps) => {
+export const MapGraph = ({ style = { width: "100%", height: "80vh", border: "1px solid red" }, map, ...props}: MapGraphProps) => {
     const container = useRef<HTMLDivElement | null>(null);
+    const [dimensions, setDimensions] = useState({});
     const [ nodes, setNodes ] = useState<Node[]>(buildNodesFromMap(map));
     const [ edges, setEdges ] = useState<Edge[]>(buildEdgesFromMap(map));
     const [ network, setNetwork ] = useState<Network | null>(null);
