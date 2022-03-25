@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Sharp.Gameplay.Map;
 using Sharp.Player.Manager;
 
 namespace Sharp.Player.Controllers;
@@ -55,6 +56,12 @@ public class FieldDto
 
 public class PlanetDto
 {
+    public ResourceDeposit[] ResourceDeposits { get; set; }
+}
+
+public class ResourceDepositDto
+{
+    public ResourceType ResourceType { get; set; }
 }
 
 public class SpacestationDto

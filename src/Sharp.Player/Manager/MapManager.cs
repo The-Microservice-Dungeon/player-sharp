@@ -36,13 +36,12 @@ public class MapManager : IMapManager
             // Shouldn't happen
             throw new ApplicationException("Map is null.");
 
-        var field = _map.GetField(fieldId) ?? new Field(fieldId);
+        var field = _map.GetOrCreateField(fieldId);
 
         if (field.SpaceStation != null)
             return;
 
         field.SetSpaceStation(new SpaceStation());
-        _map.AddField(field);
 
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO
@@ -55,12 +54,11 @@ public class MapManager : IMapManager
             // Shouldn't happen
             throw new ApplicationException("Map is null.");
         
-        var field = _map.GetField(id) ?? new Field(id);
+        var field = _map.GetOrCreateField(id);
         if (field.MovementDifficulty == movementDifficulty)
             return;
 
         field.MovementDifficulty = movementDifficulty;
-        _map.AddField(field);
         
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO
@@ -73,7 +71,7 @@ public class MapManager : IMapManager
             // Shouldn't happen
             throw new ApplicationException("Map is null.");
         
-        var field = _map.GetField(id) ?? new Field(id);
+        var field = _map.GetOrCreateField(id);
         if(field.MovementDifficulty == movementDifficulty && 
            field.Planet != null && 
            field.Planet.ResourceDeposits.Select(d => d.ResourceType).SequenceEqual(resourceTypes))
@@ -84,7 +82,6 @@ public class MapManager : IMapManager
         {
             ResourceDeposits = resourceTypes.Select(type => new ResourceDeposit(type)).ToArray()
         }); 
-        _map.AddField(field);
         
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO

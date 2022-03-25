@@ -20,6 +20,16 @@ public class Map : IIdentifiable<string>
     public ImmutableDictionary<Field, List<Connection>> Fields => _fields.ToImmutableDictionary();
     public string Id { get; }
 
+    public Field GetOrCreateField(string id)
+    {
+        var field = GetField(id);
+        if (field != null)
+            return field;
+        field = new Field(id);
+        AddField(field);
+        return field;
+    }
+    
     public Field? GetField(string id)
     {
         return _fields.Keys.FirstOrDefault(k => k.Id == id);

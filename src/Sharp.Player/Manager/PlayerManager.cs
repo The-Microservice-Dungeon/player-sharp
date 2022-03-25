@@ -56,6 +56,7 @@ public class PlayerManager : IPlayerManager
             // use them when they are still valid
             if (await ValidatePlayerDetails(dbResult))
                 return dbResult;
+            await RemoveDetails(dbResult);
         }
 
         var fetchedResult = await FetchPlayerDetails(PlayerName, PlayerEmail);
@@ -108,6 +109,12 @@ public class PlayerManager : IPlayerManager
         if (playerDetails.PlayerId == null)
             _logger.LogWarning(
                 "Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
+    }
+
+    private async Task RemoveDetails(PlayerDetails playerDetails)
+    {
+        _dbContext.PlayerDetails.Remove(playerDetails);
+        await _dbContext.SaveChangesAsync();
     }
 
     private async Task<PlayerDetails?> FetchPlayerDetails(string name, string email)

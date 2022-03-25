@@ -14,6 +14,7 @@ public class MapMappingProfile : Profile
 
         CreateMap<Planet, PlanetDto>();
         CreateMap<SpaceStation, SpacestationDto>();
+        CreateMap<ResourceDeposit, ResourceDepositDto>();
 
         CreateMap<KeyValuePair<Field, List<Connection>>, FieldDto>()
             .ConstructUsing((kv, ctx) => new FieldDto(ctx.Mapper.Map<string[]>(kv.Value))
