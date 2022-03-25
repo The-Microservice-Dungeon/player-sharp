@@ -65,10 +65,13 @@ public class Startup
         services.AddSingleton(playerRegistrationClient);
         var gameClient = RestService.For<IGameClient>(networkOptions.GameServiceAddress);
         services.AddSingleton(gameClient);
+        var gameCommandClient = RestService.For<IGameCommandClient>(networkOptions.GameServiceAddress);
+        services.AddSingleton(gameCommandClient);
 
         services.AddSingleton<IPlayerManager, PlayerManager>();
         services.AddSingleton<IGameManager, GameManager>();
         services.AddSingleton<IMapManager, MapManager>();
+        services.AddSingleton<ICommandManager, CommandManager>();
 
         // Kafka / Consumers / ...
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
