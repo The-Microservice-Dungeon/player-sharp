@@ -15,6 +15,7 @@ public class SharpDbContext : DbContext
 
     public DbSet<PlayerDetails> PlayerDetails { get; set; }
     public DbSet<GameRegistration> GameRegistrations { get; set; }
+    public DbSet<CommandTransaction> CommandTransactions { get; set; }
     public string DbPath { get; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,5 +33,8 @@ public class SharpDbContext : DbContext
 
         modelBuilder.Entity<GameRegistration>()
             .HasKey(nameof(GameRegistration.GameId));
+        
+        modelBuilder.Entity<CommandTransaction>()
+            .HasKey(nameof(CommandTransaction.TransactionId));
     }
 }
