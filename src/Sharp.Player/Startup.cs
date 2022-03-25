@@ -1,4 +1,5 @@
-﻿using KafkaFlow;
+﻿using System.Text.Json;
+using KafkaFlow;
 using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
 using KafkaFlow.TypedHandler;
@@ -77,6 +78,8 @@ public class Startup
                 .AddDefaultConsumer<GameStatusEvent, GameStatusMessageHandler>("status")
                 .AddDefaultConsumer<GameworldCreatedEvent, GameworldCreatedMessageHandler>("gameworld-created")
                 .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
+                .AddDefaultConsumer<MovementEvent, MovementEventMessageHandler>("movement")
+                .AddDefaultConsumer<NeighboursEvent, NeighbourEventMessageHandler>("neighbours")
             )
         );
 
@@ -127,7 +130,10 @@ public static class KafkaHelper
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
             .AddMiddlewares(middlewares => middlewares
-                .AddSingleTypeSerializer<JsonCoreSerializer>(typeof(T))
+                .AddSingleTypeSerializer<T, JsonCoreSerializer>(s => new JsonCoreSerializer(new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }))
                 .AddTypedHandlers(handlers => handlers
                     .AddHandler<H>()
                 )
