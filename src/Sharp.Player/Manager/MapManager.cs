@@ -66,4 +66,28 @@ public class MapManager : IMapManager
         // TODO: Use a DTO
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
+
+    public void AddPlanet(string id, int movementDifficulty, ResourceType[] resourceTypes)
+    {
+        if (_map == null)
+            // Shouldn't happen
+            throw new ApplicationException("Map is null.");
+        
+        var field = _map.GetField(id) ?? new Field(id);
+        if(field.MovementDifficulty == movementDifficulty && 
+           field.Planet != null && 
+           field.Planet.ResourceDeposits.Select(d => d.ResourceType).SequenceEqual(resourceTypes))
+            return;
+
+        field.MovementDifficulty = movementDifficulty;
+        field.SetPlanet(new Planet
+        {
+            ResourceDeposits = resourceTypes.Select(type => new ResourceDeposit(type)).ToArray()
+        }); 
+        _map.AddField(field);
+        
+        // TODO: Use an async/await pattern somehow
+        // TODO: Use a DTO
+        _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
+    }
 }
