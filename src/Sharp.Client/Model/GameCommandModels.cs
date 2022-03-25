@@ -26,7 +26,7 @@ public class CommandObjectRequest
     [JsonPropertyName("itemName")]
     public string? ItemName { get; set; }
     [JsonPropertyName("itemQuantity")]
-    public uint? ItemQuanity { get; set; }
+    public uint? ItemQuantity { get; set; }
 }
 
 public class ComamndResponse

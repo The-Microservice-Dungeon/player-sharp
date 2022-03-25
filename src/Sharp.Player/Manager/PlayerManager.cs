@@ -45,6 +45,7 @@ public class PlayerManager : IPlayerManager
     // state.
     public async Task<PlayerDetails> Init()
     {
+        // TODO: Validate
         _logger.LogDebug("Try to load player details from database...");
         var dbResult = GetFromDb(PlayerName, PlayerEmail);
 
