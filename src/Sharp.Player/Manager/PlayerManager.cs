@@ -45,18 +45,20 @@ public class PlayerManager : IPlayerManager
     // state.
     public async Task<PlayerDetails> Init()
     {
-        // TODO: Validate
         _logger.LogDebug("Try to load player details from database...");
         var dbResult = GetFromDb(PlayerName, PlayerEmail);
 
         if (dbResult != null)
         {
             _logger.LogDebug("Successfully retreived player details: {Details}", dbResult);
-            return dbResult;
+            
+            // In the meantime the credentials COULD have been changed. Therefore we're going to validate them and only
+            // use them when they are still valid
+            if (await ValidatePlayerDetails(dbResult))
+                return dbResult;
         }
 
         var fetchedResult = await FetchPlayerDetails(PlayerName, PlayerEmail);
-        ;
 
         if (fetchedResult != null)
         {
@@ -68,6 +70,13 @@ public class PlayerManager : IPlayerManager
         StoreInDatabase(createdResult);
 
         return createdResult;
+    }
+
+    private async Task<bool> ValidatePlayerDetails(PlayerDetails playerDetails)
+    {
+        var fetched = await FetchPlayerDetails(playerDetails.Name, playerDetails.Email);
+        return fetched!= null && fetched.Token == playerDetails.Token && fetched.Email == playerDetails.Email &&
+               fetched.Name == playerDetails.Name;
     }
 
     public PlayerDetails SetPlayerId(string playerId)
