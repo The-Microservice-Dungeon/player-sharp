@@ -8,13 +8,14 @@ namespace Sharp.Player.Manager;
 
 public class CommandManager : ICommandManager
 {
-    private readonly ILogger<CommandManager> _logger;
-    private readonly IPlayerManager _playerManager;
-    private readonly IGameManager _gameManager;
     private readonly IGameCommandClient _commandClient;
+    private readonly IGameManager _gameManager;
+    private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
+    private readonly IPlayerManager _playerManager;
 
-    public CommandManager(ILogger<CommandManager> logger, IPlayerManager playerManager, IGameManager gameManager, IGameCommandClient commandClient, IMapper mapper)
+    public CommandManager(ILogger<CommandManager> logger, IPlayerManager playerManager, IGameManager gameManager,
+        IGameCommandClient commandClient, IMapper mapper)
     {
         _logger = logger;
         _playerManager = playerManager;
@@ -23,7 +24,10 @@ public class CommandManager : ICommandManager
         _mapper = mapper;
     }
 
-    private CommandBuilderDirector CommandBuilder => new("TODO", _playerManager.Get().Token);
+    // TODO: What is this
+    public string GameId { get; set; }
+
+    public CommandBuilderDirector CommandBuilder => new(GameId, _playerManager.Get().Token);
 
     public async Task BuyRobot(uint amount = 1)
     {

@@ -9,11 +9,11 @@ public abstract class CommandBuilderFacade
         Command = command;
     }
 
-    protected abstract bool Validate();
+    protected abstract bool IsValid();
 
     public BaseCommand Build()
     {
-        if (Validate())
+        if (!IsValid())
             throw new ApplicationException("Validation of command failed");
         return Command;
     }

@@ -26,6 +26,7 @@ public class GameMappingProfile : Profile
         CreateMap<CommandType, string>()
             .ConstructUsing(type => type.ToString().ToLower());
         CreateMap<BaseCommand, CommandRequest>();
+        CreateMap<BaseCommandObject, CommandObjectRequest>();
 
     }
 }

@@ -20,6 +20,6 @@ public class BuyCommandBuilder : CommandBuilderFacade
         return this;
     }
 
-    protected override bool Validate() => Command.CommandObject.ItemName != null &&
+    protected override bool IsValid() => Command.CommandObject.ItemName != null &&
                                           Command.CommandObject.ItemQuantity != null;
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using KafkaFlow;
 using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
@@ -12,6 +13,8 @@ using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.Model;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
+using Sharp.Player.Middleware.Kafka;
+using Sharp.Player.Util;
 
 namespace Sharp.Player;
 
@@ -29,7 +32,7 @@ public class Startup
     {
         services.AddControllers();
         services.AddSignalR();
-        
+
         services.AddCors(options =>
         {
             options.AddPolicy("ClientPermission", policy =>
@@ -61,12 +64,17 @@ public class Startup
         // Clients
         var networkOptions =
             Configuration.GetSection(DungeonNetworkOptions.DungeonNetwork).Get<DungeonNetworkOptions>();
-        var playerRegistrationClient = RestService.For<IPlayerRegistrationClient>(networkOptions.GameServiceAddress);
-        services.AddSingleton(playerRegistrationClient);
-        var gameClient = RestService.For<IGameClient>(networkOptions.GameServiceAddress);
-        services.AddSingleton(gameClient);
-        var gameCommandClient = RestService.For<IGameCommandClient>(networkOptions.GameServiceAddress);
-        services.AddSingleton(gameCommandClient);
+
+        services.AddTransient<HttpLoggingHandler>();
+        services.AddRefitClient<IPlayerRegistrationClient>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
+            .AddHttpMessageHandler<HttpLoggingHandler>();
+        services.AddRefitClient<IGameClient>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
+            .AddHttpMessageHandler<HttpLoggingHandler>();
+        services.AddRefitClient<IGameCommandClient>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
+            .AddHttpMessageHandler<HttpLoggingHandler>();
 
         services.AddSingleton<IPlayerManager, PlayerManager>();
         services.AddSingleton<IGameManager, GameManager>();
@@ -74,6 +82,7 @@ public class Startup
         services.AddSingleton<ICommandManager, CommandManager>();
 
         // Kafka / Consumers / ...
+        services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
             .AddCluster(cluster => cluster
                 .WithBrokers(new[] { networkOptions.KafkaAddress })
@@ -83,6 +92,12 @@ public class Startup
                 .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
                 .AddDefaultConsumer<MovementEvent, MovementEventMessageHandler>("movement")
                 .AddDefaultConsumer<NeighboursEvent, NeighbourEventMessageHandler>("neighbours")
+                .AddConsumer(consumer => consumer
+                    .DefaultConsumer<RoundStatusEvent, RoundStatusMessageHandler>("roundStatus")
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddAtBeginning<FilterOldMessages>()
+                    )
+                )
             )
         );
 
@@ -123,24 +138,35 @@ public class Startup
 
 public static class KafkaHelper
 {
-    public static IClusterConfigurationBuilder AddDefaultConsumer<T, H>(this IClusterConfigurationBuilder builder,
-        string topic) where H : class, IMessageHandler<T>
+    public static IConsumerConfigurationBuilder DefaultConsumer<TMessage, THandler>(
+        this IConsumerConfigurationBuilder builder, string topic)
+        where THandler : class, IMessageHandler<TMessage>
     {
-        return builder.AddConsumer(consumer => consumer
+        return builder
             .Topic(topic)
             .WithGroupId("player-sharp")
             .WithWorkersCount(1)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+            .WithMaxPollIntervalMs(45000)
             .AddMiddlewares(middlewares => middlewares
-                .AddSingleTypeSerializer<T, JsonCoreSerializer>(s => new JsonCoreSerializer(new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                }))
-                .AddTypedHandlers(handlers => handlers
-                    .AddHandler<H>()
-                )
+                .AddSingleTypeSerializer<TMessage, JsonCoreSerializer>(s =>
+                    new JsonCoreSerializer(new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        Converters = { new JsonStringEnumMemberConverter() }
+                    }))
             )
-        );
+            .AddMiddlewares(middlewares => middlewares
+                .AddTypedHandlers(handlers => handlers
+                    .AddHandler<THandler>()
+                ));
+    }
+
+    public static IClusterConfigurationBuilder AddDefaultConsumer<TMessage, THandler>(
+        this IClusterConfigurationBuilder builder,
+        string topic) where THandler : class, IMessageHandler<TMessage>
+    {
+        return builder.AddConsumer(consumer => consumer.DefaultConsumer<TMessage, THandler>(topic));
     }
 }
