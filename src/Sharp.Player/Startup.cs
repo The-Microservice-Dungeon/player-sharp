@@ -14,7 +14,6 @@ using Sharp.Player.Consumers.Model;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
-using Sharp.Player.Util;
 
 namespace Sharp.Player;
 
@@ -65,16 +64,12 @@ public class Startup
         var networkOptions =
             Configuration.GetSection(DungeonNetworkOptions.DungeonNetwork).Get<DungeonNetworkOptions>();
 
-        services.AddTransient<HttpLoggingHandler>();
         services.AddRefitClient<IPlayerRegistrationClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
-            .AddHttpMessageHandler<HttpLoggingHandler>();
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
         services.AddRefitClient<IGameClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
-            .AddHttpMessageHandler<HttpLoggingHandler>();
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
         services.AddRefitClient<IGameCommandClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress))
-            .AddHttpMessageHandler<HttpLoggingHandler>();
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
 
         services.AddSingleton<IPlayerManager, PlayerManager>();
         services.AddSingleton<IGameManager, GameManager>();
