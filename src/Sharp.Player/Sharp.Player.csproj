@@ -26,6 +26,7 @@
         <PackageReference Include="Macross.Json.Extensions" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.2" />
         <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,8 +37,8 @@
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
         <None Update="ClientApp\.env.production.development">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
         </None>
         <None Include="ClientApp\.prettierrc.json" />
     </ItemGroup>
@@ -50,14 +51,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="ClientApp\.env.local">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="ClientApp\.env.local">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>.env.local.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ClientApp\src\components" />
+        <Folder Include="ClientApp\src\components" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
