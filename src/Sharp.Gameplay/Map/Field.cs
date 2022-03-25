@@ -17,7 +17,7 @@ public class Field : IIdentifiable<string>
         MovementDifficulty = movementDifficulty;
     }
 
-    public int? MovementDifficulty { get; }
+    public int? MovementDifficulty { get; set; }
 
     public Planet? Planet { get; private set; }
     public SpaceStation? SpaceStation { get; private set; }

@@ -48,4 +48,22 @@ public class MapManager : IMapManager
         // TODO: Use a DTO
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
+    
+    public void AddOpaqueField(string id, int movementDifficulty)
+    {
+        if (_map == null)
+            // Shouldn't happen
+            throw new ApplicationException("Map is null.");
+        
+        var field = _map.GetField(id) ?? new Field(id);
+        if (field.MovementDifficulty == movementDifficulty)
+            return;
+
+        field.MovementDifficulty = movementDifficulty;
+        _map.AddField(field);
+        
+        // TODO: Use an async/await pattern somehow
+        // TODO: Use a DTO
+        _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
+    }
 }
