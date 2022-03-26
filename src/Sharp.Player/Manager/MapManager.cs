@@ -17,10 +17,9 @@ public class MapManager : IMapManager
     // TODO: Get rid of that nullability. 
     private Map? _map { get; set; }
 
-    public Map? Get()
-    {
-        return _map;
-    }
+    public Map? Get() => _map;
+    public Map GetOrThrow() => _map ?? throw new ApplicationException($"{nameof(_map)} is null");
+    
 
     public void Create(string id)
     {
@@ -32,11 +31,7 @@ public class MapManager : IMapManager
 
     public void AddSpaceStation(string fieldId)
     {
-        if (_map == null)
-            // Shouldn't happen
-            throw new ApplicationException("Map is null.");
-
-        var field = _map.GetOrCreateField(fieldId);
+        var field = GetOrThrow().GetOrCreateField(fieldId);
 
         if (field.SpaceStation != null)
             return;
@@ -50,11 +45,7 @@ public class MapManager : IMapManager
     
     public void AddOpaqueField(string id, int movementDifficulty)
     {
-        if (_map == null)
-            // Shouldn't happen
-            throw new ApplicationException("Map is null.");
-        
-        var field = _map.GetOrCreateField(id);
+        var field = GetOrThrow().GetOrCreateField(id);
         if (field.MovementDifficulty == movementDifficulty)
             return;
 
@@ -67,11 +58,7 @@ public class MapManager : IMapManager
 
     public void AddPlanet(string id, int movementDifficulty, ResourceType[] resourceTypes)
     {
-        if (_map == null)
-            // Shouldn't happen
-            throw new ApplicationException("Map is null.");
-        
-        var field = _map.GetOrCreateField(id);
+        var field = GetOrThrow().GetOrCreateField(id);
         if(field.MovementDifficulty == movementDifficulty && 
            field.Planet != null && 
            field.Planet.ResourceDeposits.Select(d => d.ResourceType).SequenceEqual(resourceTypes))

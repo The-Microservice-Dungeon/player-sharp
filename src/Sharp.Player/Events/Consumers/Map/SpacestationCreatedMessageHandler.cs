@@ -15,8 +15,7 @@ public class SpacestationCreatedMessageHandler : IMessageHandler<SpacestationCre
         _mapManager = mapManager;
         _logger = logger;
     }
-
-    // TODO: Place mor of that in the Map Manager or maybe use a FieldManager?
+    
     public async Task Handle(IMessageContext context, SpacestationCreatedEvent message)
     {
         _logger.LogDebug("Received SpacestationCreatedEvent event with PlanetId {PlanetId}", message.PlanetId);
