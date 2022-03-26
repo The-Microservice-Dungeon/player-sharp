@@ -17,6 +17,7 @@ public class CommandTransaction
 
     [Required] public string GameId { get; set; }
 
+    [Key]
     [Required] public string TransactionId { get; set; }
     
     public string? RobotId { get; set; }
