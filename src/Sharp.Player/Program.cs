@@ -1,4 +1,5 @@
 using Serilog;
+using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 using Sharp.Player;
 using Sharp.Player.Services;
@@ -14,6 +15,7 @@ Host.CreateDefaultBuilder(args)
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
         .Enrich.FromLogContext()
+        .Enrich.WithExceptionDetails()
         .WriteTo.Console())
     .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
     .ConfigureServices(s =>

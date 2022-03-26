@@ -27,6 +27,8 @@
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.2" />
         <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.1.0" />
+        <PackageReference Include="Serilog.Exceptions.Refit" Version="8.1.0" />
     </ItemGroup>
 
     <ItemGroup>
