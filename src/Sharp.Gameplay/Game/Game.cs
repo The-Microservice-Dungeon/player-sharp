@@ -1,11 +1,13 @@
-﻿namespace Sharp.Core;
+﻿using Sharp.Core.Core;
+
+namespace Sharp.Gameplay.Game;
 
 public class Game : IIdentifiable<string>
 {
-    public string Id { get; }
-
     public Game(string id)
     {
         Id = id;
     }
+
+    public string Id { get; }
 }

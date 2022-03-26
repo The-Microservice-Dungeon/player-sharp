@@ -3,9 +3,9 @@ using AutoMapper;
 using Refit;
 using Sharp.Client.Client;
 using Sharp.Client.Model;
-using Sharp.Core;
-using Sharp.Data.Context;
-using Sharp.Data.Model;
+using Sharp.Data.Contexts;
+using Sharp.Data.Models;
+using Sharp.Gameplay.Game;
 
 namespace Sharp.Player.Manager;
 

@@ -1,21 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sharp.Data.Model;
+namespace Sharp.Data.Models;
 
+/// <summary>
+///     Stores game registrations.
+/// </summary>
 public class GameRegistration
 {
-    [Required]
-    public string GameId { get; private set; }
-    
-    [Required]
-    public string TransactionId { get; private set; }
-    
-    [Required]
-    public PlayerDetails PlayerDetails { get; set; }
-
     public GameRegistration(string gameId, string transactionId)
     {
         GameId = gameId;
         TransactionId = transactionId;
     }
+
+    [Required] public string GameId { get; }
+
+    [Required] public string TransactionId { get; }
+
+    [Required] public PlayerDetails PlayerDetails { get; set; }
 }

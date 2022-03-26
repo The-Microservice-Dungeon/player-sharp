@@ -1,6 +1,13 @@
 ﻿namespace Sharp.Gameplay.Map;
 
+/// <summary>
+///     Available Resource types
+/// </summary>
 public enum ResourceType
 {
-    COAL, IRON, GEM, GOLD, PLATIN
+    Coal,
+    Iron,
+    Gem,
+    Gold,
+    Platin
 }

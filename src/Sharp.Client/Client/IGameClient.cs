@@ -3,6 +3,9 @@ using Sharp.Client.Model;
 
 namespace Sharp.Client.Client;
 
+/// <summary>
+///     Client which interacts with games offered by the game service.
+/// </summary>
 public interface IGameClient
 {
     [Put("/games/{gameId}/players/{playerToken}")]

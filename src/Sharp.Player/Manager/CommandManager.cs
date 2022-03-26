@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Sharp.Client.Client;
 using Sharp.Client.Model;
-using Sharp.Data.Context;
-using Sharp.Data.Model;
+using Sharp.Data.Contexts;
+using Sharp.Data.Models;
 using Sharp.Gameplay.Game;
 using Sharp.Gameplay.Trading;
 
@@ -12,11 +11,11 @@ namespace Sharp.Player.Manager;
 public class CommandManager : ICommandManager
 {
     private readonly IGameCommandClient _commandClient;
+    private readonly SharpDbContext _dbContext;
     private readonly IGameManager _gameManager;
     private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
     private readonly IPlayerManager _playerManager;
-    private readonly SharpDbContext _dbContext;
 
     public CommandManager(ILogger<CommandManager> logger, IPlayerManager playerManager, IGameManager gameManager,
         IGameCommandClient commandClient, IMapper mapper, SharpDbContext dbContext)
@@ -53,5 +52,5 @@ public class CommandManager : ICommandManager
     {
         _dbContext.CommandTransactions.Add(new CommandTransaction(gameId, transactionId));
         await _dbContext.SaveChangesAsync();
-    } 
+    }
 }

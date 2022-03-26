@@ -1,5 +1,8 @@
 ﻿namespace Sharp.Gameplay.Map;
 
+/// <summary>
+///     Connection between fields. Assuming they are unidirectional
+/// </summary>
 public struct Connection
 {
     public Field Destination;

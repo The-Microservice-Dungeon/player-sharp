@@ -1,9 +1,5 @@
-﻿using System.Net;
-using Refit;
-using Sharp.Client.Client;
-using Sharp.Client.Model;
-using Sharp.Data.Context;
-using Sharp.Data.Model;
+﻿using Sharp.Client.Client;
+using Sharp.Data.Contexts;
 using Sharp.Player.Manager;
 
 namespace Sharp.Player.Services;
@@ -11,10 +7,10 @@ namespace Sharp.Player.Services;
 public class GameRegistrationService : BackgroundService
 {
     private readonly IGameClient _gameClient;
+    private readonly IGameManager _gameManager;
     private readonly ILogger<GameRegistrationService> _logger;
     private readonly IPlayerManager _playerManager;
     private readonly SharpDbContext _sharpDbContext;
-    private readonly IGameManager _gameManager;
 
     public GameRegistrationService(IGameClient gameClient, ILogger<GameRegistrationService> logger,
         SharpDbContext sharpDbContext, IPlayerManager playerManager, IGameManager gameManager)

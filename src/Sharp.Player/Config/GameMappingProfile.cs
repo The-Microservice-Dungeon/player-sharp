@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Sharp.Client.Model;
-using Sharp.Core;
-using Sharp.Data.Model;
+using Sharp.Data.Models;
 using Sharp.Gameplay.Game;
 using Sharp.Gameplay.Trading;
 using Sharp.Player.Controllers;
 
 namespace Sharp.Player.Config;
 
+// TODO: Refactor
 public class GameMappingProfile : Profile
 {
     public GameMappingProfile()
@@ -27,6 +27,5 @@ public class GameMappingProfile : Profile
             .ConstructUsing(type => type.ToString().ToLower());
         CreateMap<BaseCommand, CommandRequest>();
         CreateMap<BaseCommandObject, CommandObjectRequest>();
-
     }
 }

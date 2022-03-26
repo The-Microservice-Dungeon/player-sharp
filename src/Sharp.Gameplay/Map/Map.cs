@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using Sharp.Core;
+using Sharp.Core.Core;
 
 namespace Sharp.Gameplay.Map;
 
@@ -29,7 +29,7 @@ public class Map : IIdentifiable<string>
         AddField(field);
         return field;
     }
-    
+
     public Field? GetField(string id)
     {
         return _fields.Keys.FirstOrDefault(k => k.Id == id);

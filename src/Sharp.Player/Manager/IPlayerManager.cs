@@ -1,4 +1,4 @@
-﻿using Sharp.Data.Model;
+﻿using Sharp.Data.Models;
 
 namespace Sharp.Player.Manager;
 

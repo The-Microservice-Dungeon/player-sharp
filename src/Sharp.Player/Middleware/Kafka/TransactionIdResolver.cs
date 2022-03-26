@@ -1,18 +1,18 @@
 ﻿using System.Text;
 using KafkaFlow;
 using Microsoft.EntityFrameworkCore;
-using Sharp.Data.Context;
-using Sharp.Data.Model;
+using Sharp.Data.Contexts;
+using Sharp.Data.Models;
 
 namespace Sharp.Player.Middleware.Kafka;
 
 /// <summary>
-///    Resolves a given Transaction Id in the header (if present) and attaches the corresponding Game ID to it. 
+///     Resolves a given Transaction Id in the header (if present) and attaches the corresponding Game ID to it.
 /// </summary>
 public class TransactionIdResolver : IMessageMiddleware
 {
-    private readonly ILogger<TransactionIdResolver> _logger;
     private readonly DbSet<CommandTransaction> _commandTransactions;
+    private readonly ILogger<TransactionIdResolver> _logger;
 
     public TransactionIdResolver(ILogger<TransactionIdResolver> logger, SharpDbContext dbContext)
     {
@@ -29,7 +29,7 @@ public class TransactionIdResolver : IMessageMiddleware
             await next(context).ConfigureAwait(false);
             return;
         }
-        
+
         var id = Encoding.UTF8.GetString(transactionId);
         var commandTransaction = await _commandTransactions.FindAsync(id);
         if (commandTransaction == null)
@@ -38,7 +38,7 @@ public class TransactionIdResolver : IMessageMiddleware
             await next(context).ConfigureAwait(false);
             return;
         }
-        
+
         context.Headers.Add("GameId", Encoding.UTF8.GetBytes(commandTransaction.GameId));
         await next(context).ConfigureAwait(false);
     }

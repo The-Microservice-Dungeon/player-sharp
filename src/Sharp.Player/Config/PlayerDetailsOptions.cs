@@ -2,6 +2,9 @@
 
 namespace Sharp.Player.Config;
 
+/// <summary>
+///     Environment Options concerning the player
+/// </summary>
 public class PlayerDetailsOptions
 {
     public const string PlayerDetails = "PlayerDetails";

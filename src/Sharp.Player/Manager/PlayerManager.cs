@@ -3,8 +3,8 @@ using Microsoft.Extensions.Options;
 using Refit;
 using Sharp.Client.Client;
 using Sharp.Client.Model;
-using Sharp.Data.Context;
-using Sharp.Data.Model;
+using Sharp.Data.Contexts;
+using Sharp.Data.Models;
 using Sharp.Player.Config;
 
 namespace Sharp.Player.Manager;
@@ -51,7 +51,7 @@ public class PlayerManager : IPlayerManager
         if (dbResult != null)
         {
             _logger.LogDebug("Successfully retreived player details: {Details}", dbResult);
-            
+
             // In the meantime the credentials COULD have been changed. Therefore we're going to validate them and only
             // use them when they are still valid
             if (await ValidatePlayerDetails(dbResult))
@@ -73,13 +73,6 @@ public class PlayerManager : IPlayerManager
         return createdResult;
     }
 
-    private async Task<bool> ValidatePlayerDetails(PlayerDetails playerDetails)
-    {
-        var fetched = await FetchPlayerDetails(playerDetails.Name, playerDetails.Email);
-        return fetched!= null && fetched.Token == playerDetails.Token && fetched.Email == playerDetails.Email &&
-               fetched.Name == playerDetails.Name;
-    }
-
     public PlayerDetails SetPlayerId(string playerId)
     {
         var details = Get();
@@ -95,6 +88,13 @@ public class PlayerManager : IPlayerManager
             .Where(registration => registration.TransactionId == transactionId)
             .Select(registration => registration.PlayerDetails)
             .FirstOrDefault();
+    }
+
+    private async Task<bool> ValidatePlayerDetails(PlayerDetails playerDetails)
+    {
+        var fetched = await FetchPlayerDetails(playerDetails.Name, playerDetails.Email);
+        return fetched != null && fetched.Token == playerDetails.Token && fetched.Email == playerDetails.Email &&
+               fetched.Name == playerDetails.Name;
     }
 
     private PlayerDetails? GetFromDb(string name, string email)

@@ -1,5 +1,8 @@
 ﻿namespace Sharp.Gameplay.Game;
 
+/// <summary>
+///     Facade to create a fluent API on building commands
+/// </summary>
 public abstract class CommandBuilderFacade
 {
     protected BaseCommand Command;

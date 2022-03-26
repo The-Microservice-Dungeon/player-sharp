@@ -2,6 +2,9 @@
 
 namespace Sharp.Player.Config;
 
+/// <summary>
+///     Environment Options concerning the dungeon network architecture.
+/// </summary>
 public class DungeonNetworkOptions
 {
     public const string DungeonNetwork = "DungeonNetwork";

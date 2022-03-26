@@ -4,9 +4,9 @@ using Sharp.Player.Controllers;
 
 namespace Sharp.Player.Config;
 
+// TODO: Refactor
 public class MapMappingProfile : Profile
 {
-    // TODO: Refactor this mapping profile, there must be a cleaner way.
     public MapMappingProfile()
     {
         CreateMap<List<Connection>, string[]>()

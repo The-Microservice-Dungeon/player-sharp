@@ -1,39 +1,48 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sharp.Data.Model;
+using Sharp.Data.Models;
 
-namespace Sharp.Data.Context;
+namespace Sharp.Data.Contexts;
 
+/// <summary>
+///     Simple DB Context for the whole player.
+/// </summary>
 public class SharpDbContext : DbContext
 {
+    private readonly string _dbPath;
+
     public SharpDbContext()
     {
         // var folder = Environment.SpecialFolder.LocalApplicationData;
         // var path = Environment.GetFolderPath(folder);
         // DbPath = Path.Join(path, "database.db");
-        DbPath = "database.db";
+        _dbPath = "database.db";
     }
 
     public DbSet<PlayerDetails> PlayerDetails { get; set; }
     public DbSet<GameRegistration> GameRegistrations { get; set; }
     public DbSet<CommandTransaction> CommandTransactions { get; set; }
-    public string DbPath { get; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite($"Data Source={DbPath}");
+        // We use SQLite because we have a semi-peristent store this way.
+        // A memory store would also be thinkable but wouldn't offer much
+        // benefit when the player crashes while a whole external database
+        // system would be a overkill.
+        optionsBuilder
+            .UseSqlite($"Data Source={_dbPath}");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // TODO: We simply use a composite key of name and email until we figured out WHAT exactly the ID is? Is it
-        //  maybe provided in an event?
+        // We simply use a composite key of name and email because the player Id is fired at a later point...
+        // TODO: This will probably be refactored in the game service, therefore we need to touch this again.
         modelBuilder.Entity<PlayerDetails>()
-            .HasKey(nameof(Data.Model.PlayerDetails.Name), nameof(Data.Model.PlayerDetails.Email));
+            .HasKey(nameof(Models.PlayerDetails.Name), nameof(Models.PlayerDetails.Email));
 
         modelBuilder.Entity<GameRegistration>()
             .HasKey(nameof(GameRegistration.GameId));
-        
+
         modelBuilder.Entity<CommandTransaction>()
             .HasKey(nameof(CommandTransaction.TransactionId));
     }

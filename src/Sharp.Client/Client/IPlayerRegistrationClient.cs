@@ -3,6 +3,9 @@ using Sharp.Client.Model;
 
 namespace Sharp.Client.Client;
 
+/// <summary>
+///     Performs Player Registration.
+/// </summary>
 public interface IPlayerRegistrationClient
 {
     [Post("/players")]
