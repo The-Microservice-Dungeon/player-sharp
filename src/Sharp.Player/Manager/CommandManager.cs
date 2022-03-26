@@ -50,12 +50,17 @@ public class CommandManager : ICommandManager
     {
         var request = _mapper.Map<CommandRequest>(command);
         var response = await _commandClient.SendCommand(request);
-        await SaveCommandTransaction(GameId, response.TransactionId);
+        await SaveCommandTransaction(GameId, response.TransactionId, command);
     }
 
-    private async Task SaveCommandTransaction(string gameId, string transactionId)
+    private async Task SaveCommandTransaction(string gameId, string transactionId, BaseCommand command)
     {
-        _dbContext.CommandTransactions.Add(new CommandTransaction(gameId, transactionId));
+        _dbContext.CommandTransactions.Add(new CommandTransaction(gameId, transactionId)
+        {
+            PlanetId = command.CommandObject.PlanetId,
+            RobotId = command.RobotId,
+            TargetId = command.CommandObject.TargetId
+        });
         await _dbContext.SaveChangesAsync();
     }
 }
