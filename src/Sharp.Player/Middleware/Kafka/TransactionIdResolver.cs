@@ -3,6 +3,7 @@ using KafkaFlow;
 using Microsoft.EntityFrameworkCore;
 using Sharp.Data.Contexts;
 using Sharp.Data.Models;
+using Sharp.Player.Config;
 
 namespace Sharp.Player.Middleware.Kafka;
 
@@ -22,24 +23,24 @@ public class TransactionIdResolver : IMessageMiddleware
 
     public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
     {
-        var transactionId = context.Headers["transactionId"];
+        var transactionId = context.Headers.GetString(KafkaHeaders.TransactionIdHeaderName);
         if (transactionId == null)
         {
-            _logger.LogDebug("No TransactionId Header present");
+            _logger.LogDebug("No {Header} Header present", KafkaHeaders.TransactionIdHeaderName);
             await next(context).ConfigureAwait(false);
             return;
         }
 
-        var id = Encoding.UTF8.GetString(transactionId);
-        var commandTransaction = await _commandTransactions.FindAsync(id);
+        var commandTransaction = await _commandTransactions.FindAsync(transactionId);
         if (commandTransaction == null)
         {
-            _logger.LogDebug("No Entry for Transaction Id '{TId}' found. Probably it is for another player", id);
+            _logger.LogDebug("No Entry for Transaction Id '{TId}' found. Probably it is for another player",
+                transactionId);
             await next(context).ConfigureAwait(false);
             return;
         }
 
-        context.Headers.Add("GameId", Encoding.UTF8.GetBytes(commandTransaction.GameId));
+        context.Headers.Add(KafkaHeaders.GameIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.GameId));
         await next(context).ConfigureAwait(false);
     }
 }

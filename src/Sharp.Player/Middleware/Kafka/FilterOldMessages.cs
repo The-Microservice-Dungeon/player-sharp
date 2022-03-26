@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 using KafkaFlow;
+using Sharp.Player.Config;
 
 namespace Sharp.Player.Middleware.Kafka;
 
@@ -33,13 +33,10 @@ public class FilterOldMessages : IMessageMiddleware
     {
         // Timestamp defined by our headers
         DateTime? dateTimeFromTimestampHeader = null;
-        var timestampHeader = context.Headers["timestamp"];
+        var timestampHeader = context.Headers.GetString(KafkaHeaders.TimestampHeaderName);
 
         if (timestampHeader != null)
-        {
-            var timestamp = Encoding.UTF8.GetString(timestampHeader, 0, timestampHeader.Length);
-            dateTimeFromTimestampHeader = DateTime.Parse(timestamp, null, DateTimeStyles.RoundtripKind);
-        }
+            dateTimeFromTimestampHeader = DateTime.Parse(timestampHeader, null, DateTimeStyles.RoundtripKind);
 
         // Timestamp of the message
         var messageTimestamp = context.ConsumerContext.MessageTimestamp;
