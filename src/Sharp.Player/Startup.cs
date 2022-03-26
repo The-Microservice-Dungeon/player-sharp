@@ -11,6 +11,9 @@ using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.Model;
+using Sharp.Player.Consumers.Models.Trading;
+using Sharp.Player.Consumers.TypeResolver.Trading;
+using Sharp.Player.Events.Models;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
@@ -88,9 +91,21 @@ public class Startup
                 .AddDefaultConsumer<MovementEvent, MovementEventMessageHandler>("movement")
                 .AddDefaultConsumer<NeighboursEvent, NeighbourEventMessageHandler>("neighbours")
                 .AddConsumer(consumer => consumer
-                    .DefaultConsumer<RoundStatusEvent, RoundStatusMessageHandler>("roundStatus")
+                    .DefaultTypedConsumer<RoundStatusEvent, RoundStatusMessageHandler>("roundStatus")
                     .AddMiddlewares(middlewares => middlewares
                         .AddAtBeginning<FilterOldMessages>()
+                    )
+                )
+                .AddConsumer(consumer => consumer
+                    .DefaultConsumer("trades")
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddAtBeginning<FilterOldMessages>()
+                        .AddSerializer<JsonCoreSerializer, TradeEventTypeResolver>()
+                        .AddTypedHandlers(handlers => handlers
+                            .AddHandler<TradeBuyRobotEventHandler>()
+                            .AddHandler<TradeSellResourcesEventHandler>()
+                            .AddHandler<TradeErrorEventHandler>()
+                        )
                     )
                 )
             )
@@ -133,9 +148,8 @@ public class Startup
 
 public static class KafkaHelper
 {
-    public static IConsumerConfigurationBuilder DefaultConsumer<TMessage, THandler>(
+    public static IConsumerConfigurationBuilder DefaultConsumer(
         this IConsumerConfigurationBuilder builder, string topic)
-        where THandler : class, IMessageHandler<TMessage>
     {
         return builder
             .Topic(topic)
@@ -143,7 +157,14 @@ public static class KafkaHelper
             .WithWorkersCount(1)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-            .WithMaxPollIntervalMs(45000)
+            .WithMaxPollIntervalMs(45000);
+    } 
+    
+    public static IConsumerConfigurationBuilder DefaultTypedConsumer<TMessage, THandler>(
+        this IConsumerConfigurationBuilder builder, string topic)
+        where THandler : class, IMessageHandler<TMessage>
+    {
+        return builder.DefaultConsumer(topic)
             .AddMiddlewares(middlewares => middlewares
                 .AddSingleTypeSerializer<TMessage, JsonCoreSerializer>(s =>
                     new JsonCoreSerializer(new JsonSerializerOptions
@@ -162,6 +183,6 @@ public static class KafkaHelper
         this IClusterConfigurationBuilder builder,
         string topic) where THandler : class, IMessageHandler<TMessage>
     {
-        return builder.AddConsumer(consumer => consumer.DefaultConsumer<TMessage, THandler>(topic));
+        return builder.AddConsumer(consumer => consumer.DefaultTypedConsumer<TMessage, THandler>(topic));
     }
 }
