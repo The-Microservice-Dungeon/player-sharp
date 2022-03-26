@@ -23,6 +23,7 @@ Host.CreateDefaultBuilder(args)
         // Should run first.
         s.AddHostedService<PlayerRegistrationService>();
         s.AddHostedService<GameRegistrationService>();
+        s.AddHostedService<CommandTransactionCleanupService>();
     })
     .Build()
     .Run();

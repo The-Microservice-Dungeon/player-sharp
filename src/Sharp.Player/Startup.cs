@@ -9,6 +9,7 @@ using Refit;
 using Sharp.Client.Client;
 using Sharp.Data.Contexts;
 using Sharp.Player.Config;
+using Sharp.Player.Config.Mapping;
 using Sharp.Player.Events.Consumers.Game;
 using Sharp.Player.Events.Consumers.Map;
 using Sharp.Player.Events.Consumers.Robot;
