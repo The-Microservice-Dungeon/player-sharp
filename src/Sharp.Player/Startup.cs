@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using AutoMapper;
+using Confluent.Kafka;
 using KafkaFlow;
 using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
@@ -22,6 +23,7 @@ using Sharp.Player.Events.TypeResolver.Trading;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
+using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Sharp.Player;
@@ -68,7 +70,7 @@ public class Startup
             Configuration.GetSection(DungeonNetworkOptions.DungeonNetwork));
 
         // Data
-        services.AddDbContext<SharpDbContext>(ServiceLifetime.Singleton, ServiceLifetime.Singleton);
+        services.AddDbContext<SharpDbContext>();
 
         // Clients
         var networkOptions =
@@ -91,7 +93,10 @@ public class Startup
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
         services.AddKafka(kafka => kafka.UseMicrosoftLog()
             .AddCluster(cluster => cluster
-                .WithBrokers(new[] { networkOptions.KafkaAddress })
+                .WithBrokers(new[]
+                {
+                    networkOptions.KafkaAddress
+                })
                 .AddDefaultConsumer<PlayerStatusEvent, PlayerStatusMessageHandler>("playerStatus")
                 .AddDefaultConsumer<GameStatusEvent, GameStatusMessageHandler>("status")
                 .AddDefaultConsumer<GameworldCreatedEvent, GameworldCreatedMessageHandler>("gameworld-created")
@@ -166,10 +171,17 @@ public static class KafkaHelper
     {
         return builder
             .Topic(topic)
-            .WithGroupId("player-sharp-1")
+            .WithGroupId("player-sharp")
             .WithWorkersCount(1)
             .WithBufferSize(100)
-            .WithAutoOffsetReset(AutoOffsetReset.Earliest);
+            .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+            .WithConsumerConfig(new ConsumerConfig()
+            {
+                AllowAutoCreateTopics = true
+            })
+            .AddMiddlewares(middlewares => middlewares
+                .Add<TransactionIdResolver>()
+                .Add<FilterMessagesFromUnregisteredGames>());
     }
 
     public static IConsumerConfigurationBuilder DefaultTypedConsumer<TMessage, THandler>(

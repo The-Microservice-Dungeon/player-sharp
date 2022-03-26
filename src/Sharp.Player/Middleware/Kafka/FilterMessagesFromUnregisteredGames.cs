@@ -13,12 +13,12 @@ namespace Sharp.Player.Middleware.Kafka;
 public class FilterMessagesFromUnregisteredGames : IMessageMiddleware
 {
     private readonly ILogger<FilterMessagesFromUnregisteredGames> _logger;
-    private readonly SharpDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public FilterMessagesFromUnregisteredGames(ILogger<FilterMessagesFromUnregisteredGames> logger, SharpDbContext dbContext)
+    public FilterMessagesFromUnregisteredGames(ILogger<FilterMessagesFromUnregisteredGames> logger, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
@@ -26,12 +26,20 @@ public class FilterMessagesFromUnregisteredGames : IMessageMiddleware
         var gameIdHeader = context.Headers.GetString(KafkaHeaders.GameIdHeaderName);
 
         if (gameIdHeader == null)
-            throw new Exception(
-                $"No GameID Header was found, did you registered the {nameof(TransactionIdResolver)} first?"); 
-
-        if(_dbContext.GameRegistrations.Any(r => r.GameId == gameIdHeader))
+        {
+            _logger.LogWarning($"No GameID Header was found, did you registered the {nameof(TransactionIdResolver)} first?");
             await next(context).ConfigureAwait(false);
-        
-        _logger.LogDebug("Received a message in Topic '{Topic}' which does not belong to any registered game", context.ConsumerContext.Topic);
+            return;
+        }
+
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            if (db.GameRegistrations.Any(r => r.GameId == gameIdHeader))
+                await next(context).ConfigureAwait(false);
+
+            _logger.LogDebug("Received a message in Topic '{Topic}' which does not belong to any registered game",
+                context.ConsumerContext.Topic);
+        }
     }
 }

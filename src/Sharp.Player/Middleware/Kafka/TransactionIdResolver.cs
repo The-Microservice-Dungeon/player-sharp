@@ -12,13 +12,13 @@ namespace Sharp.Player.Middleware.Kafka;
 /// </summary>
 public class TransactionIdResolver : IMessageMiddleware
 {
-    private readonly DbSet<CommandTransaction> _commandTransactions;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<TransactionIdResolver> _logger;
 
-    public TransactionIdResolver(ILogger<TransactionIdResolver> logger, SharpDbContext dbContext)
+    public TransactionIdResolver(ILogger<TransactionIdResolver> logger, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _commandTransactions = dbContext.CommandTransactions;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
@@ -31,7 +31,10 @@ public class TransactionIdResolver : IMessageMiddleware
             return;
         }
 
-        var commandTransaction = await _commandTransactions.FindAsync(transactionId);
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+        var commandTransaction = await db.CommandTransactions.FindAsync(transactionId);
+
         if (commandTransaction == null)
         {
             _logger.LogDebug("No Entry for Transaction Id '{TId}' found. Probably it is for another player",
@@ -41,14 +44,14 @@ public class TransactionIdResolver : IMessageMiddleware
         }
 
         context.Headers.Add(KafkaHeaders.GameIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.GameId));
-        
+            
         if (commandTransaction.PlanetId != null)
             context.Headers.Add(KafkaHeaders.PlanetIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.PlanetId));
         if (commandTransaction.RobotId != null)
             context.Headers.Add(KafkaHeaders.RobotIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.RobotId));
         if (commandTransaction.TargetId != null)
             context.Headers.Add(KafkaHeaders.TargetIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.TargetId));
-        
+            
         await next(context).ConfigureAwait(false);
     }
 }

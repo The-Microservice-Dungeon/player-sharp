@@ -15,7 +15,8 @@ public class TradeErrorEventHandler : IMessageHandler<TradeErrorEvent>
     
     public Task Handle(IMessageContext context, TradeErrorEvent message)
     {
-        _logger.LogDebug("Received Error Trade Event: {@Message}", message);
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        
         return Task.CompletedTask;
     }
 }

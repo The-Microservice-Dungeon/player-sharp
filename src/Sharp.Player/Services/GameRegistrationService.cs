@@ -10,27 +10,22 @@ public class GameRegistrationService : BackgroundService
     private readonly IGameManager _gameManager;
     private readonly ILogger<GameRegistrationService> _logger;
     private readonly IPlayerManager _playerManager;
-    private readonly SharpDbContext _sharpDbContext;
 
-    public GameRegistrationService(IGameClient gameClient, ILogger<GameRegistrationService> logger,
-        SharpDbContext sharpDbContext, IPlayerManager playerManager, IGameManager gameManager)
+    public GameRegistrationService(IGameClient gameClient, ILogger<GameRegistrationService> logger,IPlayerManager playerManager, IGameManager gameManager)
     {
         _gameClient = gameClient;
         _logger = logger;
-        _sharpDbContext = sharpDbContext;
         _playerManager = playerManager;
         _gameManager = gameManager;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogDebug("Started {Service}", nameof(GameRegistrationService));
         var playerDetails = _playerManager.Get();
 
-        return _gameManager.GetAvailableGames().ContinueWith(games =>
-        {
-            var result = games.Result;
-            _logger.LogInformation("Retreived {N} open games to register", result.Count);
-            return Task.WhenAll(result.Select(game => _gameManager.PerformRegistration(game.Id, playerDetails)));
-        });
+        var games = await _gameManager.GetAvailableGames();
+        _logger.LogInformation("Retreived {N} open games to register", games.Count);
+        await Task.WhenAll(games.Select(game => _gameManager.PerformRegistration(game.Id, playerDetails)));
     }
 }

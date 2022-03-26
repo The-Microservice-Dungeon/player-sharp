@@ -18,7 +18,8 @@ public class SpacestationCreatedMessageHandler : IMessageHandler<SpacestationCre
     
     public async Task Handle(IMessageContext context, SpacestationCreatedEvent message)
     {
-        _logger.LogDebug("Received SpacestationCreatedEvent event with PlanetId {PlanetId}", message.PlanetId);
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        
         var map = _mapManager.Get();
         // The Event is produced in a separate topic and COULD (in my tests it is most likely) that the spacestation-created
         //  event is even consumed before the gameworld-created event. Therefore we must handle the case where the map

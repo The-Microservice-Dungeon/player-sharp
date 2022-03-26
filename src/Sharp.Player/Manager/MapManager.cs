@@ -9,9 +9,11 @@ namespace Sharp.Player.Manager;
 public class MapManager : IMapManager
 {
     private readonly IHubContext<MapHub, IMapHub> _mapHubContext;
-    public MapManager(IHubContext<MapHub, IMapHub> mapHubContext)
+    private readonly ILogger<MapManager> _logger;
+    public MapManager(IHubContext<MapHub, IMapHub> mapHubContext, ILogger<MapManager> logger)
     {
         _mapHubContext = mapHubContext;
+        _logger = logger;
     }
 
     // TODO: Get rid of that nullability. 
@@ -23,6 +25,8 @@ public class MapManager : IMapManager
 
     public void Create(string id)
     {
+        _logger.LogDebug("Creating a new Map with ID {Id}", id);
+        
         _map = new Map(id);
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO
@@ -31,12 +35,17 @@ public class MapManager : IMapManager
 
     public void AddSpaceStation(string fieldId)
     {
+        _logger.LogDebug("Adding SpaceStation on Field {Id}", fieldId);
+        
         var field = GetOrThrow().GetOrCreateField(fieldId);
 
         if (field.SpaceStation != null)
             return;
 
-        field.SetSpaceStation(new SpaceStation());
+        var spacestation = new SpaceStation();
+        field.SetSpaceStation(spacestation);
+        
+        _logger.LogDebug("SpaceStation {SpaceStation} added", spacestation);
 
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO
@@ -45,6 +54,8 @@ public class MapManager : IMapManager
     
     public void AddOpaqueField(string id, int movementDifficulty)
     {
+        _logger.LogDebug("Adding Opaque field with {Id}", id);
+        
         var field = GetOrThrow().GetOrCreateField(id);
         if (field.MovementDifficulty == movementDifficulty)
             return;
@@ -58,6 +69,8 @@ public class MapManager : IMapManager
 
     public void AddPlanet(string id, int movementDifficulty, ResourceType[] resourceTypes)
     {
+        _logger.LogDebug("Adding Planet on Field {Id}", id);
+        
         var field = GetOrThrow().GetOrCreateField(id);
         if(field.MovementDifficulty == movementDifficulty && 
            field.Planet != null && 
@@ -65,10 +78,13 @@ public class MapManager : IMapManager
             return;
 
         field.MovementDifficulty = movementDifficulty;
-        field.SetPlanet(new Planet
+        var planet = new Planet
         {
             ResourceDeposits = resourceTypes.Select(type => new ResourceDeposit(type)).ToArray()
-        }); 
+        };
+        field.SetPlanet(planet);
+        
+        _logger.LogDebug("Planet {Planet} added", planet);
         
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO

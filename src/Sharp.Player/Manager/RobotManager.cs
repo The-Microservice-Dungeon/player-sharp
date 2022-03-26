@@ -25,6 +25,7 @@ public class RobotManager : IRobotManager
 
     public Task AddRobotFromTrade(TradeRobotData boughtRobot)
     {
+        _logger.LogDebug("Adding Robot {@Robot} to fleet", boughtRobot);
         Debug.Assert(_playerManager.Get().PlayerId == boughtRobot.Player);
         
         RobotAttributes attributes = _mapper.Map<RobotAttributes>(boughtRobot);
@@ -32,6 +33,8 @@ public class RobotManager : IRobotManager
 
         var robot = new Robot(boughtRobot.Id, boughtRobot.Alive, attributes, field);
         RobotFleet.Add(robot);
+        
+        _logger.LogDebug("Robot {@Robot} added to fleet", robot);
         
         return Task.CompletedTask;
     }

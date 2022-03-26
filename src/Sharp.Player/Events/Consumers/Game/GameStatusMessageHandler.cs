@@ -10,15 +10,18 @@ public class GameStatusMessageHandler : IMessageHandler<GameStatusEvent>
 {
     private readonly IGameManager _gameManager;
     private readonly IPlayerManager _playerManager;
+    private readonly ILogger<GameStatusMessageHandler> _logger;
 
-    public GameStatusMessageHandler(IGameManager gameManager, IPlayerManager playerManager)
+    public GameStatusMessageHandler(IGameManager gameManager, IPlayerManager playerManager, ILogger<GameStatusMessageHandler> logger)
     {
         _gameManager = gameManager;
         _playerManager = playerManager;
+        _logger = logger;
     }
 
     public async Task Handle(IMessageContext context, GameStatusEvent message)
     {
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
         if (message.Status == GameStatus.Created)
         {
             await _gameManager.PerformRegistration(message.GameId, _playerManager.Get());

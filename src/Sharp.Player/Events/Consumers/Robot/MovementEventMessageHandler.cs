@@ -18,13 +18,12 @@ public class MovementEventMessageHandler : IMessageHandler<MovementEvent>
 
     public Task Handle(IMessageContext context, MovementEvent message)
     {
-        _logger.LogDebug(
-            "Received Movement event: {Event}", message);
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
 
         if (message.Success)
         {
             var planet = message.Planet!;
-            if (planet.PlanetType == PlanetType.DEFAULT)
+            if (planet.PlanetType == PlanetType.Default)
             {
                 _mapManager.AddPlanet(planet.PlanetId, planet.MovementDifficulty, new []{ planet.ResourceType });
             }

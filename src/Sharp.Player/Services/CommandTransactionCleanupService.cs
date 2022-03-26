@@ -5,26 +5,35 @@ namespace Sharp.Player.Services;
 
 public class CommandTransactionCleanupService : BackgroundService
 {
-    private readonly SharpDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<CommandTransactionCleanupService> _logger;
     private readonly IGameClient _gameClient;
 
-    public CommandTransactionCleanupService(SharpDbContext dbContext, ILogger<CommandTransactionCleanupService> logger, IGameClient gameClient)
+    public CommandTransactionCleanupService(IServiceScopeFactory scopeFactory, ILogger<CommandTransactionCleanupService> logger, IGameClient gameClient)
     {
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
         _logger = logger;
         _gameClient = gameClient;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogDebug("Started {Service}", nameof(CommandTransactionCleanupService));
         try
         {
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
             var activeGameIds = (await _gameClient.GetAllActiveGames()).Select(g => g.GameId);
-            var danglingCommandTransactions = _dbContext.CommandTransactions.Where(transaction => activeGameIds.All(id => id != transaction.GameId))
+            var danglingCommandTransactions = db.CommandTransactions
+                .Where(transaction => activeGameIds.All(id => id != transaction.GameId))
                 .ToList();
-            _dbContext.RemoveRange(danglingCommandTransactions);
-            await _dbContext.SaveChangesAsync(stoppingToken);
+
+            if (danglingCommandTransactions.Count > 0)
+            {
+                _logger.LogDebug("There are {N} dangling command transactions that will be removed", danglingCommandTransactions.Count);
+                db.RemoveRange(danglingCommandTransactions);
+                await db.SaveChangesAsync(stoppingToken);
+            }
         }
         catch (Exception e)
         {

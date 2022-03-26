@@ -11,21 +11,21 @@ namespace Sharp.Player.Manager;
 public class CommandManager : ICommandManager
 {
     private readonly IGameCommandClient _commandClient;
-    private readonly SharpDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IGameManager _gameManager;
     private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
     private readonly IPlayerManager _playerManager;
 
     public CommandManager(ILogger<CommandManager> logger, IPlayerManager playerManager, IGameManager gameManager,
-        IGameCommandClient commandClient, IMapper mapper, SharpDbContext dbContext)
+        IGameCommandClient commandClient, IMapper mapper, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
         _playerManager = playerManager;
         _gameManager = gameManager;
         _commandClient = commandClient;
         _mapper = mapper;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
     }
 
     // TODO: See ICommandManager
@@ -48,6 +48,8 @@ public class CommandManager : ICommandManager
 
     private async Task SendCommand(BaseCommand command)
     {
+        _logger.LogDebug("Sending command {@Command}", command);
+        
         var request = _mapper.Map<CommandRequest>(command);
         var response = await _commandClient.SendCommand(request);
         await SaveCommandTransaction(GameId, response.TransactionId, command);
@@ -55,12 +57,16 @@ public class CommandManager : ICommandManager
 
     private async Task SaveCommandTransaction(string gameId, string transactionId, BaseCommand command)
     {
-        _dbContext.CommandTransactions.Add(new CommandTransaction(gameId, transactionId)
+        _logger.LogDebug("Save Command Transaction to {GameId} with Transaction ID {TransactionId} for Command {@Command}", gameId, transactionId, command);
+
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+        await db.CommandTransactions.AddAsync(new CommandTransaction(gameId, transactionId)
         {
             PlanetId = command.CommandObject.PlanetId,
             RobotId = command.RobotId,
             TargetId = command.CommandObject.TargetId
         });
-        await _dbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
     }
 }

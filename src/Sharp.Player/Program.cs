@@ -1,22 +1,15 @@
 using Serilog;
 using Serilog.Exceptions;
-using Serilog.Formatting.Compact;
 using Sharp.Player;
 using Sharp.Player.Services;
 
 Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.File(new RenderedCompactJsonFormatter(), "./logs/log.ndjson")
     .CreateBootstrapLogger();
 
 Host.CreateDefaultBuilder(args)
     .UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .Enrich.WithExceptionDetails()
-        .WriteTo.Console())
+        .ReadFrom.Services(services))
     .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
     .ConfigureServices(s =>
     {

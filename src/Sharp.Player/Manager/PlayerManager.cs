@@ -11,19 +11,19 @@ namespace Sharp.Player.Manager;
 
 public class PlayerManager : IPlayerManager
 {
-    private readonly SharpDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly PlayerDetailsOptions _detailsOptions;
     private readonly ILogger<PlayerManager> _logger;
     private readonly IPlayerRegistrationClient _playerRegistrationClient;
 
     public PlayerManager(IPlayerRegistrationClient playerRegistrationClient,
         IOptions<PlayerDetailsOptions> detailsOptions, ILogger<PlayerManager> logger,
-        SharpDbContext dbContext)
+        IServiceScopeFactory scopeFactory)
     {
         _playerRegistrationClient = playerRegistrationClient;
         _detailsOptions = detailsOptions.Value;
         _logger = logger;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
     }
 
     private string PlayerName => _detailsOptions.Name;
@@ -50,7 +50,7 @@ public class PlayerManager : IPlayerManager
 
         if (dbResult != null)
         {
-            _logger.LogDebug("Successfully retreived player details: {Details}", dbResult);
+            _logger.LogDebug("Successfully retreived player details: {@Details}", dbResult);
 
             // In the meantime the credentials COULD have been changed. Therefore we're going to validate them and only
             // use them when they are still valid
@@ -63,31 +63,39 @@ public class PlayerManager : IPlayerManager
 
         if (fetchedResult != null)
         {
-            StoreInDatabase(fetchedResult);
+            await StoreInDatabase(fetchedResult);
             return fetchedResult;
         }
 
         var createdResult = await RegisterPlayer(PlayerName, PlayerEmail);
-        StoreInDatabase(createdResult);
+        await StoreInDatabase(createdResult);
 
         return createdResult;
     }
 
     public PlayerDetails SetPlayerId(string playerId)
     {
-        var details = Get();
-        details.PlayerId = playerId;
-        _dbContext.PlayerDetails.Update(details);
-        _dbContext.SaveChanges();
-        return details;
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            var details = Get();
+            details.PlayerId = playerId;
+            db.PlayerDetails.Update(details);
+            db.SaveChanges();
+            return details;
+        }
     }
 
     public PlayerDetails? ResolveRegistrationTransactionId(string transactionId)
     {
-        return _dbContext.GameRegistrations
-            .Where(registration => registration.TransactionId == transactionId)
-            .Select(registration => registration.PlayerDetails)
-            .FirstOrDefault();
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            return db.GameRegistrations
+                .Where(registration => registration.TransactionId == transactionId)
+                .Select(registration => registration.PlayerDetails)
+                .FirstOrDefault();
+        }
     }
 
     private async Task<bool> ValidatePlayerDetails(PlayerDetails playerDetails)
@@ -99,22 +107,34 @@ public class PlayerManager : IPlayerManager
 
     private PlayerDetails? GetFromDb(string name, string email)
     {
-        return _dbContext.PlayerDetails.Find(name, email);
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            return db.PlayerDetails.Find(name, email);
+        }
     }
 
-    private void StoreInDatabase(PlayerDetails playerDetails)
+    private async Task StoreInDatabase(PlayerDetails playerDetails)
     {
-        _dbContext.PlayerDetails.Add(playerDetails);
-        _dbContext.SaveChanges();
-        if (playerDetails.PlayerId == null)
-            _logger.LogWarning(
-                "Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            await db.PlayerDetails.AddAsync(playerDetails);
+            await db.SaveChangesAsync();
+            if (playerDetails.PlayerId == null)
+                _logger.LogWarning(
+                    "Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
+        }
     }
 
     private async Task RemoveDetails(PlayerDetails playerDetails)
     {
-        _dbContext.PlayerDetails.Remove(playerDetails);
-        await _dbContext.SaveChangesAsync();
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+            db.PlayerDetails.Remove(playerDetails);
+            await db.SaveChangesAsync();
+        }
     }
 
     private async Task<PlayerDetails?> FetchPlayerDetails(string name, string email)
@@ -124,7 +144,7 @@ public class PlayerManager : IPlayerManager
         {
             var response = await _playerRegistrationClient.GetPlayerDetails(name, email);
             PlayerDetails details = new(response.Name, response.Email, response.BearerToken);
-            _logger.LogDebug("Successfully retreived player details: {Details}", details);
+            _logger.LogDebug("Successfully retreived player details: {@Details}", details);
             return details;
         }
         catch (ApiException e)
@@ -142,7 +162,7 @@ public class PlayerManager : IPlayerManager
         var response = await _playerRegistrationClient.CreatePlayer(new PlayerRequest(name, email));
         var details = new PlayerDetails(response.Name, response.Email,
             response.BearerToken);
-        _logger.LogDebug("Successfully created player with details: {Details}", details);
+        _logger.LogDebug("Successfully created player with details: {@Details}", details);
         return details;
     }
 }

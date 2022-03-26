@@ -22,9 +22,9 @@ public class MovementEvent
 public enum PlanetType
 {
     [EnumMember(Value = "DEFAULT")]
-    DEFAULT, 
+    Default, 
     [EnumMember(Value = "SPACESTATION")]
-    SPACESTATION
+    Spacestation
 }
 
 public class MovementPlanet
@@ -36,10 +36,10 @@ public class MovementPlanet
     public int MovementDifficulty { get; set; }
     
     [JsonPropertyName("planetType")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public PlanetType PlanetType { get; set; }
     
     [JsonPropertyName("resourceType")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     public ResourceType ResourceType { get; set; }
 }

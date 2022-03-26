@@ -18,7 +18,7 @@ public class TradeBuyRobotEventHandler : IMessageHandler<TradeBuyRobotEvent>
     
     public Task Handle(IMessageContext context, TradeBuyRobotEvent message)
     {
-        _logger.LogDebug("Received Buy Robot Trade Event: {@Message}", message);
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
 
         foreach (var robot in message.Data)
         {

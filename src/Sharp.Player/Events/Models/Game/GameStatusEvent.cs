@@ -11,7 +11,7 @@ public class GameStatusEvent
     public string GameId { get; set; }
     
     [JsonPropertyName("status")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     [Required]
     public GameStatus Status { get; set; }
 }

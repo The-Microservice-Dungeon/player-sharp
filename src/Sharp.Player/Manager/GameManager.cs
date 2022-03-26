@@ -11,15 +11,15 @@ namespace Sharp.Player.Manager;
 
 public class GameManager : IGameManager
 {
-    private readonly SharpDbContext _dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IGameClient _gameClient;
     private readonly ILogger<GameManager> _logger;
     private readonly IMapper _mapper;
 
-    public GameManager(IGameClient gameClient, SharpDbContext dbContext, IMapper mapper, ILogger<GameManager> logger)
+    public GameManager(IGameClient gameClient, IServiceScopeFactory scopeFactory, IMapper mapper, ILogger<GameManager> logger)
     {
         _gameClient = gameClient;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -32,6 +32,8 @@ public class GameManager : IGameManager
             var game = await _gameClient.GetGame(gameId);
             if (game.GameStatus == GameStatus.Created)
             {
+                using var scope = _scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
                 if (playerDetails.PlayerId != null && game.ParticipatingPlayers.Contains(playerDetails.PlayerId))
                 {
                     _logger.LogDebug("Player is already participating in the game");
@@ -39,14 +41,15 @@ public class GameManager : IGameManager
                 }
 
                 var transactionId = (await _gameClient.RegisterInGame(gameId, playerDetails.Token)).TransactionId;
-                _logger.LogDebug("Successfully registered for game {Id}. The received TransactionId is {TransactionId}",
+                _logger.LogDebug(
+                    "Successfully registered for game {Id}. The received TransactionId is {TransactionId}",
                     gameId, transactionId);
                 var registration = new GameRegistration(gameId, transactionId)
                 {
                     PlayerDetails = playerDetails
                 };
-                _dbContext.GameRegistrations.Add(registration);
-                await _dbContext.SaveChangesAsync();
+                await db.GameRegistrations.AddAsync(registration);
+                await db.SaveChangesAsync();
             }
             else
             {
@@ -77,7 +80,9 @@ public class GameManager : IGameManager
 
     public Task<List<Game>> GetRegisteredGames()
     {
-        return Task.Run(() => _dbContext.GameRegistrations
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+        return Task.Run(() => db.GameRegistrations
             .Select(registration => _mapper.Map<Game>(registration))
             .ToList());
     }

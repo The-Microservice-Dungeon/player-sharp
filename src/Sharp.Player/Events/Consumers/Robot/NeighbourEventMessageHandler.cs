@@ -18,8 +18,7 @@ public class NeighbourEventMessageHandler : IMessageHandler<NeighboursEvent>
 
     public Task Handle(IMessageContext context, NeighboursEvent message)
     {
-        _logger.LogDebug(
-            "Received Neighbours event: {Event}", message);
+        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
         
         foreach (var neighbour in message.Neighbours)
         {

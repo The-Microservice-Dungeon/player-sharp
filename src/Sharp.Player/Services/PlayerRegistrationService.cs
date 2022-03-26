@@ -2,7 +2,7 @@
 
 namespace Sharp.Player.Services;
 
-public class PlayerRegistrationService : IHostedService
+public class PlayerRegistrationService : BackgroundService
 {
     private readonly IPlayerManager _playerManager;
     private readonly ILogger<PlayerRegistrationService> _logger;
@@ -13,14 +13,9 @@ public class PlayerRegistrationService : IHostedService
         _logger = logger;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogDebug("Started Service: {Service}", nameof(PlayerRegistrationService));
-        return _playerManager.Init();
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+        _logger.LogDebug("Started {Service}", nameof(PlayerRegistrationService));
+        await _playerManager.Init();
+    } 
 }

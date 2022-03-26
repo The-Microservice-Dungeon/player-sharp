@@ -11,10 +11,10 @@ public class GameRegistrationResponse
 
 public enum GameStatus
 {
-    [EnumMember(Value = "CREATED")] Created,
-    [EnumMember(Value = "STARTED")] Started,
+    [EnumMember(Value = "created")] Created,
+    [EnumMember(Value = "started")] Started,
 
-    [EnumMember(Value = "ENDED")]
+    [EnumMember(Value = "ended")]
     Ended
 }
 
