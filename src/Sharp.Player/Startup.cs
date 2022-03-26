@@ -160,8 +160,7 @@ public static class KafkaHelper
             .WithGroupId("player-sharp-1")
             .WithWorkersCount(1)
             .WithBufferSize(100)
-            .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-            .WithMaxPollIntervalMs(45000);
+            .WithAutoOffsetReset(AutoOffsetReset.Earliest);
     }
 
     public static IConsumerConfigurationBuilder DefaultTypedConsumer<TMessage, THandler>(
