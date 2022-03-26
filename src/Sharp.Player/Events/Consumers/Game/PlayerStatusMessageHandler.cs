@@ -2,12 +2,10 @@
 using KafkaFlow;
 using KafkaFlow.TypedHandler;
 using Sharp.Data.Context;
-using Sharp.Data.Model;
-using Sharp.Player.Consumers.Model;
+using Sharp.Player.Events.Models.Game;
 using Sharp.Player.Manager;
-using Sharp.Player.Services;
 
-namespace Sharp.Player.Consumers;
+namespace Sharp.Player.Events.Consumers.Game;
 
 public class PlayerStatusMessageHandler : IMessageHandler<PlayerStatusEvent>
 {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Sharp.Player.Consumers.Model;
+namespace Sharp.Player.Events.Models.Game;
 
 public class PlayerStatusEvent
 {

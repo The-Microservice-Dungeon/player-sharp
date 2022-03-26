@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Sharp.Client.Model;
 
-namespace Sharp.Player.Consumers.Model;
+namespace Sharp.Player.Events.Models.Game;
 
 public class GameStatusEvent
 {

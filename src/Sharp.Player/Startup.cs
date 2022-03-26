@@ -10,10 +10,14 @@ using Sharp.Client.Client;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
 using Sharp.Player.Consumers;
-using Sharp.Player.Consumers.Model;
-using Sharp.Player.Consumers.Models.Trading;
 using Sharp.Player.Consumers.TypeResolver.Trading;
-using Sharp.Player.Events.Models;
+using Sharp.Player.Events.Consumers.Game;
+using Sharp.Player.Events.Consumers.Map;
+using Sharp.Player.Events.Consumers.Robot;
+using Sharp.Player.Events.Consumers.Trading;
+using Sharp.Player.Events.Models.Game;
+using Sharp.Player.Events.Models.Map;
+using Sharp.Player.Events.Models.Robot;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
@@ -102,6 +106,7 @@ public class Startup
                         .AddAtBeginning<FilterOldMessages>()
                         .AddSerializer<JsonCoreSerializer, TradeEventTypeResolver>()
                         .AddTypedHandlers(handlers => handlers
+                            .WithHandlerLifetime(InstanceLifetime.Singleton)
                             .AddHandler<TradeBuyRobotEventHandler>()
                             .AddHandler<TradeSellResourcesEventHandler>()
                             .AddHandler<TradeErrorEventHandler>()
@@ -153,8 +158,8 @@ public static class KafkaHelper
     {
         return builder
             .Topic(topic)
-            .WithGroupId("player-sharp")
-            .WithWorkersCount(1)
+            .WithGroupId("player-sharp-1")
+            .WithWorkersCount(2)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
             .WithMaxPollIntervalMs(45000);

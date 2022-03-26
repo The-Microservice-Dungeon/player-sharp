@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Sharp.Gameplay.Map;
 
-namespace Sharp.Player.Consumers.Model;
+namespace Sharp.Player.Events.Models.Robot;
 
 public class MovementEvent
 {

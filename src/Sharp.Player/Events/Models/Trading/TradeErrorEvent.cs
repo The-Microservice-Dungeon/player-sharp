@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Sharp.Player.Consumers.Models.Trading;
+﻿namespace Sharp.Player.Events.Models.Trading;
 
 public class TradeErrorEvent : TradeBaseEvent<string?>
 {

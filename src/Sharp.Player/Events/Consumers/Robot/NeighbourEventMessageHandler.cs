@@ -1,9 +1,9 @@
 ﻿using KafkaFlow;
 using KafkaFlow.TypedHandler;
-using Sharp.Player.Consumers.Model;
+using Sharp.Player.Events.Models.Robot;
 using Sharp.Player.Manager;
 
-namespace Sharp.Player.Consumers;
+namespace Sharp.Player.Events.Consumers.Robot;
 
 public class NeighbourEventMessageHandler : IMessageHandler<NeighboursEvent>
 {

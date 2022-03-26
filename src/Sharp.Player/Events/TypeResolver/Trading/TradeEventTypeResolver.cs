@@ -1,5 +1,5 @@
 ﻿using KafkaFlow;
-using Sharp.Player.Consumers.Models.Trading;
+using Sharp.Player.Events.Models.Trading;
 
 namespace Sharp.Player.Consumers.TypeResolver.Trading;
 

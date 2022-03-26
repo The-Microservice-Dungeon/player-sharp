@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Sharp.Player.Consumers.Models.Trading;
+namespace Sharp.Player.Events.Models.Trading;
 
 public abstract class TradeBaseEvent<T>
 {

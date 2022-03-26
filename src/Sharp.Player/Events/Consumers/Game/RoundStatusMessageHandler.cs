@@ -1,9 +1,9 @@
 ﻿using KafkaFlow;
 using KafkaFlow.TypedHandler;
-using Sharp.Player.Consumers.Model;
+using Sharp.Player.Events.Models.Game;
 using Sharp.Player.Manager;
 
-namespace Sharp.Player.Consumers;
+namespace Sharp.Player.Events.Consumers.Game;
 
 public class RoundStatusMessageHandler : IMessageHandler<RoundStatusEvent>
 {

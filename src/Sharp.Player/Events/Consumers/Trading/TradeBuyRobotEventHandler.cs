@@ -1,8 +1,8 @@
 ﻿using KafkaFlow;
 using KafkaFlow.TypedHandler;
-using Sharp.Player.Consumers.Models.Trading;
+using Sharp.Player.Events.Models.Trading;
 
-namespace Sharp.Player.Events.Models;
+namespace Sharp.Player.Events.Consumers.Trading;
 
 public class TradeBuyRobotEventHandler : IMessageHandler<TradeBuyRobotEvent>
 {
@@ -13,8 +13,9 @@ public class TradeBuyRobotEventHandler : IMessageHandler<TradeBuyRobotEvent>
         _logger = logger;
     }
     
-    public async Task Handle(IMessageContext context, TradeBuyRobotEvent message)
+    public Task Handle(IMessageContext context, TradeBuyRobotEvent message)
     {
         _logger.LogDebug("Received Buy Robot Trade Event: {@Message}", message);
+        return Task.CompletedTask;
     }
 }
