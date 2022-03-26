@@ -9,4 +9,5 @@ public interface IMapManager
     void AddSpaceStation(string fieldId);
     void AddOpaqueField(string id, int movementDifficulty);
     void AddPlanet(string id, int movementDifficulty, ResourceType[] resourceTypes);
+    Field GetField(string id);
 }

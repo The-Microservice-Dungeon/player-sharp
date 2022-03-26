@@ -74,4 +74,6 @@ public class MapManager : IMapManager
         // TODO: Use a DTO
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
+
+    public Field GetField(string id) => GetOrThrow().GetOrCreateField(id);
 }

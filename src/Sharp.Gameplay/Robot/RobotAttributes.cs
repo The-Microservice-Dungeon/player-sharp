@@ -15,7 +15,8 @@ public readonly record struct RobotAttributes
     uint MiningLevel,
     uint EnergyLevel,
     uint EnergyRegenLevel,
-    uint StorageLevel
+    uint StorageLevel,
+    uint MaxStorage
 )
 {
 }

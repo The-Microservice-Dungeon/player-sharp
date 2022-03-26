@@ -85,6 +85,7 @@ public class Startup
         services.AddSingleton<IGameManager, GameManager>();
         services.AddSingleton<IMapManager, MapManager>();
         services.AddSingleton<ICommandManager, CommandManager>();
+        services.AddSingleton<IRobotManager, RobotManager>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
