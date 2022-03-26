@@ -25,7 +25,7 @@ public class Map : IIdentifiable<string>
         var field = GetField(id);
         if (field != null)
             return field;
-        field = new Field(id);
+        field = new Field(id, this);
         AddField(field);
         return field;
     }

@@ -3,6 +3,6 @@
 /// <summary>
 ///     Space Station
 /// </summary>
-public class SpaceStation : IFieldLocatable
+public class SpaceStation
 {
 }

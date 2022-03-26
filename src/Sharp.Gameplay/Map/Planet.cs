@@ -3,7 +3,7 @@
 /// <summary>
 ///     Planet
 /// </summary>
-public class Planet : IFieldLocatable
+public class Planet
 {
     public ResourceDeposit[] ResourceDeposits { get; set; }
 }

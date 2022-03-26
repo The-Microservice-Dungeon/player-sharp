@@ -7,4 +7,5 @@
 /// </summary>
 public interface IFieldLocatable
 {
+    public Field Field { get; }
 }

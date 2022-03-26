@@ -5,14 +5,16 @@ namespace Sharp.Gameplay.Map;
 /// <summary>
 ///     Field of the map. A field can contain certain objects (e.g. planets, space-stations)
 /// </summary>
-public class Field : IIdentifiable<string>
+public class Field : IIdentifiable<string>, IMapLocatable
 {
-    public Field(string id)
+    public readonly Map _map;
+    public Field(string id, Map map)
     {
         Id = id;
+        _map = map;
     }
 
-    public Field(string id, int movementDifficulty) : this(id)
+    public Field(string id, int movementDifficulty, Map map) : this(id, map)
     {
         MovementDifficulty = movementDifficulty;
     }
@@ -21,14 +23,6 @@ public class Field : IIdentifiable<string>
 
     public Planet? Planet { get; private set; }
     public SpaceStation? SpaceStation { get; private set; }
-
-    // TODO: We could also use something like this but this would come with additional complexity as we would have to
-    //  deal with polymorphism. Maybe this is not a problem, maybe it is? What is better for extensiblity? Does it make
-    //  more sens to be explicit here?
-    /*private List<IFieldLocatable> _content = new();
-    // We expose a immutable list as public property to ensure every modification will be done over the member
-    // methods
-    public ImmutableList<IFieldLocatable> Content => _content.ToImmutableList();*/
 
     public string Id { get; }
 
@@ -41,4 +35,8 @@ public class Field : IIdentifiable<string>
     {
         SpaceStation = spaceStation;
     }
+
+    public Map Map => _map;
+    public Field[] GetNeighbours() => _map.Fields[this].Select(c => c.Destination).ToArray();
+    public bool IsNeighbour(Field field) => GetNeighbours().Any(n => n.Id == field.Id);
 }
