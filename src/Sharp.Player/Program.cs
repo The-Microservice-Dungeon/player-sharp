@@ -7,10 +7,14 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File(new RenderedCompactJsonFormatter(), "./logs/log.ndjson")
-    .CreateLogger();
+    .CreateBootstrapLogger();
 
 Host.CreateDefaultBuilder(args)
-    .UseSerilog()
+    .UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console())
     .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
     .ConfigureServices(s =>
     {

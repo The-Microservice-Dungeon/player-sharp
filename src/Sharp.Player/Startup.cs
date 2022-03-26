@@ -9,7 +9,6 @@ using Refit;
 using Sharp.Client.Client;
 using Sharp.Data.Context;
 using Sharp.Player.Config;
-using Sharp.Player.Consumers;
 using Sharp.Player.Consumers.TypeResolver.Trading;
 using Sharp.Player.Events.Consumers.Game;
 using Sharp.Player.Events.Consumers.Map;
@@ -18,6 +17,7 @@ using Sharp.Player.Events.Consumers.Trading;
 using Sharp.Player.Events.Models.Game;
 using Sharp.Player.Events.Models.Map;
 using Sharp.Player.Events.Models.Robot;
+using Sharp.Player.Events.Models.Trading;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
@@ -159,12 +159,12 @@ public static class KafkaHelper
         return builder
             .Topic(topic)
             .WithGroupId("player-sharp-1")
-            .WithWorkersCount(2)
+            .WithWorkersCount(1)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
             .WithMaxPollIntervalMs(45000);
-    } 
-    
+    }
+
     public static IConsumerConfigurationBuilder DefaultTypedConsumer<TMessage, THandler>(
         this IConsumerConfigurationBuilder builder, string topic)
         where THandler : class, IMessageHandler<TMessage>
