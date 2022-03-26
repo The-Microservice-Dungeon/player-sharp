@@ -5,9 +5,8 @@ using Sharp.Gameplay.Game;
 using Sharp.Gameplay.Trading;
 using Sharp.Player.Controllers;
 
-namespace Sharp.Player.Config;
+namespace Sharp.Player.Config.Mapping;
 
-// TODO: Refactor
 public class GameMappingProfile : Profile
 {
     public GameMappingProfile()

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using AutoMapper;
 using KafkaFlow;
 using KafkaFlow.Configuration;
 using KafkaFlow.Serializer;
@@ -21,6 +22,7 @@ using Sharp.Player.Events.TypeResolver.Trading;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
+using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Sharp.Player;
 
@@ -56,7 +58,8 @@ public class Startup
         //  better way. Some parts have even found their way into Program.cs ... That needs refactoring
 
         // Mapper
-        services.AddAutoMapper(typeof(GameMappingProfile), typeof(MapMappingProfile));
+        services
+            .AddAutoMapper(typeof(GameMappingProfile).Assembly);
 
         // Register custom configuration
         services.Configure<PlayerDetailsOptions>(
@@ -126,6 +129,10 @@ public class Startup
         IHostApplicationLifetime lifetime)
     {
         dbContext.Database.Migrate();
+
+        var mapperConfiguration = app.ApplicationServices.GetRequiredService<IConfigurationProvider>();
+        mapperConfiguration.CompileMappings();
+        mapperConfiguration.AssertConfigurationIsValid();
 
         var kafkaBus = app.ApplicationServices.CreateKafkaBus();
         lifetime.ApplicationStarted.Register(() => kafkaBus.StartAsync(lifetime.ApplicationStopped));
