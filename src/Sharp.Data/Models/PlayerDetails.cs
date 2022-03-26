@@ -14,9 +14,9 @@ public class PlayerDetails
         Token = token;
     }
 
-    [Required] public string Name { get; }
+    [Required] public string Name { get; set; }
 
-    [Required] public string Email { get; }
+    [Required] public string Email { get; set; }
 
     [Required] public string Token { get; set; }
 

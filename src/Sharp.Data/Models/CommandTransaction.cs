@@ -15,7 +15,7 @@ public class CommandTransaction
         TransactionId = transactionId;
     }
 
-    [Required] public string GameId { get; }
+    [Required] public string GameId { get; set; }
 
-    [Required] public string TransactionId { get; }
+    [Required] public string TransactionId { get; set; }
 }

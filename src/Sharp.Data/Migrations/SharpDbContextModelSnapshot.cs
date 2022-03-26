@@ -16,7 +16,7 @@ namespace Sharp.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.3");
 
-            modelBuilder.Entity("Sharp.Data.Model.CommandTransaction", b =>
+            modelBuilder.Entity("Sharp.Data.Models.CommandTransaction", b =>
                 {
                     b.Property<string>("GameId")
                         .HasColumnType("TEXT");
@@ -29,7 +29,7 @@ namespace Sharp.Data.Migrations
                     b.ToTable("CommandTransactions");
                 });
 
-            modelBuilder.Entity("Sharp.Data.Model.GameRegistration", b =>
+            modelBuilder.Entity("Sharp.Data.Models.GameRegistration", b =>
                 {
                     b.Property<string>("GameId")
                         .HasColumnType("TEXT");
@@ -53,7 +53,7 @@ namespace Sharp.Data.Migrations
                     b.ToTable("GameRegistrations");
                 });
 
-            modelBuilder.Entity("Sharp.Data.Model.PlayerDetails", b =>
+            modelBuilder.Entity("Sharp.Data.Models.PlayerDetails", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -73,9 +73,9 @@ namespace Sharp.Data.Migrations
                     b.ToTable("PlayerDetails");
                 });
 
-            modelBuilder.Entity("Sharp.Data.Model.GameRegistration", b =>
+            modelBuilder.Entity("Sharp.Data.Models.GameRegistration", b =>
                 {
-                    b.HasOne("Sharp.Data.Model.PlayerDetails", "PlayerDetails")
+                    b.HasOne("Sharp.Data.Models.PlayerDetails", "PlayerDetails")
                         .WithMany()
                         .HasForeignKey("PlayerDetailsName", "PlayerDetailsEmail")
                         .OnDelete(DeleteBehavior.Cascade)
