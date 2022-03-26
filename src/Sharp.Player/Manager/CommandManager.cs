@@ -28,7 +28,7 @@ public class CommandManager : ICommandManager
         _dbContext = dbContext;
     }
 
-    // TODO: What is this
+    // TODO: See ICommandManager
     public string GameId { get; set; }
 
     public CommandBuilderDirector CommandBuilder => new(GameId, _playerManager.Get().Token);
@@ -42,8 +42,13 @@ public class CommandManager : ICommandManager
             .SetItem(Item.Robot)
             .SetQuantity(amount)
             .Build();
-        var request = _mapper.Map<CommandRequest>(command);
 
+        await SendCommand(command);
+    }
+
+    private async Task SendCommand(BaseCommand command)
+    {
+        var request = _mapper.Map<CommandRequest>(command);
         var response = await _commandClient.SendCommand(request);
         await SaveCommandTransaction(GameId, response.TransactionId);
     }
