@@ -13,8 +13,6 @@ Host.CreateDefaultBuilder(args)
     .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
     .ConfigureServices(s =>
     {
-        // Should run first.
-        s.AddHostedService<PlayerRegistrationService>();
         s.AddHostedService<GameRegistrationService>();
         s.AddHostedService<CommandTransactionCleanupService>();
     })

@@ -5,6 +5,7 @@ using Sharp.Data.Contexts;
 using Sharp.Data.Models;
 using Sharp.Gameplay.Game;
 using Sharp.Gameplay.Trading;
+using Sharp.Player.Provider;
 
 namespace Sharp.Player.Manager;
 
@@ -31,7 +32,15 @@ public class CommandManager : ICommandManager
     // TODO: See ICommandManager
     public string GameId { get; set; }
 
-    public CommandBuilderDirector CommandBuilder => new(GameId, _playerManager.Get().Token);
+    public CommandBuilderDirector CommandBuilder
+    {
+        get
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var playerDetailsProvider = scope.ServiceProvider.GetRequiredService<IPlayerDetailsProvider>();
+            return new(GameId, playerDetailsProvider.Get().Token);
+        }
+    }
 
     public async Task BuyRobot(uint amount = 1)
     {

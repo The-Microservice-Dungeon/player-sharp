@@ -11,22 +11,19 @@ public class RobotManager : IRobotManager
     private readonly IMapManager _mapManager;
     private readonly ILogger<RobotManager> _logger;
     private readonly IMapper _mapper;
-    private readonly IPlayerManager _playerManager;
 
     private List<Robot> RobotFleet = new();
 
-    public RobotManager(IMapManager mapManager, ILogger<RobotManager> logger, IMapper mapper, IPlayerManager playerManager)
+    public RobotManager(IMapManager mapManager, ILogger<RobotManager> logger, IMapper mapper)
     {
         _mapManager = mapManager;
         _logger = logger;
         _mapper = mapper;
-        _playerManager = playerManager;
     }
 
     public Task AddRobotFromTrade(TradeRobotData boughtRobot)
     {
         _logger.LogDebug("Adding Robot {@Robot} to fleet", boughtRobot);
-        Debug.Assert(_playerManager.Get().PlayerId == boughtRobot.Player);
         
         RobotAttributes attributes = _mapper.Map<RobotAttributes>(boughtRobot);
         Field field = _mapManager.GetField(boughtRobot.Planet);

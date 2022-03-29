@@ -5,7 +5,7 @@ namespace Sharp.Player.Manager;
 
 public interface IGameManager
 {
-    Task PerformRegistration(string gameId, PlayerDetails playerDetails);
+    Task PerformRegistration(string gameId);
 
     Task<List<Game>> GetAvailableGames();
     Task<List<Game>> GetRegisteredGames();

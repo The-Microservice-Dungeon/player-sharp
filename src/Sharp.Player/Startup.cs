@@ -23,6 +23,7 @@ using Sharp.Player.Events.TypeResolver.Trading;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
+using Sharp.Player.Provider;
 using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
@@ -83,6 +84,8 @@ public class Startup
         services.AddRefitClient<IGameCommandClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
 
+        services.AddScoped<IPlayerDetailsProvider, PlayerDetailsProvider>();
+        
         services.AddSingleton<IPlayerManager, PlayerManager>();
         services.AddSingleton<IGameManager, GameManager>();
         services.AddSingleton<IMapManager, MapManager>();

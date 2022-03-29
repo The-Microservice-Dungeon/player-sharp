@@ -6,6 +6,7 @@ using Sharp.Client.Model;
 using Sharp.Data.Contexts;
 using Sharp.Data.Models;
 using Sharp.Gameplay.Game;
+using Sharp.Player.Provider;
 
 namespace Sharp.Player.Manager;
 
@@ -24,7 +25,7 @@ public class GameManager : IGameManager
         _logger = logger;
     }
 
-    public async Task PerformRegistration(string gameId, PlayerDetails playerDetails)
+    public async Task PerformRegistration(string gameId)
     {
         try
         {
@@ -34,6 +35,9 @@ public class GameManager : IGameManager
             {
                 using var scope = _scopeFactory.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
+                var playerDetailsProvider = scope.ServiceProvider.GetRequiredService<IPlayerDetailsProvider>();
+                var playerDetails = await playerDetailsProvider.GetAsync();
+                
                 if (playerDetails.PlayerId != null && game.ParticipatingPlayers.Contains(playerDetails.PlayerId))
                 {
                     _logger.LogDebug("Player is already participating in the game");
@@ -44,6 +48,8 @@ public class GameManager : IGameManager
                 _logger.LogDebug(
                     "Successfully registered for game {Id}. The received TransactionId is {TransactionId}",
                     gameId, transactionId);
+
+                db.PlayerDetails.Attach(playerDetails);
                 var registration = new GameRegistration(gameId, transactionId)
                 {
                     PlayerDetails = playerDetails
@@ -59,15 +65,12 @@ public class GameManager : IGameManager
         }
         catch (ApiException e)
         {
-            if (e.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.NotFound)
-            {
-                _logger.LogWarning(
-                    "Could not register to the game {GameId}. A {Code} response was received. This might be caused by a dangling game or a duplicate registration",
-                    gameId, e.StatusCode);
-                return;
-            }
+            if (e.StatusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.NotFound)) throw;
+            
+            _logger.LogWarning(
+                "Could not register to the game {GameId}. A {Code} response was received. This might be caused by a dangling game or a duplicate registration",
+                gameId, e.StatusCode);
 
-            throw;
         }
     }
 

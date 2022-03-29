@@ -9,13 +9,11 @@ namespace Sharp.Player.Events.Consumers.Game;
 public class GameStatusMessageHandler : IMessageHandler<GameStatusEvent>
 {
     private readonly IGameManager _gameManager;
-    private readonly IPlayerManager _playerManager;
     private readonly ILogger<GameStatusMessageHandler> _logger;
 
-    public GameStatusMessageHandler(IGameManager gameManager, IPlayerManager playerManager, ILogger<GameStatusMessageHandler> logger)
+    public GameStatusMessageHandler(IGameManager gameManager, ILogger<GameStatusMessageHandler> logger)
     {
         _gameManager = gameManager;
-        _playerManager = playerManager;
         _logger = logger;
     }
 
@@ -24,7 +22,7 @@ public class GameStatusMessageHandler : IMessageHandler<GameStatusEvent>
         _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
         if (message.Status == GameStatus.Created)
         {
-            await _gameManager.PerformRegistration(message.GameId, _playerManager.Get());
+            await _gameManager.PerformRegistration(message.GameId);
         }
     }
     
