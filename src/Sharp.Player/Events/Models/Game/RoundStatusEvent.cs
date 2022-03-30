@@ -9,15 +9,15 @@ public class RoundStatusEvent
     [JsonPropertyName("gameId")]
     [Required]
     public string GameId { get; set; }
-    
+
     [JsonPropertyName("roundId")]
     [Required]
     public string RoundId { get; set; }
-    
+
     [JsonPropertyName("roundNumber")]
     [Required]
     public uint RoundNumber { get; set; }
-    
+
     [JsonPropertyName("roundStatus")]
     [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     [Required]
@@ -26,12 +26,11 @@ public class RoundStatusEvent
 
 public enum RoundStatus
 {
-    [EnumMember(Value = "started")]
-    Started, 
+    [EnumMember(Value = "started")] Started,
+
     // Doesn't work because of the spaces. Shouldn't be any problem for now but sucks anyway
     [EnumMember(Value = "command input ended")]
     CommandInputEnded,
-    
-    [JsonPropertyName("ended")]
-    Ended
-} 
+
+    [JsonPropertyName("ended")] Ended
+}

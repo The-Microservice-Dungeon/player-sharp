@@ -12,9 +12,9 @@ namespace Sharp.Player.Manager;
 public class CommandManager : ICommandManager
 {
     private readonly IGameCommandClient _commandClient;
+    private readonly SharpDbContext _db;
     private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
-    private readonly SharpDbContext _db;
     private readonly IPlayerDetailsProvider _playerDetails;
 
     public CommandManager(ILogger<CommandManager> logger,
@@ -48,7 +48,7 @@ public class CommandManager : ICommandManager
     private async Task SendCommand(BaseCommand command)
     {
         _logger.LogDebug("Sending command {@Command}", command);
-        
+
         var request = _mapper.Map<CommandRequest>(command);
         var response = await _commandClient.SendCommand(request);
         await SaveCommandTransaction(GameId, response.TransactionId, command);
@@ -56,7 +56,9 @@ public class CommandManager : ICommandManager
 
     private async Task SaveCommandTransaction(string gameId, string transactionId, BaseCommand command)
     {
-        _logger.LogDebug("Save Command Transaction to {GameId} with Transaction ID {TransactionId} for Command {@Command}", gameId, transactionId, command);
+        _logger.LogDebug(
+            "Save Command Transaction to {GameId} with Transaction ID {TransactionId} for Command {@Command}", gameId,
+            transactionId, command);
 
         await _db.CommandTransactions.AddAsync(new CommandTransaction(gameId, transactionId)
         {

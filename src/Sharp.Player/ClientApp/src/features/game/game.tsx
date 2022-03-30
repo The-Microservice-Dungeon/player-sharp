@@ -1,6 +1,5 @@
 import {useQuery} from "react-query";
-import {Game, GameState, getGames, getMap, Map} from "../../client";
-import {MapGraph, MapOutletProps} from "../map";
+import {Game, GameState, getGames} from "../../client";
 import clsx from "clsx";
 
 const bgStatusClasses: Record<GameState, string> = {
@@ -46,7 +45,7 @@ const GameEntry = (props: GameEntryProps) => {
                         </div>
                     </div>
                     <div>
-                        <GameStatusIndicator state={props.state} />
+                        <GameStatusIndicator state={props.state}/>
                     </div>
                 </div>
             </div>
@@ -54,9 +53,7 @@ const GameEntry = (props: GameEntryProps) => {
     );
 }
 
-type GameOverviewProps = {
-
-};
+type GameOverviewProps = {};
 
 export const GameOverview = (props: GameOverviewProps) => {
     const {isLoading, error, data} = useQuery<Game[], Error>('gameData', () => getGames());

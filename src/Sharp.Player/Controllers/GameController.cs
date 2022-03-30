@@ -28,4 +28,4 @@ public class GameController : ControllerBase
 public class GameDto
 {
     public string Id { get; set; }
-} 
+}

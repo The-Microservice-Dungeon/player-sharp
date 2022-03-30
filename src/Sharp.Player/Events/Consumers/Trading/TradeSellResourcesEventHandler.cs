@@ -16,7 +16,7 @@ public class TradeSellResourcesEventHandler : IMessageHandler<TradeSellResources
     public Task Handle(IMessageContext context, TradeSellResourcesEvent message)
     {
         _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
-        
+
         return Task.CompletedTask;
     }
 }

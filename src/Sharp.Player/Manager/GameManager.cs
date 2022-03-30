@@ -12,13 +12,14 @@ namespace Sharp.Player.Manager;
 
 public class GameManager : IGameManager
 {
+    private readonly SharpDbContext _db;
     private readonly IGameClient _gameClient;
     private readonly ILogger<GameManager> _logger;
     private readonly IMapper _mapper;
     private readonly IPlayerDetailsProvider _playerDetailsProvider;
-    private readonly SharpDbContext _db;
 
-    public GameManager(IGameClient gameClient, IMapper mapper, ILogger<GameManager> logger, SharpDbContext db, IPlayerDetailsProvider playerDetailsProvider)
+    public GameManager(IGameClient gameClient, IMapper mapper, ILogger<GameManager> logger, SharpDbContext db,
+        IPlayerDetailsProvider playerDetailsProvider)
     {
         _gameClient = gameClient;
         _mapper = mapper;
@@ -36,7 +37,7 @@ public class GameManager : IGameManager
             if (game.GameStatus == GameStatus.Created)
             {
                 var playerDetails = await _playerDetailsProvider.GetAsync();
-                
+
                 if (playerDetails.PlayerId != null && game.ParticipatingPlayers.Contains(playerDetails.PlayerId))
                 {
                     _logger.LogDebug("Player is already participating in the game");
@@ -65,11 +66,10 @@ public class GameManager : IGameManager
         catch (ApiException e)
         {
             if (e.StatusCode is not (HttpStatusCode.Forbidden or HttpStatusCode.NotFound)) throw;
-            
+
             _logger.LogWarning(
                 "Could not register to the game {GameId}. A {Code} response was received. This might be caused by a dangling game or a duplicate registration",
                 gameId, e.StatusCode);
-
         }
     }
 

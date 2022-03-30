@@ -12,11 +12,11 @@ public class TradeErrorEventHandler : IMessageHandler<TradeErrorEvent>
     {
         _logger = logger;
     }
-    
+
     public Task Handle(IMessageContext context, TradeErrorEvent message)
     {
         _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
-        
+
         return Task.CompletedTask;
     }
 }

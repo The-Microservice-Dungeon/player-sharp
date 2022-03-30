@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {ErrorBoundary} from 'react-error-boundary';
+import {HelmetProvider} from 'react-helmet-async';
+import {QueryClientProvider} from 'react-query';
+import {ReactQueryDevtools} from 'react-query/devtools';
+import {BrowserRouter as Router} from 'react-router-dom';
 
-import { Button, Spinner } from '../components/Elements';
-import { Notifications } from '../components/Notifications';
-import { queryClient } from '../lib/react-query';
+import {Button, Spinner} from '../components/Elements';
+import {Notifications} from '../components/Notifications';
+import {queryClient} from '../lib/react-query';
 
 const ErrorFallback = () => {
     return (
@@ -27,20 +27,20 @@ type AppProviderProps = {
     children: React.ReactNode;
 };
 
-export const AppProvider = ({ children }: AppProviderProps) => {
+export const AppProvider = ({children}: AppProviderProps) => {
     return (
         <React.Suspense
             fallback={
                 <div className="flex items-center justify-center w-screen h-screen">
-                    <Spinner size="xl" />
+                    <Spinner size="xl"/>
                 </div>
             }
         >
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <HelmetProvider>
                     <QueryClientProvider client={queryClient}>
-                        {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools />}
-                        <Notifications />
+                        {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools/>}
+                        <Notifications/>
                         <Router>{children}</Router>
                     </QueryClientProvider>
                 </HelmetProvider>

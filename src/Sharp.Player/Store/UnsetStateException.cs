@@ -2,7 +2,11 @@
 
 public class UnsetStateException : Exception
 {
-    public UnsetStateException() : base() {}
-    
-    public UnsetStateException(string message) : base(message) {}
+    public UnsetStateException()
+    {
+    }
+
+    public UnsetStateException(string message) : base(message)
+    {
+    }
 }

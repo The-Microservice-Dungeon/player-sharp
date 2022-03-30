@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using KafkaFlow;
+﻿using KafkaFlow;
 using Sharp.Data.Contexts;
 using Sharp.Player.Config;
 
@@ -15,7 +12,8 @@ public class FilterMessagesFromUnregisteredGames : IMessageMiddleware
     private readonly ILogger<FilterMessagesFromUnregisteredGames> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public FilterMessagesFromUnregisteredGames(ILogger<FilterMessagesFromUnregisteredGames> logger, IServiceScopeFactory scopeFactory)
+    public FilterMessagesFromUnregisteredGames(ILogger<FilterMessagesFromUnregisteredGames> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
@@ -27,7 +25,8 @@ public class FilterMessagesFromUnregisteredGames : IMessageMiddleware
 
         if (gameIdHeader == null)
         {
-            _logger.LogWarning($"No GameID Header was found, did you registered the {nameof(TransactionIdResolver)} first?");
+            _logger.LogWarning(
+                $"No GameID Header was found, did you registered the {nameof(TransactionIdResolver)} first?");
             await next(context).ConfigureAwait(false);
             return;
         }

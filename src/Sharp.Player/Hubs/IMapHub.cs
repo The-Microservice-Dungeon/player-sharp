@@ -1,5 +1,4 @@
 ﻿using Sharp.Gameplay.Map;
-using Sharp.Player.Controllers;
 
 namespace Sharp.Player.Hubs;
 

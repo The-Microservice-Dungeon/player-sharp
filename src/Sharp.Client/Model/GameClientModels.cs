@@ -14,8 +14,7 @@ public enum GameStatus
     [EnumMember(Value = "created")] Created,
     [EnumMember(Value = "started")] Started,
 
-    [EnumMember(Value = "ended")]
-    Ended
+    [EnumMember(Value = "ended")] Ended
 }
 
 public class GameResponse

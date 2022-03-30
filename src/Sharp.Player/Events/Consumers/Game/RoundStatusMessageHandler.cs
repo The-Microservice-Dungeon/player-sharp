@@ -7,8 +7,8 @@ namespace Sharp.Player.Events.Consumers.Game;
 
 public class RoundStatusMessageHandler : IMessageHandler<RoundStatusEvent>
 {
-    private readonly ILogger<RoundStatusMessageHandler> _logger;
     private readonly ICommandManager _commandManager;
+    private readonly ILogger<RoundStatusMessageHandler> _logger;
 
     public RoundStatusMessageHandler(ILogger<RoundStatusMessageHandler> logger, ICommandManager commandManager)
     {
@@ -21,9 +21,6 @@ public class RoundStatusMessageHandler : IMessageHandler<RoundStatusEvent>
         _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
 
         _commandManager.GameId = message.GameId;
-        if (message.RoundStatus == RoundStatus.Started)
-        {
-            await _commandManager.BuyRobot();
-        }
+        if (message.RoundStatus == RoundStatus.Started) await _commandManager.BuyRobot();
     }
 }

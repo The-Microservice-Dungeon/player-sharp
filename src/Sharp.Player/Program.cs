@@ -1,5 +1,4 @@
 using Serilog;
-using Serilog.Exceptions;
 using Sharp.Player;
 using Sharp.Player.Services;
 

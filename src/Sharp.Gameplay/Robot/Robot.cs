@@ -5,26 +5,27 @@ namespace Sharp.Gameplay.Robot;
 
 public class Robot : IIdentifiable<string>, IFieldLocatable
 {
-    private readonly string _id;
-    private Field _field;
-    public bool Alive { get; private set; }
-
     public Robot(string id, bool alive, RobotAttributes attributes, Field field)
     {
-        _id = id;
+        Id = id;
         Alive = alive;
-        _field = field;
+        Field = field;
         Attributes = attributes;
     }
-    
-    public string Id => _id;
-    public Field Field => _field;
 
-    public RobotAttributes Attributes { get; private set; }
+    public bool Alive { get; private set; }
+
+    public RobotAttributes Attributes { get; }
 
     public Dictionary<ResourceType, uint> Inventory { get; } = new();
+    public Field Field { get; private set; }
 
-    public void Kill() => Alive = false;
+    public string Id { get; }
+
+    public void Kill()
+    {
+        Alive = false;
+    }
 
     public void SetField(Field field)
     {
@@ -32,6 +33,6 @@ public class Robot : IIdentifiable<string>, IFieldLocatable
             throw new DeadRobotActionException();
         if (!field.IsNeighbour(field))
             throw new IllegalRobotMovementException(Id, field.Id);
-        _field = field;
+        Field = field;
     }
 }

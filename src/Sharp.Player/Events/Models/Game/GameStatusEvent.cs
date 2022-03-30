@@ -9,7 +9,7 @@ public class GameStatusEvent
     [JsonPropertyName("gameId")]
     [Required]
     public string GameId { get; set; }
-    
+
     [JsonPropertyName("status")]
     [JsonConverter(typeof(JsonStringEnumMemberConverter))]
     [Required]

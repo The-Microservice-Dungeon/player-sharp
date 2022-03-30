@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using AutoMapper;
 using Confluent.Kafka;
 using KafkaFlow;
 using KafkaFlow.Configuration;
@@ -86,7 +85,7 @@ public class Startup
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
 
         services.AddScoped<IPlayerDetailsProvider, PlayerDetailsProvider>();
-        
+
         services.AddScoped<IPlayerManager, PlayerManager>();
         services.AddScoped<IGameManager, GameManager>();
         services.AddScoped<IMapManager, MapManager>();
@@ -182,7 +181,7 @@ public static class KafkaHelper
             .WithWorkersCount(1)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-            .WithConsumerConfig(new ConsumerConfig()
+            .WithConsumerConfig(new ConsumerConfig
             {
                 AllowAutoCreateTopics = true
             })

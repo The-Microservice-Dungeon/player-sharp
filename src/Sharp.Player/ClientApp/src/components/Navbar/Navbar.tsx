@@ -1,5 +1,4 @@
 import * as React from "react";
-import {FolderIcon, HomeIcon} from "@heroicons/react/outline";
 import {NavLink} from "react-router-dom";
 import clsx from "clsx";
 
@@ -10,9 +9,9 @@ type NavigationItem = {
 
 const NavigationButtons = () => {
     const navigation = [
-        { name: 'Home', to: '.' },
-        { name: 'Games', to: './games' },
-        { name: 'Map', to: './map' },
+        {name: 'Home', to: '.'},
+        {name: 'Games', to: './games'},
+        {name: 'Map', to: './map'},
     ] as NavigationItem[];
 
     return (
@@ -38,7 +37,7 @@ export const Navbar = () => {
                 <div className="relative flex items-center justify-between h-16">
                     <div className="flex-1 flex items-stretch justify-start">
                         <div className="block ml-6 flex space-x-4">
-                            <NavigationButtons />
+                            <NavigationButtons/>
                         </div>
                     </div>
                 </div>

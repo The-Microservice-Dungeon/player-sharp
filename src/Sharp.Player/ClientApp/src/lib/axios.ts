@@ -1,5 +1,5 @@
-import { API_URL} from "../config/config";
-import Axios, { AxiosRequestConfig } from "axios";
+import {API_URL} from "../config/config";
+import Axios from "axios";
 
 export const axios = Axios.create({
     baseURL: API_URL
@@ -13,7 +13,7 @@ axios.interceptors.response.use(
             message,
             error: err
         });
-        
+
         return Promise.reject(err);
-    } 
+    }
 );

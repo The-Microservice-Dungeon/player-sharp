@@ -24,9 +24,7 @@ public class MovementEventMessageHandler : IMessageHandler<MovementEvent>
         {
             var planet = message.Planet!;
             if (planet.PlanetType == PlanetType.Default)
-            {
-                _mapManager.AddPlanet(planet.PlanetId, planet.MovementDifficulty, new []{ planet.ResourceType });
-            }
+                _mapManager.AddPlanet(planet.PlanetId, planet.MovementDifficulty, new[] { planet.ResourceType });
         }
 
         return Task.CompletedTask;

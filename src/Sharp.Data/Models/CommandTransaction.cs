@@ -17,12 +17,11 @@ public class CommandTransaction
 
     [Required] public string GameId { get; set; }
 
-    [Key]
-    [Required] public string TransactionId { get; set; }
-    
+    [Key] [Required] public string TransactionId { get; set; }
+
     public string? RobotId { get; set; }
-    
+
     public string? PlanetId { get; set; }
-    
+
     public string? TargetId { get; set; }
 }

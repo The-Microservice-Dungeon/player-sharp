@@ -5,11 +5,12 @@ namespace Sharp.Player.Services;
 
 public class CommandTransactionCleanupService : BackgroundService
 {
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<CommandTransactionCleanupService> _logger;
     private readonly IGameClient _gameClient;
+    private readonly ILogger<CommandTransactionCleanupService> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public CommandTransactionCleanupService(IServiceScopeFactory scopeFactory, ILogger<CommandTransactionCleanupService> logger, IGameClient gameClient)
+    public CommandTransactionCleanupService(IServiceScopeFactory scopeFactory,
+        ILogger<CommandTransactionCleanupService> logger, IGameClient gameClient)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
@@ -30,7 +31,8 @@ public class CommandTransactionCleanupService : BackgroundService
 
             if (danglingCommandTransactions.Count > 0)
             {
-                _logger.LogDebug("There are {N} dangling command transactions that will be removed", danglingCommandTransactions.Count);
+                _logger.LogDebug("There are {N} dangling command transactions that will be removed",
+                    danglingCommandTransactions.Count);
                 db.RemoveRange(danglingCommandTransactions);
                 await db.SaveChangesAsync(stoppingToken);
             }

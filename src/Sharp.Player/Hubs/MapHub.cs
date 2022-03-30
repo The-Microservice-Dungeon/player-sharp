@@ -4,5 +4,4 @@ namespace Sharp.Player.Hubs;
 
 public class MapHub : Hub<IMapHub>
 {
-    
 }

@@ -4,9 +4,7 @@ namespace Sharp.Player.Events.Models.Map;
 
 public class GameworldCreatedEvent
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-    
-    [JsonPropertyName("spacestation_ids")]
-    public List<string> SpacestationIds { get; set; }
+    [JsonPropertyName("id")] public string Id { get; set; }
+
+    [JsonPropertyName("spacestation_ids")] public List<string> SpacestationIds { get; set; }
 }

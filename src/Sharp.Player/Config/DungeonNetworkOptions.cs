@@ -9,9 +9,7 @@ public class DungeonNetworkOptions
 {
     public const string DungeonNetwork = "DungeonNetwork";
 
-    [Required] 
-    public string KafkaAddress { get; set; }
-    
-    [Required]
-    public string GameServiceAddress { get; set; }
+    [Required] public string KafkaAddress { get; set; }
+
+    [Required] public string GameServiceAddress { get; set; }
 }

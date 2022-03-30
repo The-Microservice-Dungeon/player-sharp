@@ -1,5 +1,4 @@
-﻿using Sharp.Data.Models;
-using Sharp.Gameplay.Game;
+﻿using Sharp.Gameplay.Game;
 
 namespace Sharp.Player.Manager;
 

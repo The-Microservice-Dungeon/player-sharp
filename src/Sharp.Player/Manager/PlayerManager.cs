@@ -1,11 +1,5 @@
-﻿using System.Net;
-using Microsoft.Extensions.Options;
-using Refit;
-using Sharp.Client.Client;
-using Sharp.Client.Model;
-using Sharp.Data.Contexts;
+﻿using Sharp.Data.Contexts;
 using Sharp.Data.Models;
-using Sharp.Player.Config;
 using Sharp.Player.Provider;
 
 namespace Sharp.Player.Manager;
@@ -28,7 +22,7 @@ public class PlayerManager : IPlayerManager
         details.PlayerId = playerId;
         _db.PlayerDetails.Update(details);
         _db.SaveChanges();
-        
+
         return details;
     }
 

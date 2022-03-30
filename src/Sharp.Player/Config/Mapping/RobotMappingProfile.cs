@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Confluent.Kafka.Admin;
 using Sharp.Gameplay.Robot;
 using Sharp.Player.Events.Models.Trading;
 

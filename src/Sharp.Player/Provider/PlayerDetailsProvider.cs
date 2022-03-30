@@ -12,9 +12,9 @@ namespace Sharp.Player.Provider;
 public class PlayerDetailsProvider : IPlayerDetailsProvider
 {
     private readonly SharpDbContext _dbContext;
+    private readonly IOptions<PlayerDetailsOptions> _detailsOptions;
     private readonly ILogger<PlayerDetailsProvider> _logger;
     private readonly IPlayerRegistrationClient _registrationClient;
-    private readonly IOptions<PlayerDetailsOptions> _detailsOptions;
 
     public PlayerDetailsProvider(
         SharpDbContext dbContext,

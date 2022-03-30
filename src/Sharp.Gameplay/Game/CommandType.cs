@@ -2,5 +2,14 @@
 
 public enum CommandType
 {
-    Blocking, Buying, Selling, Movement, Battle, Mining, Regeneration, BattleItemUse, RepairItemUse, MoveItemUse
+    Blocking,
+    Buying,
+    Selling,
+    Movement,
+    Battle,
+    Mining,
+    Regeneration,
+    BattleItemUse,
+    RepairItemUse,
+    MoveItemUse
 }

@@ -1,4 +1,4 @@
-import { useRoutes } from 'react-router-dom';
+import {useRoutes} from 'react-router-dom';
 import {Landing} from "../features/misc";
 import {MapOutlet} from "../features/map";
 import {ContentLayout} from "../components/Layout";
@@ -8,15 +8,15 @@ export const AppRoutes = () => {
     const routes = [
         {
             path: '/',
-            element: <Landing />
+            element: <Landing/>
         },
         {
             path: '/map',
-            element: <MapOutlet />
+            element: <MapOutlet/>
         },
         {
             path: '/games',
-            element: <GameOverview />
+            element: <GameOverview/>
         }
     ];
 

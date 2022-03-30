@@ -1,8 +1,6 @@
 ﻿using System.Text;
 using KafkaFlow;
-using Microsoft.EntityFrameworkCore;
 using Sharp.Data.Contexts;
-using Sharp.Data.Models;
 using Sharp.Player.Config;
 
 namespace Sharp.Player.Middleware.Kafka;
@@ -12,8 +10,8 @@ namespace Sharp.Player.Middleware.Kafka;
 /// </summary>
 public class TransactionIdResolver : IMessageMiddleware
 {
-    private readonly ILogger<TransactionIdResolver> _logger;
     private readonly SharpDbContext _db;
+    private readonly ILogger<TransactionIdResolver> _logger;
 
     public TransactionIdResolver(ILogger<TransactionIdResolver> logger, SharpDbContext db)
     {
@@ -42,14 +40,14 @@ public class TransactionIdResolver : IMessageMiddleware
         }
 
         context.Headers.Add(KafkaHeaders.GameIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.GameId));
-            
+
         if (commandTransaction.PlanetId != null)
             context.Headers.Add(KafkaHeaders.PlanetIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.PlanetId));
         if (commandTransaction.RobotId != null)
             context.Headers.Add(KafkaHeaders.RobotIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.RobotId));
         if (commandTransaction.TargetId != null)
             context.Headers.Add(KafkaHeaders.TargetIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.TargetId));
-            
+
         await next(context).ConfigureAwait(false);
     }
 }

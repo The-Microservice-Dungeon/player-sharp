@@ -1,6 +1,6 @@
 import {getMap, Map} from "../../client";
 import {useQuery} from "react-query";
-import {CSSProperties, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {CSSProperties, useEffect, useRef, useState} from "react";
 import {Edge, Network, Node, Options} from "vis-network";
 
 const colorSpaceStation = "#FFA701";
@@ -62,7 +62,7 @@ export const MapGraph = ({
     const container = useRef<HTMLDivElement | null>(null);
     const [nodes] = useState<Node[]>(buildNodesFromMap(map));
     const [edges] = useState<Edge[]>(buildEdgesFromMap(map));
-    const [ legend, setLegend ] = useState<Node[]>([]);
+    const [legend, setLegend] = useState<Node[]>([]);
     const [network, setNetwork] = useState<Network | null>(null);
 
     const options: Options = {
@@ -88,7 +88,7 @@ export const MapGraph = ({
     }, [nodes, legend]);
 
     useEffect(() => {
-        if(container.current) {
+        if (container.current) {
             const lStartX = -container.current?.clientWidth / 2;
             const lStartY = -container.current?.clientHeight / 2;
             console.log({
@@ -113,7 +113,11 @@ export const MapGraph = ({
 export type MapOutletProps = {};
 
 export const MapOutlet = (props: MapOutletProps) => {
-    const {isLoading, error, data} = useQuery<Map, Error>('mapData', async () => await getMap(), {useErrorBoundary: false});
+    const {
+        isLoading,
+        error,
+        data
+    } = useQuery<Map, Error>('mapData', async () => await getMap(), {useErrorBoundary: false});
 
     // TODO: Later
     /*const [ connection, setConnection ] = useState<HubConnection>();

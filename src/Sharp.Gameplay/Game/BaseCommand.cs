@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Sharp.Gameplay.Game;
+﻿namespace Sharp.Gameplay.Game;
 
 // TODO: We're not bound to this model and could get rid of the nullabilty shit by simply introducing our own command
 //  model and map it onto a DTO.
@@ -18,6 +16,6 @@ public struct BaseCommand
         CommandType = commandType;
         CommandObject = new BaseCommandObject(commandType);
     }
-    
+
     public string? RobotId { get; set; } = null;
 }

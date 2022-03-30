@@ -1,7 +1,7 @@
 ﻿namespace Sharp.Player.Repository;
 
-public interface ISingleStateStore<T> 
-    where T: class
+public interface ISingleStateStore<T>
+    where T : class
 {
     T Get();
     void Set(T data);

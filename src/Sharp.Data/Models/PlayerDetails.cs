@@ -15,12 +15,10 @@ public class PlayerDetails
         Token = token;
     }
 
-    [Key, Column(Order = 0)]
-    [Required] public string Name { get; set; }
+    [Key] [Column(Order = 0)] [Required] public string Name { get; set; }
 
-    [Key, Column(Order = 1)]
-    [Required] public string Email { get; set; }
-    
+    [Key] [Column(Order = 1)] [Required] public string Email { get; set; }
+
     [Required] public string Token { get; set; }
 
     public string? PlayerId { get; set; }

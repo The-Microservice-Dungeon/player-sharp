@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Sharp.Gameplay.Map;
-using Sharp.Player.Manager;
 using Sharp.Player.Repository;
 
 namespace Sharp.Player.Controllers;
