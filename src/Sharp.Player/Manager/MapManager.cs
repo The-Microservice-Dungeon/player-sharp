@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Sharp.Gameplay.Map;
 using Sharp.Player.Controllers;
 using Sharp.Player.Hubs;
+using Sharp.Player.Repository;
 
 namespace Sharp.Player.Manager;
 
@@ -10,34 +11,31 @@ public class MapManager : IMapManager
 {
     private readonly IHubContext<MapHub, IMapHub> _mapHubContext;
     private readonly ILogger<MapManager> _logger;
-    public MapManager(IHubContext<MapHub, IMapHub> mapHubContext, ILogger<MapManager> logger)
+    private readonly ICurrentMapStore _currentMapStore;
+    public MapManager(IHubContext<MapHub, IMapHub> mapHubContext, ILogger<MapManager> logger, ICurrentMapStore currentMapStore)
     {
         _mapHubContext = mapHubContext;
         _logger = logger;
+        _currentMapStore = currentMapStore;
     }
-
-    // TODO: Get rid of that nullability. 
-    private Map? _map { get; set; }
-
-    public Map? Get() => _map;
-    public Map GetOrThrow() => _map ?? throw new ApplicationException($"{nameof(_map)} is null");
-    
 
     public void Create(string id)
     {
         _logger.LogDebug("Creating a new Map with ID {Id}", id);
         
-        _map = new Map(id);
+        var map = new Map(id);
+        _currentMapStore.Set(map);
+        
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO
-        _mapHubContext.Clients.All.MapCreated(_map).GetAwaiter().GetResult();
+        _mapHubContext.Clients.All.MapCreated(map).GetAwaiter().GetResult();
     }
 
     public void AddSpaceStation(string fieldId)
     {
         _logger.LogDebug("Adding SpaceStation on Field {Id}", fieldId);
         
-        var field = GetOrThrow().GetOrCreateField(fieldId);
+        var field = _currentMapStore.Get().GetOrCreateField(fieldId);
 
         if (field.SpaceStation != null)
             return;
@@ -56,7 +54,7 @@ public class MapManager : IMapManager
     {
         _logger.LogDebug("Adding Opaque field with {Id}", id);
         
-        var field = GetOrThrow().GetOrCreateField(id);
+        var field = _currentMapStore.Get().GetOrCreateField(id);
         if (field.MovementDifficulty == movementDifficulty)
             return;
 
@@ -71,7 +69,7 @@ public class MapManager : IMapManager
     {
         _logger.LogDebug("Adding Planet on Field {Id}", id);
         
-        var field = GetOrThrow().GetOrCreateField(id);
+        var field = _currentMapStore.Get().GetOrCreateField(id);
         if(field.MovementDifficulty == movementDifficulty && 
            field.Planet != null && 
            field.Planet.ResourceDeposits.Select(d => d.ResourceType).SequenceEqual(resourceTypes))
@@ -91,5 +89,5 @@ public class MapManager : IMapManager
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
 
-    public Field GetField(string id) => GetOrThrow().GetOrCreateField(id);
+    public Field GetField(string id) => _currentMapStore.Get().GetOrCreateField(id);
 }

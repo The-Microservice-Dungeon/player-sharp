@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sharp.Gameplay.Map;
 using Sharp.Player.Manager;
+using Sharp.Player.Repository;
 
 namespace Sharp.Player.Controllers;
 
@@ -9,23 +10,27 @@ namespace Sharp.Player.Controllers;
 [Route("map")]
 public class MapController : ControllerBase
 {
-    private readonly IMapManager _mapManager;
+    private readonly ICurrentMapStore _map;
     private readonly IMapper _mapper;
 
-    public MapController(IMapper mapper, IMapManager mapManager)
+    public MapController(IMapper mapper, ICurrentMapStore map)
     {
         _mapper = mapper;
-        _mapManager = mapManager;
+        _map = map;
     }
 
     [HttpGet]
     public ActionResult<MapDto> GetMap()
     {
-        var map = _mapManager.Get();
-        if (map == null)
+        try
+        {
+            var map = _map.Get();
+            return Ok(_mapper.Map<MapDto>(map));
+        }
+        catch (UnsetStateException)
+        {
             return NotFound();
-        // TODO: The Mapping should be part of the Map Manager.
-        return Ok(_mapper.Map<MapDto>(map));
+        }
     }
 }
 

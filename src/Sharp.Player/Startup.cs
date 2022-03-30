@@ -24,6 +24,7 @@ using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
 using Sharp.Player.Middleware.Kafka;
 using Sharp.Player.Provider;
+using Sharp.Player.Repository;
 using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
@@ -91,6 +92,9 @@ public class Startup
         services.AddScoped<IMapManager, MapManager>();
         services.AddScoped<ICommandManager, CommandManager>();
         services.AddScoped<IRobotManager, RobotManager>();
+
+        services.AddSingleton<ICurrentGameStore, MemoryCurrentGameStore>();
+        services.AddSingleton<ICurrentMapStore, MemoryCurrentMapStore>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
