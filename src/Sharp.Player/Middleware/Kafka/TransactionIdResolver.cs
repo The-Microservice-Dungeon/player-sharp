@@ -2,6 +2,7 @@
 using KafkaFlow;
 using Sharp.Data.Contexts;
 using Sharp.Player.Config;
+using Sharp.Player.Provider;
 
 namespace Sharp.Player.Middleware.Kafka;
 

@@ -18,6 +18,7 @@ using Sharp.Player.Events.Consumers.Trading;
 using Sharp.Player.Events.Models.Game;
 using Sharp.Player.Events.Models.Map;
 using Sharp.Player.Events.Models.Robot;
+using Sharp.Player.Events.Models.Trading;
 using Sharp.Player.Events.TypeResolver.Trading;
 using Sharp.Player.Hubs;
 using Sharp.Player.Manager;
@@ -95,6 +96,7 @@ public class Startup
         services.AddSingleton<ICurrentGameStore, MemoryCurrentGameStore>();
         services.AddSingleton<ICurrentMapStore, MemoryCurrentMapStore>();
         services.AddSingleton<IRobotFleetStore, MemoryRobotFleetStore>();
+        services.AddSingleton<IWalletStore, MemoryWalletStore>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
@@ -110,6 +112,7 @@ public class Startup
                 .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
                 .AddDefaultConsumer<MovementEvent, MovementEventMessageHandler>("movement")
                 .AddDefaultConsumer<NeighboursEvent, NeighbourEventMessageHandler>("neighbours")
+                .AddDefaultConsumer<BankCreatedEvent, BankCreatedEventHandler>("bank-created")
                 .AddConsumer(consumer => consumer
                     .DefaultTypedConsumer<RoundStatusEvent, RoundStatusMessageHandler>("roundStatus")
                     .AddMiddlewares(middlewares => middlewares
