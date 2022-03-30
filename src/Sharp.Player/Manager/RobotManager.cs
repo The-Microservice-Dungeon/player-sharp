@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Sharp.Gameplay.Robot;
 using Sharp.Player.Events.Models.Trading;
+using Sharp.Player.Repository;
 
 namespace Sharp.Player.Manager;
 
@@ -9,14 +10,14 @@ public class RobotManager : IRobotManager
     private readonly ILogger<RobotManager> _logger;
     private readonly IMapManager _mapManager;
     private readonly IMapper _mapper;
+    private readonly IRobotFleetStore _robotFleetStore;
 
-    private readonly List<Robot> RobotFleet = new();
-
-    public RobotManager(IMapManager mapManager, ILogger<RobotManager> logger, IMapper mapper)
+    public RobotManager(IMapManager mapManager, ILogger<RobotManager> logger, IMapper mapper, IRobotFleetStore robotFleetStore)
     {
         _mapManager = mapManager;
         _logger = logger;
         _mapper = mapper;
+        _robotFleetStore = robotFleetStore;
     }
 
     public Task AddRobotFromTrade(TradeRobotData boughtRobot)
@@ -27,7 +28,7 @@ public class RobotManager : IRobotManager
         var field = _mapManager.GetField(boughtRobot.Planet);
 
         var robot = new Robot(boughtRobot.Id, boughtRobot.Alive, attributes, field);
-        RobotFleet.Add(robot);
+        _robotFleetStore.Add(robot);
 
         _logger.LogDebug("Robot {@Robot} added to fleet", robot);
 
@@ -36,6 +37,6 @@ public class RobotManager : IRobotManager
 
     public void ClearFleet()
     {
-        RobotFleet.Clear();
+        _robotFleetStore.Clear();
     }
 }

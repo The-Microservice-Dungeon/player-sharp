@@ -94,6 +94,7 @@ public class Startup
 
         services.AddSingleton<ICurrentGameStore, MemoryCurrentGameStore>();
         services.AddSingleton<ICurrentMapStore, MemoryCurrentMapStore>();
+        services.AddSingleton<IRobotFleetStore, MemoryRobotFleetStore>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
