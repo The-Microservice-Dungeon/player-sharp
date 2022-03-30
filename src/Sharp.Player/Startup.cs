@@ -183,7 +183,7 @@ public static class KafkaHelper
                 AllowAutoCreateTopics = true
             })
             .AddMiddlewares(middlewares => middlewares
-                .Add<TransactionIdResolver>()
+                .Add<TransactionIdResolver>(MiddlewareLifetime.Scoped)
                 .Add<FilterMessagesFromUnregisteredGames>());
     }
 

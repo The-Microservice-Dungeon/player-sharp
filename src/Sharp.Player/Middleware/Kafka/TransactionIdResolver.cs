@@ -12,13 +12,13 @@ namespace Sharp.Player.Middleware.Kafka;
 /// </summary>
 public class TransactionIdResolver : IMessageMiddleware
 {
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<TransactionIdResolver> _logger;
+    private readonly SharpDbContext _db;
 
-    public TransactionIdResolver(ILogger<TransactionIdResolver> logger, IServiceScopeFactory scopeFactory)
+    public TransactionIdResolver(ILogger<TransactionIdResolver> logger, SharpDbContext db)
     {
         _logger = logger;
-        _scopeFactory = scopeFactory;
+        _db = db;
     }
 
     public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
@@ -31,9 +31,7 @@ public class TransactionIdResolver : IMessageMiddleware
             return;
         }
 
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-        var commandTransaction = await db.CommandTransactions.FindAsync(transactionId);
+        var commandTransaction = await _db.CommandTransactions.FindAsync(transactionId);
 
         if (commandTransaction == null)
         {
