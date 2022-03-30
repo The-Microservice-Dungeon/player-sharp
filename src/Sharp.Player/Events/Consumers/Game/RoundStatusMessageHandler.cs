@@ -18,7 +18,7 @@ public class RoundStatusMessageHandler : IMessageHandler<RoundStatusEvent>
 
     public async Task Handle(IMessageContext context, RoundStatusEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         _commandManager.GameId = message.GameId;
         if (message.RoundStatus == RoundStatus.Started) await _commandManager.BuyRobot();

@@ -19,7 +19,7 @@ public class GameStatusMessageHandler : IMessageHandler<GameStatusEvent>
 
     public async Task Handle(IMessageContext context, GameStatusEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
         if (message.Status == GameStatus.Created) await _gameManager.PerformRegistration(message.GameId);
     }
 }

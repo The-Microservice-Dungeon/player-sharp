@@ -18,7 +18,7 @@ public class MovementEventMessageHandler : IMessageHandler<MovementEvent>
 
     public Task Handle(IMessageContext context, MovementEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         if (message.Success)
         {

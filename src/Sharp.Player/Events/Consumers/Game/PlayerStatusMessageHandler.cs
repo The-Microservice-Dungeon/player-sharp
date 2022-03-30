@@ -20,7 +20,7 @@ public class PlayerStatusMessageHandler : IMessageHandler<PlayerStatusEvent>
 
     public Task Handle(IMessageContext context, PlayerStatusEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         var transactionId = context.Headers.GetString(KafkaHeaders.TransactionIdHeaderName) ??
                             throw new ApplicationException("There must be an transaction id");

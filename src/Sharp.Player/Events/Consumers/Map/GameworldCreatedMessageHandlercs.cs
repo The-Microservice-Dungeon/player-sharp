@@ -18,7 +18,7 @@ public class GameworldCreatedMessageHandler : IMessageHandler<GameworldCreatedEv
 
     public Task Handle(IMessageContext context, GameworldCreatedEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         _mapManager.Create(message.Id);
         foreach (var messageSpacestationId in message.SpacestationIds)

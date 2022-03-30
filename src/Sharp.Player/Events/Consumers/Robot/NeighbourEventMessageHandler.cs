@@ -18,7 +18,7 @@ public class NeighbourEventMessageHandler : IMessageHandler<NeighboursEvent>
 
     public Task Handle(IMessageContext context, NeighboursEvent message)
     {
-        _logger.LogDebug("Received {Event} Message {@Message}", typeof(Message).FullName, message);
+        _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         foreach (var neighbour in message.Neighbours)
             _mapManager.AddOpaqueField(neighbour.PlanetId, neighbour.MovementDifficulty);
