@@ -12,35 +12,25 @@ namespace Sharp.Player.Manager;
 public class CommandManager : ICommandManager
 {
     private readonly IGameCommandClient _commandClient;
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IGameManager _gameManager;
     private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
-    private readonly IPlayerManager _playerManager;
+    private readonly SharpDbContext _db;
+    private readonly IPlayerDetailsProvider _playerDetails;
 
-    public CommandManager(ILogger<CommandManager> logger, IPlayerManager playerManager, IGameManager gameManager,
-        IGameCommandClient commandClient, IMapper mapper, IServiceScopeFactory scopeFactory)
+    public CommandManager(ILogger<CommandManager> logger,
+        IGameCommandClient commandClient, IMapper mapper, SharpDbContext db, IPlayerDetailsProvider playerDetails)
     {
         _logger = logger;
-        _playerManager = playerManager;
-        _gameManager = gameManager;
         _commandClient = commandClient;
         _mapper = mapper;
-        _scopeFactory = scopeFactory;
+        _db = db;
+        _playerDetails = playerDetails;
     }
 
     // TODO: See ICommandManager
     public string GameId { get; set; }
 
-    public CommandBuilderDirector CommandBuilder
-    {
-        get
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var playerDetailsProvider = scope.ServiceProvider.GetRequiredService<IPlayerDetailsProvider>();
-            return new(GameId, playerDetailsProvider.Get().Token);
-        }
-    }
+    public CommandBuilderDirector CommandBuilder => new(GameId, _playerDetails.Get().Token);
 
     public async Task BuyRobot(uint amount = 1)
     {
@@ -68,14 +58,12 @@ public class CommandManager : ICommandManager
     {
         _logger.LogDebug("Save Command Transaction to {GameId} with Transaction ID {TransactionId} for Command {@Command}", gameId, transactionId, command);
 
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-        await db.CommandTransactions.AddAsync(new CommandTransaction(gameId, transactionId)
+        await _db.CommandTransactions.AddAsync(new CommandTransaction(gameId, transactionId)
         {
             PlanetId = command.CommandObject.PlanetId,
             RobotId = command.RobotId,
             TargetId = command.CommandObject.TargetId
         });
-        await db.SaveChangesAsync();
+        await _db.SaveChangesAsync();
     }
 }

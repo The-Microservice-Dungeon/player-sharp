@@ -12,17 +12,19 @@ namespace Sharp.Player.Manager;
 
 public class GameManager : IGameManager
 {
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IGameClient _gameClient;
     private readonly ILogger<GameManager> _logger;
     private readonly IMapper _mapper;
+    private readonly IPlayerDetailsProvider _playerDetailsProvider;
+    private readonly SharpDbContext _db;
 
-    public GameManager(IGameClient gameClient, IServiceScopeFactory scopeFactory, IMapper mapper, ILogger<GameManager> logger)
+    public GameManager(IGameClient gameClient, IMapper mapper, ILogger<GameManager> logger, SharpDbContext db, IPlayerDetailsProvider playerDetailsProvider)
     {
         _gameClient = gameClient;
-        _scopeFactory = scopeFactory;
         _mapper = mapper;
         _logger = logger;
+        _db = db;
+        _playerDetailsProvider = playerDetailsProvider;
     }
 
     public async Task PerformRegistration(string gameId)
@@ -33,10 +35,7 @@ public class GameManager : IGameManager
             var game = await _gameClient.GetGame(gameId);
             if (game.GameStatus == GameStatus.Created)
             {
-                using var scope = _scopeFactory.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-                var playerDetailsProvider = scope.ServiceProvider.GetRequiredService<IPlayerDetailsProvider>();
-                var playerDetails = await playerDetailsProvider.GetAsync();
+                var playerDetails = await _playerDetailsProvider.GetAsync();
                 
                 if (playerDetails.PlayerId != null && game.ParticipatingPlayers.Contains(playerDetails.PlayerId))
                 {
@@ -49,13 +48,13 @@ public class GameManager : IGameManager
                     "Successfully registered for game {Id}. The received TransactionId is {TransactionId}",
                     gameId, transactionId);
 
-                db.PlayerDetails.Attach(playerDetails);
+                _db.PlayerDetails.Attach(playerDetails);
                 var registration = new GameRegistration(gameId, transactionId)
                 {
                     PlayerDetails = playerDetails
                 };
-                await db.GameRegistrations.AddAsync(registration);
-                await db.SaveChangesAsync();
+                await _db.GameRegistrations.AddAsync(registration);
+                await _db.SaveChangesAsync();
             }
             else
             {
@@ -83,9 +82,7 @@ public class GameManager : IGameManager
 
     public Task<List<Game>> GetRegisteredGames()
     {
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-        return Task.Run(() => db.GameRegistrations
+        return Task.Run(() => _db.GameRegistrations
             .Select(registration => _mapper.Map<Game>(registration))
             .ToList());
     }

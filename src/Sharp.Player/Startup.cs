@@ -86,11 +86,11 @@ public class Startup
 
         services.AddScoped<IPlayerDetailsProvider, PlayerDetailsProvider>();
         
-        services.AddSingleton<IPlayerManager, PlayerManager>();
-        services.AddSingleton<IGameManager, GameManager>();
-        services.AddSingleton<IMapManager, MapManager>();
-        services.AddSingleton<ICommandManager, CommandManager>();
-        services.AddSingleton<IRobotManager, RobotManager>();
+        services.AddScoped<IPlayerManager, PlayerManager>();
+        services.AddScoped<IGameManager, GameManager>();
+        services.AddScoped<IMapManager, MapManager>();
+        services.AddScoped<ICommandManager, CommandManager>();
+        services.AddScoped<IRobotManager, RobotManager>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
@@ -118,7 +118,7 @@ public class Startup
                         .AddAtBeginning<FilterOldMessages>()
                         .AddSerializer<JsonCoreSerializer, TradeEventTypeResolver>()
                         .AddTypedHandlers(handlers => handlers
-                            .WithHandlerLifetime(InstanceLifetime.Singleton)
+                            .WithHandlerLifetime(InstanceLifetime.Scoped)
                             .AddHandler<TradeBuyRobotEventHandler>()
                             .AddHandler<TradeSellResourcesEventHandler>()
                             .AddHandler<TradeErrorEventHandler>()
@@ -202,6 +202,7 @@ public static class KafkaHelper
             )
             .AddMiddlewares(middlewares => middlewares
                 .AddTypedHandlers(handlers => handlers
+                    .WithHandlerLifetime(InstanceLifetime.Scoped)
                     .AddHandler<THandler>()
                 ));
     }

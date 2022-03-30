@@ -12,36 +12,29 @@ namespace Sharp.Player.Manager;
 
 public class PlayerManager : IPlayerManager
 {
-    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly SharpDbContext _db;
+    private readonly IPlayerDetailsProvider _playerDetails;
 
-    public PlayerManager(
-        IServiceScopeFactory scopeFactory)
+    public PlayerManager(SharpDbContext db, IPlayerDetailsProvider playerDetails)
     {
-        _scopeFactory = scopeFactory;
+        _db = db;
+        _playerDetails = playerDetails;
     }
 
     public PlayerDetails SetPlayerId(string playerId)
     {
-        using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-        var detailsProvider = scope.ServiceProvider.GetRequiredService<IPlayerDetailsProvider>();
-        
-        var details = detailsProvider.Get();
-        db.PlayerDetails.Attach(details);
+        var details = _playerDetails.Get();
+        _db.PlayerDetails.Attach(details);
         details.PlayerId = playerId;
-        db.PlayerDetails.Update(details);
-        db.SaveChanges();
+        _db.PlayerDetails.Update(details);
+        _db.SaveChanges();
         
         return details;
     }
 
     public PlayerDetails? ResolveRegistrationTransactionId(string transactionId)
     {
-        using var scope = _scopeFactory.CreateScope();
-        
-        var db = scope.ServiceProvider.GetRequiredService<SharpDbContext>();
-        
-        return db.GameRegistrations
+        return _db.GameRegistrations
             .Where(registration => registration.TransactionId == transactionId)
             .Select(registration => registration.PlayerDetails)
             .FirstOrDefault();

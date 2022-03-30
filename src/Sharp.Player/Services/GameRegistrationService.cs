@@ -6,20 +6,23 @@ namespace Sharp.Player.Services;
 
 public class GameRegistrationService : BackgroundService
 {
-    private readonly IGameManager _gameManager;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<GameRegistrationService> _logger;
 
-    public GameRegistrationService(ILogger<GameRegistrationService> logger, IGameManager gameManager)
+    public GameRegistrationService(ILogger<GameRegistrationService> logger, IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _gameManager = gameManager;
+        _scopeFactory = scopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        using var scope = _scopeFactory.CreateScope();
+        var gameManager = scope.ServiceProvider.GetRequiredService<IGameManager>();
+        
         _logger.LogDebug("Started {Service}", nameof(GameRegistrationService));
-        var games = await _gameManager.GetAvailableGames();
+        var games = await gameManager.GetAvailableGames();
         _logger.LogInformation("Retreived {N} open games to register", games.Count);
-        await Task.WhenAll(games.Select(game => _gameManager.PerformRegistration(game.Id)));
+        await Task.WhenAll(games.Select(game => gameManager.PerformRegistration(game.Id)));
     }
 }
