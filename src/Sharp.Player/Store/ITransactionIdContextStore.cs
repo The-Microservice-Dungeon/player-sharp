@@ -27,12 +27,15 @@ public interface ITransactionIdContextStore
     bool HasBeenConsumed(string transactionId, string consumerName);
     void MarkAsConsumed(string transactionId, string consumerName);
 
+    void AddContext((string, string) tuple, string context) => AddContext(tuple.Item1, tuple.Item2, context);
+    void AddContext((string, string) tuple, byte[] context) => AddContext(tuple.Item1, tuple.Item2, context);
     void AddContext(string transactionId, string key, string context)
     {
         AddContext(transactionId, key, Encoding.UTF8.GetBytes(context));
     }
 
     void AddContext(string transactionId, string key, byte[] context);
+    List<string> GetContextAsString((string, string) tuple) => GetContextAsString(tuple.Item1, tuple.Item2);
 
     List<string> GetContextAsString(string transactionId, string key)
     {
@@ -42,8 +45,10 @@ public interface ITransactionIdContextStore
     }
 
     List<byte[]> GetContext(string transactionId, string key);
+    void RemoveContext((string, string) tuple) => RemoveContext(tuple.Item1, tuple.Item2);
     void RemoveContext(string transactionId, string key);
     void ClearContext(string transactionId);
+    void ClearContext();
 }
 
 public class ContextKeys

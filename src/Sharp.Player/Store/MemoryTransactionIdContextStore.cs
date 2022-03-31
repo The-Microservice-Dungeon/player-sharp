@@ -7,7 +7,7 @@
 public class MemoryTransactionIdContextStore : ITransactionIdContextStore
 {
     private readonly Dictionary<string, HashSet<string>> _store = new();
-    private readonly Dictionary<string, Dictionary<string, List<byte[]>>> _contextStore = new();
+    private readonly Dictionary<(string, string), List<byte[]>> _contextStore = new();
 
     private readonly ILogger<MemoryTransactionIdContextStore> _logger;
 
@@ -36,22 +36,25 @@ public class MemoryTransactionIdContextStore : ITransactionIdContextStore
     public void AddContext(string transactionId, string key, byte[] context)
     {
         _logger.LogDebug("Adding Context For {TransactionId} with Key {Key} and context length {Length}", transactionId, key, context.Length);
-        if (!_contextStore.ContainsKey(transactionId))
+        var cKey = (transactionId, key);
+        if (!_contextStore.ContainsKey(cKey))
         {
-            Dictionary<string, List<byte[]>> tStore = new();
-            _contextStore.Add(transactionId, tStore);
-        }
-        else if (!_contextStore[transactionId].ContainsKey(key))
-        {
-            _contextStore[transactionId].Add(key, new List<byte[]>());
+            _contextStore.Add(cKey, new List<byte[]>());
         }
 
-        _contextStore[transactionId][key].Add(context);
+        _contextStore[cKey].Add(context);
     }
 
-    public List<byte[]> GetContext(string transactionId, string key) => _contextStore[transactionId][key];
+    public List<byte[]> GetContext(string transactionId, string key) => _contextStore[(transactionId, key)];
 
-    public void RemoveContext(string transactionId, string key) => _contextStore[transactionId].Remove(key);
+    public void RemoveContext(string transactionId, string key) => _contextStore.Remove((transactionId, key));
 
-    public void ClearContext(string transactionId) => _contextStore[transactionId].Clear();
+    public void ClearContext(string transactionId)
+    {
+        foreach (var keyValuePair in _contextStore.Where(c => c.Key.Item1 == transactionId))
+        {
+            _contextStore.Remove(keyValuePair.Key);
+        }
+    }
+    public void ClearContext() => _contextStore.Clear();
 }
