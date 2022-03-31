@@ -36,6 +36,10 @@ public class CommandManager : ICommandManager
     {
         if (amount == 0)
             throw new ArgumentException("Amount cannot be 0", nameof(amount));
+        if (amount > 1)
+            throw new ArgumentException(
+                "At the moment no more than 1 robot can be bought at a time because of problems with the location",
+                nameof(amount));
 
         var command = CommandBuilder.BuyCommand
             .SetItem(Item.Robot)
