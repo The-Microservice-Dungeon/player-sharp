@@ -97,6 +97,7 @@ public class Startup
         services.AddSingleton<ICurrentMapStore, MemoryCurrentMapStore>();
         services.AddSingleton<IRobotFleetStore, MemoryRobotFleetStore>();
         services.AddSingleton<IWalletStore, MemoryWalletStore>();
+        services.AddSingleton<ITransactionIdContextStore, MemoryTransactionIdContextStore>();
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
@@ -185,13 +186,11 @@ public static class KafkaHelper
             .WithWorkersCount(1)
             .WithBufferSize(100)
             .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-            .WithConsumerConfig(new ConsumerConfig
-            {
-                AllowAutoCreateTopics = true
-            })
+            .WithConsumerConfig(new ConsumerConfig())
             .AddMiddlewares(middlewares => middlewares
                 .Add<TransactionIdResolver>(MiddlewareLifetime.Scoped)
-                .Add<FilterMessagesFromUnregisteredGames>());
+                .Add<FilterMessagesFromUnregisteredGames>()
+                .Add<TransactionIdConsumptionMarker>());
     }
 
     public static IConsumerConfigurationBuilder DefaultTypedConsumer<TMessage, THandler>(

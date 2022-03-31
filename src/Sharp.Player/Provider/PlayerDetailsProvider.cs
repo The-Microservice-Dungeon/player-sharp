@@ -16,6 +16,8 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
     private readonly ILogger<PlayerDetailsProvider> _logger;
     private readonly IPlayerRegistrationClient _registrationClient;
 
+    private bool IsValidated = false;
+
     public PlayerDetailsProvider(
         SharpDbContext dbContext,
         ILogger<PlayerDetailsProvider> logger,
@@ -45,11 +47,14 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
         if (dbResult != null)
         {
             _logger.LogDebug("Successfully retreived player details: {@Details}", dbResult);
-
+            
+            if (IsValidated) return dbResult;
+            
             // In the meantime the credentials COULD have been changed. Therefore we're going to validate them and only
             // use them when they are still valid
             if (await ValidatePlayerDetails(dbResult))
                 return dbResult;
+            
             await RemoveDetails(dbResult);
         }
 

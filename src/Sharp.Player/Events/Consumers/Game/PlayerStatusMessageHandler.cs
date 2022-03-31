@@ -26,13 +26,12 @@ public class PlayerStatusMessageHandler : IMessageHandler<PlayerStatusEvent>
                             throw new ApplicationException("There must be an transaction id");
 
         var details = _playerManager.ResolveRegistrationTransactionId(transactionId);
-        if (details != null)
-        {
-            Debug.Assert(details.Name == message.Name);
-            Debug.Assert(details.PlayerId == null || details.PlayerId == message.PlayerId);
+        if (details == null) return Task.CompletedTask;
+        
+        Debug.Assert(details.Name == message.Name);
+        Debug.Assert(details.PlayerId == null || details.PlayerId == message.PlayerId);
 
-            if (details.PlayerId != message.PlayerId) _playerManager.SetPlayerId(message.PlayerId);
-        }
+        if (details.PlayerId != message.PlayerId) _playerManager.SetPlayerId(message.PlayerId);
 
         return Task.CompletedTask;
     }
