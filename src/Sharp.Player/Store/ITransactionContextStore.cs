@@ -22,7 +22,7 @@ namespace Sharp.Player.Repository;
  * All in all this some kind of hacky approach to intercept technical debts. IT SHOULD BE REMOVED AND IS HEAVILY
  * ERRORNOUS TODO TODO TODO TODO
  */
-public interface ITransactionIdContextStore
+public interface ITransactionContextStore
 {
     bool HasBeenConsumed(string transactionId, string consumerName);
     void MarkAsConsumed(string transactionId, string consumerName);

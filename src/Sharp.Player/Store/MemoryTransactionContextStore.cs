@@ -4,14 +4,14 @@
  * We could also directly interact with kafka. Check consumption with the admin client, etc. pp. But as we as a player
  * should not write to kafka, we stick to this hacky approach.
  */
-public class MemoryTransactionIdContextStore : ITransactionIdContextStore
+public class MemoryTransactionContextStore : ITransactionContextStore
 {
     private readonly Dictionary<string, HashSet<string>> _store = new();
     private readonly Dictionary<(string, string), List<byte[]>> _contextStore = new();
 
-    private readonly ILogger<MemoryTransactionIdContextStore> _logger;
+    private readonly ILogger<MemoryTransactionContextStore> _logger;
 
-    public MemoryTransactionIdContextStore(ILogger<MemoryTransactionIdContextStore> logger)
+    public MemoryTransactionContextStore(ILogger<MemoryTransactionContextStore> logger)
     {
         _logger = logger;
     }

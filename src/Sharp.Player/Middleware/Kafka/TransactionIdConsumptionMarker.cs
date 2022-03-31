@@ -6,12 +6,12 @@ namespace Sharp.Player.Middleware.Kafka;
 
 public class TransactionIdConsumptionMarker : IMessageMiddleware
 {
-    private readonly ITransactionIdContextStore _transactionIdContext;
+    private readonly ITransactionContextStore _transactionContext;
     private readonly ILogger<TransactionIdConsumptionMarker> _logger;
 
-    public TransactionIdConsumptionMarker(ITransactionIdContextStore transactionIdContext, ILogger<TransactionIdConsumptionMarker> logger)
+    public TransactionIdConsumptionMarker(ITransactionContextStore transactionContext, ILogger<TransactionIdConsumptionMarker> logger)
     {
-        _transactionIdContext = transactionIdContext;
+        _transactionContext = transactionContext;
         _logger = logger;
     }
 
@@ -28,7 +28,7 @@ public class TransactionIdConsumptionMarker : IMessageMiddleware
             }
             else
             {
-                _transactionIdContext.MarkAsConsumed(transactionId, context.ConsumerContext.ConsumerName);
+                _transactionContext.MarkAsConsumed(transactionId, context.ConsumerContext.ConsumerName);
             }
         }
     }

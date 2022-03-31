@@ -12,9 +12,9 @@ public class TradeBuyRobotEventHandler : IMessageHandler<TradeBuyRobotEvent>
     private readonly ILogger<TradeBuyRobotEventHandler> _logger;
     private readonly IRobotManager _robotManager;
     private readonly IWalletStore _walletStore;
-    private readonly ITransactionIdContextStore _contextStore;
+    private readonly ITransactionContextStore _contextStore;
 
-    public TradeBuyRobotEventHandler(ILogger<TradeBuyRobotEventHandler> logger, IRobotManager robotManager, IWalletStore walletStore, ITransactionIdContextStore contextStore)
+    public TradeBuyRobotEventHandler(ILogger<TradeBuyRobotEventHandler> logger, IRobotManager robotManager, IWalletStore walletStore, ITransactionContextStore contextStore)
     {
         _logger = logger;
         _robotManager = robotManager;
