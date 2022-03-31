@@ -8,7 +8,10 @@ public class MemoryWalletStore : IWalletStore
 
     public Wallet Get() => _wallet ?? throw new UnsetStateException("Wallet is not set");
 
-    public void Set(Wallet data) => _wallet = data;
+    public void Set(Wallet data)
+    {
+        _wallet = data;
+    }
 
     public bool IsSet() => _wallet != null;
 }

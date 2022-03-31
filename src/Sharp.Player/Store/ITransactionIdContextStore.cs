@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using KafkaFlow.TypedHandler;
 
 namespace Sharp.Player.Repository;
 
@@ -28,12 +27,27 @@ public interface ITransactionIdContextStore
     bool HasBeenConsumed(string transactionId, string consumerName);
     void MarkAsConsumed(string transactionId, string consumerName);
 
-    void AddContext(string transactionId, string key, string context) =>
+    void AddContext(string transactionId, string key, string context)
+    {
         AddContext(transactionId, key, Encoding.UTF8.GetBytes(context));
+    }
+
     void AddContext(string transactionId, string key, byte[] context);
 
-    string GetContextAsString(string transactionId, string key) => Encoding.UTF8.GetString(GetContext(transactionId, key));
-    byte[] GetContext(string transactionId, string key);
+    List<string> GetContextAsString(string transactionId, string key)
+    {
+        return GetContext(transactionId, key)
+            .Select(b => Encoding.UTF8.GetString(b))
+            .ToList();
+    }
+
+    List<byte[]> GetContext(string transactionId, string key);
     void RemoveContext(string transactionId, string key);
     void ClearContext(string transactionId);
+}
+
+public class ContextKeys
+{
+    public const string PlanetId = "PlanetId";
+    public const string RobotId = "RobotId";
 }

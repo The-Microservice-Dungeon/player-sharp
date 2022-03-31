@@ -62,6 +62,7 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
 
         if (fetchedResult != null)
         {
+            _logger.LogDebug("Successfully retreived player details from remote service: {@Details}", fetchedResult);
             await StoreInDatabase(fetchedResult);
             return fetchedResult;
         }
@@ -106,7 +107,6 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
         {
             var response = await _registrationClient.GetPlayerDetails(name, email);
             PlayerDetails details = new(response.Name, response.Email, response.BearerToken);
-            _logger.LogDebug("Successfully retreived player details: {@Details}", details);
             return details;
         }
         catch (ApiException e)

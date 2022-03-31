@@ -7,7 +7,7 @@
 public class MemoryTransactionIdContextStore : ITransactionIdContextStore
 {
     private readonly Dictionary<string, HashSet<string>> _store = new();
-    private readonly Dictionary<string, Dictionary<string, byte[]>> _contextStore = new();
+    private readonly Dictionary<string, Dictionary<string, List<byte[]>>> _contextStore = new();
 
     private readonly ILogger<MemoryTransactionIdContextStore> _logger;
 
@@ -38,14 +38,18 @@ public class MemoryTransactionIdContextStore : ITransactionIdContextStore
         _logger.LogDebug("Adding Context For {TransactionId} with Key {Key} and context length {Length}", transactionId, key, context.Length);
         if (!_contextStore.ContainsKey(transactionId))
         {
-            Dictionary<string, byte[]> tStore = new();
+            Dictionary<string, List<byte[]>> tStore = new();
             _contextStore.Add(transactionId, tStore);
         }
-        
-        _contextStore[transactionId].Add(key, context);
+        else if (!_contextStore[transactionId].ContainsKey(key))
+        {
+            _contextStore[transactionId].Add(key, new List<byte[]>());
+        }
+
+        _contextStore[transactionId][key].Add(context);
     }
 
-    public byte[] GetContext(string transactionId, string key) => _contextStore[transactionId][key];
+    public List<byte[]> GetContext(string transactionId, string key) => _contextStore[transactionId][key];
 
     public void RemoveContext(string transactionId, string key) => _contextStore[transactionId].Remove(key);
 
