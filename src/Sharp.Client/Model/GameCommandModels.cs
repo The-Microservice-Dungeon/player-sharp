@@ -6,6 +6,7 @@ namespace Sharp.Client.Model;
 public class CommandRequest
 {
     [JsonPropertyName("gameId")] public string GameId { get; set; }
+    [JsonPropertyName("robotId")] public string RobotId { get; set; }
 
     [JsonPropertyName("playerToken")] public string PlayerToken { get; set; }
 

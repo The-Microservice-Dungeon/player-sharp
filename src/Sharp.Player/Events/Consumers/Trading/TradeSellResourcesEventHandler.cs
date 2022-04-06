@@ -20,6 +20,12 @@ public class TradeSellResourcesEventHandler : IMessageHandler<TradeSellResources
     {
         // TODO: We do'nt Filter events yet
         _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
+
+        if (!message.Success)
+        {
+            _logger.LogError("Received unsuccessful Resource Sell Event: {Message}", message);
+            return Task.CompletedTask;
+        }
         
         // TODO: Shouldn't be in the handler I guess?
         _walletStore.Get().Deposit(message.MoneyChangeBy);

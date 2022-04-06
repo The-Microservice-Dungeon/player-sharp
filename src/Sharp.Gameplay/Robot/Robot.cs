@@ -31,7 +31,7 @@ public class Robot : IIdentifiable<string>, IFieldLocatable
     {
         if (!Alive)
             throw new DeadRobotActionException();
-        if (!field.IsNeighbour(field))
+        if (!Field.IsNeighbour(field))
             throw new IllegalRobotMovementException(Id, field.Id);
         Field = field;
     }

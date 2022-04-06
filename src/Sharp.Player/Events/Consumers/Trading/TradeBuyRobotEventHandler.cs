@@ -31,6 +31,12 @@ public class TradeBuyRobotEventHandler : IMessageHandler<TradeBuyRobotEvent>
 
         _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
+        if (!message.Success)
+        {
+            _logger.LogError("Received unsuccessful Buy Robot Event: {Message}", message);
+            return;
+        }
+        
         // TODO: Shouldn't be in the handler I guess?
         _walletStore.Get().Charge(Math.Abs(message.MoneyChangeBy));
 

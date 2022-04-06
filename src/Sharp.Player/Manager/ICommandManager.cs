@@ -13,4 +13,6 @@ public interface ICommandManager
 
     public CommandBuilderDirector CommandBuilder { get; }
     public Task BuyRobot(uint amount = 1);
+    // TODO: Just for testing
+    public Task RandomMovement();
 }

@@ -65,7 +65,7 @@ public class MapManager : IMapManager
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
 
-    public void AddPlanet(string id, int movementDifficulty, ResourceType[] resourceTypes)
+    public void AddPlanet(string id, int movementDifficulty, List<ResourceType> resourceTypes)
     {
         _logger.LogDebug("Adding Planet on Field {Id}", id);
 
@@ -76,13 +76,16 @@ public class MapManager : IMapManager
             return;
 
         field.MovementDifficulty = movementDifficulty;
-        var planet = new Planet
+        if (field.Planet == null)
         {
-            ResourceDeposits = resourceTypes.Select(type => new ResourceDeposit(type)).ToArray()
-        };
-        field.SetPlanet(planet);
+            var planet = new Planet
+            {
+                ResourceDeposits = resourceTypes.Select(type => new ResourceDeposit(type)).ToArray()
+            };
+            field.SetPlanet(planet);
 
-        _logger.LogDebug("Planet {Planet} added", planet);
+            _logger.LogDebug("Planet {Planet} added", planet);
+        }
 
         // TODO: Use an async/await pattern somehow
         // TODO: Use a DTO

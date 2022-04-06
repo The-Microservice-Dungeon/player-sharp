@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Sharp.Gameplay.Robot;
+using Sharp.Player.Controllers;
 using Sharp.Player.Events.Models.Trading;
 using Sharp.Player.Repository;
 
@@ -39,4 +40,24 @@ public class RobotManager : IRobotManager
     {
         _robotFleetStore.Clear();
     }
+
+    public List<Robot> GetRobots()
+    {
+        return _robotFleetStore.Get().ToList();
+    }
+
+    public void MoveRobot(string robotId, string fieldId)
+    {
+        var robot = _robotFleetStore.Get(robotId);
+        if (robot == null)
+            throw new Exception($"Could not find Robot with ID ${robot}");
+        
+        var field = robot.Field.Map.GetField(fieldId);
+        if (field == null)
+            throw new Exception($"Could not find Field with ID ${field}");
+        
+        robot.SetField(field);
+    }
+
+    public bool HasAnyAliveRobot() => _robotFleetStore.Get().Any(robot => robot.Alive);
 }

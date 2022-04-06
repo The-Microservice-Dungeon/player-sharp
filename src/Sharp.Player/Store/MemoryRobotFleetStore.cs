@@ -8,6 +8,8 @@ public class MemoryRobotFleetStore : IRobotFleetStore
 
     public IEnumerable<Robot> Get() => _robotFleet;
 
+    public Robot? Get(string id) => _robotFleet.Find(r => r.Id == id);
+
     public void Add(Robot t) => _robotFleet.Add(t);
 
     public void Clear() => _robotFleet.Clear();

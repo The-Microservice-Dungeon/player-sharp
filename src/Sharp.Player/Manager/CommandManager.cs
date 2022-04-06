@@ -16,15 +16,19 @@ public class CommandManager : ICommandManager
     private readonly ILogger<CommandManager> _logger;
     private readonly IMapper _mapper;
     private readonly IPlayerDetailsProvider _playerDetails;
+    private readonly IRobotManager _robotManager;
+    private readonly IMapManager _mapManager;
 
     public CommandManager(ILogger<CommandManager> logger,
-        IGameCommandClient commandClient, IMapper mapper, SharpDbContext db, IPlayerDetailsProvider playerDetails)
+        IGameCommandClient commandClient, IMapper mapper, SharpDbContext db, IPlayerDetailsProvider playerDetails, IRobotManager robotManager, IMapManager mapManager)
     {
         _logger = logger;
         _commandClient = commandClient;
         _mapper = mapper;
         _db = db;
         _playerDetails = playerDetails;
+        _robotManager = robotManager;
+        _mapManager = mapManager;
     }
 
     // TODO: See ICommandManager
@@ -47,6 +51,21 @@ public class CommandManager : ICommandManager
             .Build();
 
         await SendCommand(command);
+    }
+
+    // TODO: Just for testing
+    public async Task RandomMovement()
+    {
+        var robot = _robotManager.GetRobots()[0];
+        var neighbours = robot.Field.GetNeighbours();
+        var random = new Random();
+        var randomNeighbour = neighbours[random.Next(0, neighbours.Length)];
+        var randomMovementCommand = CommandBuilder.MovementCommand
+            .SetRobotId(robot.Id)
+            .SetPlanetId(randomNeighbour.Id)
+            .Build();
+
+        await SendCommand(randomMovementCommand);
     }
 
     private async Task SendCommand(BaseCommand command)

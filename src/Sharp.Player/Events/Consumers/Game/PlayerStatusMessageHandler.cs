@@ -21,19 +21,26 @@ public class PlayerStatusMessageHandler : IMessageHandler<PlayerStatusEvent>
         _gameManager = gameManager;
     }
 
-    public Task Handle(IMessageContext context, PlayerStatusEvent message)
+    public async Task Handle(IMessageContext context, PlayerStatusEvent message)
     {
         _logger.LogDebug("Received {Event} Message {@Message}", message.GetType().FullName, message);
 
         var transactionId = context.Headers.GetString(KafkaHeaders.TransactionIdHeaderName) ??
                             throw new ApplicationException("There must be an transaction id");
 
-        var registration = _gameManager.ResolveRegistration(transactionId);
-        if (registration != null)
+        // Defer until registration is present
+        // We now, that a robot movement event will result into a planet id set in the transaction context
+        // This assumption allows us to defer the message until this id is being set.
+        for (var i = 0; _gameManager.ResolveRegistration(transactionId) == null; i++)
         {
-            _playerManager.SetPlayerId(message.PlayerId);
+            if (i == 10)
+                throw new Exception("Waiting for Game Registration took more than 10 iterations");
+            // And blocking...
+            await Task.Delay(100);
         }
 
-        return Task.CompletedTask;
+        var registration = _gameManager.ResolveRegistration(transactionId)!;
+        _playerManager.SetPlayerId(message.PlayerId);
+        _logger.LogInformation("Succesfully updated PlayerId to: {PlayerId}", message.PlayerId);
     }
 }

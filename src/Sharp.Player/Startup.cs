@@ -101,7 +101,9 @@ public class Startup
 
         // Kafka / Consumers / ...
         services.AddSingleton<IMessageMiddleware, FilterOldMessages>();
-        services.AddKafka(kafka => kafka.UseMicrosoftLog()
+        // TODO (for my own interest): Why KafkaFlowHostedService and not AddKafka? Are the lifetimes different? How does
+        //  it work internally with a scoped lifetime?
+        services.AddKafkaFlowHostedService(kafka => kafka.UseMicrosoftLog()
             .AddCluster(cluster => cluster
                 .WithBrokers(new[]
                 {
@@ -124,6 +126,7 @@ public class Startup
                     .DefaultConsumer("trades")
                     .AddMiddlewares(middlewares => middlewares
                         .AddAtBeginning<FilterOldMessages>()
+                        .Add<DeferUntilWalletIsCreated>()
                         .AddSerializer<JsonCoreSerializer, TradeEventTypeResolver>()
                         .AddTypedHandlers(handlers => handlers
                             .WithHandlerLifetime(InstanceLifetime.Scoped)

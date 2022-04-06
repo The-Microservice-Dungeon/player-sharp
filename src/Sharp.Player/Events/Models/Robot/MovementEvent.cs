@@ -34,5 +34,5 @@ public class MovementPlanet
 
     [JsonPropertyName("resourceType")]
     [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-    public ResourceType ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
 }

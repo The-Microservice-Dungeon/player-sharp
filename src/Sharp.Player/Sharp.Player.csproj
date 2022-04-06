@@ -18,6 +18,7 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
         <PackageReference Include="KafkaFlow" Version="2.3.0-beta.1" />
+        <PackageReference Include="KafkaFlow.Extensions.Hosting" Version="2.3.0-beta.1" />
         <PackageReference Include="KafkaFlow.LogHandler.Console" Version="2.3.0-beta.1" />
         <PackageReference Include="KafkaFlow.LogHandler.Microsoft" Version="2.2.4" />
         <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="2.3.0-beta.1" />

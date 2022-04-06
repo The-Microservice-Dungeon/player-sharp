@@ -30,6 +30,7 @@ public class BankCreatedEventHandler : IMessageHandler<BankCreatedEvent>
         if (message.PlayerId == playerDetails.PlayerId)
         {
             _walletStore.Set(new Wallet(message.Money));
+            _logger.LogInformation("Intialized Wallet with {Money} Schmeckels", message.Money);
         }
     }
 }
