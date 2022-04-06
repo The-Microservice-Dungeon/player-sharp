@@ -68,7 +68,8 @@ public class CommandManager : ICommandManager
         {
             PlanetId = command.CommandObject.PlanetId,
             RobotId = command.RobotId,
-            TargetId = command.CommandObject.TargetId
+            TargetId = command.CommandObject.TargetId,
+            CommandType = command.CommandType
         });
         await _db.SaveChangesAsync();
     }

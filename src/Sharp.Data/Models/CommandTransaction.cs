@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Sharp.Gameplay.Game;
 
 namespace Sharp.Data.Models;
 
@@ -18,6 +19,8 @@ public class CommandTransaction
     [Required] public string GameId { get; set; }
 
     [Key] [Required] public string TransactionId { get; set; }
+    
+    [Required] public CommandType CommandType { get; set; } 
 
     public string? RobotId { get; set; }
 
