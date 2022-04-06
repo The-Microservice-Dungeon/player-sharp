@@ -7,12 +7,10 @@ namespace Sharp.Gameplay.Map;
 /// </summary>
 public class Field : IIdentifiable<string>, IMapLocatable
 {
-    public readonly Map _map;
-
     public Field(string id, Map map)
     {
         Id = id;
-        _map = map;
+        Map = map;
     }
 
     public Field(string id, int movementDifficulty, Map map) : this(id, map)
@@ -27,7 +25,7 @@ public class Field : IIdentifiable<string>, IMapLocatable
 
     public string Id { get; }
 
-    public Map Map => _map;
+    public Map Map { get; }
 
     public void SetPlanet(Planet planet)
     {
@@ -41,7 +39,7 @@ public class Field : IIdentifiable<string>, IMapLocatable
 
     public Field[] GetNeighbours()
     {
-        return _map.Fields[this].Select(c => c.Destination).ToArray();
+        return Map.Fields[this].Select(c => c.Destination).ToArray();
     }
 
     public bool IsNeighbour(Field field)

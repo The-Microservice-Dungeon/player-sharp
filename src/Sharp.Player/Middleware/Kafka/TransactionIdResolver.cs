@@ -2,7 +2,6 @@
 using KafkaFlow;
 using Sharp.Data.Contexts;
 using Sharp.Player.Config;
-using Sharp.Player.Provider;
 
 namespace Sharp.Player.Middleware.Kafka;
 
@@ -41,6 +40,8 @@ public class TransactionIdResolver : IMessageMiddleware
         }
 
         context.Headers.Add(KafkaHeaders.GameIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.GameId));
+        context.Headers.Add(KafkaHeaders.CommandTypeHeaderName,
+            BitConverter.GetBytes((int)commandTransaction.CommandType));
 
         if (commandTransaction.PlanetId != null)
             context.Headers.Add(KafkaHeaders.PlanetIdHeaderName, Encoding.UTF8.GetBytes(commandTransaction.PlanetId));

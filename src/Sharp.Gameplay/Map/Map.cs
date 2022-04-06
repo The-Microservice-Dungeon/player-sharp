@@ -30,6 +30,11 @@ public class Map : IIdentifiable<string>
         return field;
     }
 
+    public void AddConnection(Field field, Connection connection)
+    {
+        _fields[field].Add(connection);
+    }
+
     public Field? GetField(string id)
     {
         return _fields.Keys.FirstOrDefault(k => k.Id == id);

@@ -89,4 +89,4 @@ public class GameManager : IGameManager
         return _db.GameRegistrations
             .FirstOrDefault(registration => registration.TransactionId == transactionId);
     }
-}cd
+}

@@ -89,6 +89,24 @@ public class MapManager : IMapManager
         _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
     }
 
+    public void AddNeighbour(string fieldId, string neighbourId, int movementDifficulty)
+    {
+        var mapStore = _currentMapStore.Get();
+        var field = mapStore.GetField(fieldId);
+        if (field == null)
+            throw new Exception($"Field ${fieldId} could not be found");
+        var neighbour = mapStore.GetOrCreateField(neighbourId);
+        neighbour.MovementDifficulty = movementDifficulty;
+        if (!field.IsNeighbour(neighbour))
+            field.Map.AddConnection(field, new Connection(neighbour));
+
+        _logger.LogDebug("Added Neighbour {Neighbour} for Field {Field}", neighbourId, fieldId);
+
+        // TODO: Use an async/await pattern somehow
+        // TODO: Use a DTO
+        _mapHubContext.Clients.All.FieldUpdated(field).GetAwaiter().GetResult();
+    }
+
     public Field GetField(string id)
     {
         return _currentMapStore.Get().GetOrCreateField(id);

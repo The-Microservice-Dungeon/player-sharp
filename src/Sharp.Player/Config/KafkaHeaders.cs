@@ -9,4 +9,5 @@ public class KafkaHeaders
     public const string RobotIdHeaderName = "robotId";
     public const string TransactionIdHeaderName = "transactionId";
     public const string TimestampHeaderName = "timestamp";
+    public const string CommandTypeHeaderName = "commandType";
 }
