@@ -17,11 +17,4 @@ public class GameRegistration
     [Key] [Required] public string GameId { get; set; }
 
     [Required] public string TransactionId { get; set; }
-
-    public string PlayerName { get; set; }
-    public string PlayerEmail { get; set; }
-
-    [Required]
-    [ForeignKey("PlayerName, PlayerEmail")]
-    public virtual PlayerDetails PlayerDetails { get; set; }
 }

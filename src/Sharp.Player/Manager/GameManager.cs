@@ -50,10 +50,7 @@ public class GameManager : IGameManager
                     gameId, transactionId);
 
                 _db.PlayerDetails.Attach(playerDetails);
-                var registration = new GameRegistration(gameId, transactionId)
-                {
-                    PlayerDetails = playerDetails
-                };
+                var registration = new GameRegistration(gameId, transactionId);
                 await _db.GameRegistrations.AddAsync(registration);
                 await _db.SaveChangesAsync();
             }
@@ -86,4 +83,10 @@ public class GameManager : IGameManager
             .Select(registration => _mapper.Map<Game>(registration))
             .ToList());
     }
-}
+
+    public GameRegistration? ResolveRegistration(string transactionId)
+    {
+        return _db.GameRegistrations
+            .FirstOrDefault(registration => registration.TransactionId == transactionId);
+    }
+}cd

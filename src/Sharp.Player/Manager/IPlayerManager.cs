@@ -5,5 +5,4 @@ namespace Sharp.Player.Manager;
 public interface IPlayerManager
 {
     PlayerDetails SetPlayerId(string playerId);
-    PlayerDetails? ResolveRegistrationTransactionId(string transactionId);
 }

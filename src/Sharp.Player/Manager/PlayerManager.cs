@@ -1,4 +1,5 @@
-﻿using Sharp.Data.Contexts;
+﻿using System.Diagnostics;
+using Sharp.Data.Contexts;
 using Sharp.Data.Models;
 using Sharp.Player.Provider;
 
@@ -18,19 +19,13 @@ public class PlayerManager : IPlayerManager
     public PlayerDetails SetPlayerId(string playerId)
     {
         var details = _playerDetails.Get();
+        Debug.Assert(details.PlayerId == null || details.PlayerId == playerId);
+        
         _db.PlayerDetails.Attach(details);
         details.PlayerId = playerId;
         _db.PlayerDetails.Update(details);
         _db.SaveChanges();
 
         return details;
-    }
-
-    public PlayerDetails? ResolveRegistrationTransactionId(string transactionId)
-    {
-        return _db.GameRegistrations
-            .Where(registration => registration.TransactionId == transactionId)
-            .Select(registration => registration.PlayerDetails)
-            .FirstOrDefault();
     }
 }
