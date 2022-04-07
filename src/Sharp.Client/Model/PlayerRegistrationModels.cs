@@ -4,6 +4,7 @@ namespace Sharp.Client.Model;
 
 public class PlayerResponse
 {
+    [JsonPropertyName("playerId")] public string PlayerId { get; set; }
     [JsonPropertyName("bearerToken")] public string BearerToken { get; set; }
 
     [JsonPropertyName("name")] public string Name { get; set; }

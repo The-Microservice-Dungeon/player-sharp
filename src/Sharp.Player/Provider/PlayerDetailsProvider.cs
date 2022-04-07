@@ -87,16 +87,18 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
 
     private async Task StoreInDatabase(PlayerDetails playerDetails)
     {
-        await _dbContext.PlayerDetails.AddAsync(playerDetails);
+        var fromDb = GetFromDb(playerDetails.Name, playerDetails.Email);
+        if (fromDb == null)
+            _dbContext.PlayerDetails.Add(playerDetails);
+        else
+            _dbContext.PlayerDetails.Update(playerDetails);
+
         await _dbContext.SaveChangesAsync();
-        if (playerDetails.PlayerId == null)
-            _logger.LogWarning(
-                "Player details were stored, but a PlayerID is not present. We might fetch it later on when registering to a game");
     }
 
     private PlayerDetails? GetFromDb(string name, string email)
     {
-        return _dbContext.PlayerDetails.Find(name, email);
+        return _dbContext.PlayerDetails.FirstOrDefault(details => details.Email == email && details.Name == name);
     }
 
     private async Task<PlayerDetails?> FetchPlayerDetails(string name, string email)
@@ -105,7 +107,7 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
         try
         {
             var response = await _registrationClient.GetPlayerDetails(name, email);
-            PlayerDetails details = new(response.Name, response.Email, response.BearerToken);
+            PlayerDetails details = new(response.PlayerId, response.Name, response.Email, response.BearerToken);
             return details;
         }
         catch (ApiException e)
@@ -121,7 +123,7 @@ public class PlayerDetailsProvider : IPlayerDetailsProvider
         _logger.LogDebug("Try to register player in game service...");
 
         var response = await _registrationClient.CreatePlayer(new PlayerRequest(name, email));
-        var details = new PlayerDetails(response.Name, response.Email, response.BearerToken);
+        var details = new PlayerDetails(response.PlayerId, response.Name, response.Email, response.BearerToken);
 
         _logger.LogDebug("Successfully created player with details: {@Details}", details);
         return details;

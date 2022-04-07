@@ -38,7 +38,10 @@ public class SharpDbContext : DbContext
         // We simply use a composite key of name and email because the player Id is fired at a later point...
         // TODO: This will probably be refactored in the game service, therefore we need to touch this again.
         modelBuilder.Entity<PlayerDetails>()
-            .HasKey(nameof(Models.PlayerDetails.Name), nameof(Models.PlayerDetails.Email));
+            .HasKey(nameof(Models.PlayerDetails.PlayerId));
+        modelBuilder.Entity<PlayerDetails>()
+            .HasIndex(p => new { p.Email, p.Name })
+            .IsUnique(true);
 
         modelBuilder.Entity<GameRegistration>()
             .HasKey(nameof(GameRegistration.GameId));

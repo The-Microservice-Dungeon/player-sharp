@@ -86,8 +86,7 @@ public class Startup
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(networkOptions.GameServiceAddress));
 
         services.AddScoped<IPlayerDetailsProvider, PlayerDetailsProvider>();
-
-        services.AddScoped<IPlayerManager, PlayerManager>();
+        
         services.AddScoped<IGameManager, GameManager>();
         services.AddScoped<IMapManager, MapManager>();
         services.AddScoped<ICommandManager, CommandManager>();
@@ -109,7 +108,6 @@ public class Startup
                 {
                     networkOptions.KafkaAddress
                 })
-                .AddDefaultConsumer<PlayerStatusEvent, PlayerStatusMessageHandler>("playerStatus")
                 .AddDefaultConsumer<GameStatusEvent, GameStatusMessageHandler>("status")
                 .AddDefaultConsumer<GameworldCreatedEvent, GameworldCreatedMessageHandler>("gameworld-created")
                 .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
