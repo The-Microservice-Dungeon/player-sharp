@@ -36,6 +36,15 @@ public class RobotManager : IRobotManager
         return Task.CompletedTask;
     }
 
+    public void UpdateEnergy(string robotId, uint energy)
+    {
+        var robot = _robotFleetStore.Get(robotId);
+        if (robot == null)
+            throw new Exception($"Could not find Robot with ID ${robot}");
+
+        robot.UpdateEnergy(energy);
+    }
+
     public void ClearFleet()
     {
         _robotFleetStore.Clear();

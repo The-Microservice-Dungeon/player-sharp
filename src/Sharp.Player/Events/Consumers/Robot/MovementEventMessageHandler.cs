@@ -55,6 +55,7 @@ public class MovementEventMessageHandler : IMessageHandler<MovementEvent>
             throw new Exception("Robot is not present");
         
         _robotManager.MoveRobot(robotId, planet.PlanetId);
+        _robotManager.UpdateEnergy(robotId, message.Energy);
         
         var transactionId = context.Headers.GetString(KafkaHeaders.TransactionIdHeaderName);
         if (transactionId == null)

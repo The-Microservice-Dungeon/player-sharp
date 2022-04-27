@@ -9,6 +9,7 @@ public class MovementEvent
     [JsonPropertyName("success")] public bool Success { get; set; }
 
     [JsonPropertyName("message")] public string Message { get; set; }
+    [JsonPropertyName("remainingEnergy")] public uint Energy { get; set; }
 
     [JsonPropertyName("planet")] public MovementPlanet? Planet { get; set; }
 

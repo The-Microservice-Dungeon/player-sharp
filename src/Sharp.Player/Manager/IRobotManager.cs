@@ -9,5 +9,6 @@ public interface IRobotManager
     bool HasAnyAliveRobot();
     List<Robot> GetRobots();
     void MoveRobot(string robotId, string fieldId);
+    void UpdateEnergy(string robotId, uint energy);
     void ClearFleet();
 }

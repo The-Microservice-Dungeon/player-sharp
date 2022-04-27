@@ -22,6 +22,11 @@ public class Robot : IIdentifiable<string>, IFieldLocatable
 
     public string Id { get; }
 
+    public void UpdateEnergy(uint energy)
+    {
+        Attributes.Energy = energy;
+    }
+
     public void Kill()
     {
         Alive = false;
