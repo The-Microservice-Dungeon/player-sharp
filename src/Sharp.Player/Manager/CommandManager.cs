@@ -57,6 +57,19 @@ public class CommandManager : ICommandManager
     public async Task RandomMovement()
     {
         var robot = _robotManager.GetRobots()[0];
+        
+        // TODO: Regeneration does not belong here. Doing it just for testing purposes
+        var needsRegeneration = robot.Attributes.Energy < robot.Field.MovementDifficulty;
+
+        if (needsRegeneration)
+        {
+            var regenerationCommand = CommandBuilder.RegenerateCommand
+                .SetRobotId(robot.Id)
+                .Build();
+            await SendCommand(regenerationCommand);
+            return;
+        }
+            
         var neighbours = robot.Field.GetNeighbours();
         var random = new Random();
         var randomNeighbour = neighbours[random.Next(0, neighbours.Length)];
