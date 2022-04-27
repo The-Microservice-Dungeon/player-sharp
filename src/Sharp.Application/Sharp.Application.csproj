@@ -33,8 +33,4 @@
         <ProjectReference Include="..\Sharp.Domain\Sharp.Domain.csproj" />
         <ProjectReference Include="..\Sharp.Infrastructure\Sharp.Infrastructure.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Util" />
-    </ItemGroup>
 </Project>
