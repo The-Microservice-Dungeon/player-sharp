@@ -16,4 +16,7 @@ public class CommandBuilderDirector
     
     public BuyCommandBuilder BuyCommand => new(new BaseCommand(_gameId, _playerToken, CommandType.Buying));
     public MovementCommandBuilder MovementCommand => new(new BaseCommand(_gameId, _playerToken, CommandType.Movement));
+
+    public RegenerateCommandBuilder RegenerateCommand =>
+        new(new BaseCommand(_gameId, _playerToken, CommandType.Regeneration));
 }
