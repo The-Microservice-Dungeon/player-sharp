@@ -113,6 +113,7 @@ public class Startup
                 .AddDefaultConsumer<SpacestationCreatedEvent, SpacestationCreatedMessageHandler>("spacestation-created")
                 .AddDefaultConsumer<MovementEvent, MovementEventMessageHandler>("movement")
                 .AddDefaultConsumer<NeighboursEvent, NeighbourEventMessageHandler>("neighbours")
+                .AddDefaultConsumer<RegenerationEvent, RegenerationEventMessageHandler>("regeneration")
                 .AddDefaultConsumer<BankCreatedEvent, BankCreatedEventHandler>("bank-created")
                 .AddConsumer(consumer => consumer
                     .DefaultTypedConsumer<RoundStatusEvent, RoundStatusMessageHandler>("roundStatus")
