@@ -9,6 +9,10 @@ public class RobotMappingProfile : Profile
     public RobotMappingProfile()
     {
         CreateMap<TradeRobotData, RobotAttributes>()
-            .ForMember(dest => dest.MaxStorage, opt => opt.MapFrom(src => src.Inventory.MaxStorage));
+            // Urgh
+            .ConstructUsing(from => new RobotAttributes(from.MaxHealth, from.MaxEnergy, from.EnergyRegen,
+                from.AttackDamage, from.MiningSpeed, from.Health, from.Energy, from.HealthLevel, from.DamageLevel,
+                from.MiningSpeedLevel, from.MiningLevel, from.EnergyLevel, from.EnergyRegenLevel, from.StorageLevel,
+                from.Inventory.MaxStorage));
     }
 }
