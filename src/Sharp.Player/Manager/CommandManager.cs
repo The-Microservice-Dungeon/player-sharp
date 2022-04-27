@@ -72,13 +72,17 @@ public class CommandManager : ICommandManager
             
         var neighbours = robot.Field.GetNeighbours();
         var random = new Random();
-        var randomNeighbour = neighbours[random.Next(0, neighbours.Length)];
-        var randomMovementCommand = CommandBuilder.MovementCommand
-            .SetRobotId(robot.Id)
-            .SetPlanetId(randomNeighbour.Id)
-            .Build();
+        // It can occur that we didn't have the neighbours yet while issuing a command. Not good this. 
+        if (neighbours.Length > 0)
+        {
+            var randomNeighbour = neighbours[random.Next(0, neighbours.Length)];
+            var randomMovementCommand = CommandBuilder.MovementCommand
+                .SetRobotId(robot.Id)
+                .SetPlanetId(randomNeighbour.Id)
+                .Build();
 
-        await SendCommand(randomMovementCommand);
+            await SendCommand(randomMovementCommand);
+        }
     }
 
     private async Task SendCommand(BaseCommand command)
