@@ -36,5 +36,5 @@ $ docker build -t player-sharp . && docker run player-sharp
 ```
 or using the dotnet CLI:
 ```sh
-$ dotnet run --project .\src\Sharp.Player
+$ dotnet run --project .\src\Sharp.Application
 ```
