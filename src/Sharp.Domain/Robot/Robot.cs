@@ -3,6 +3,9 @@ using Sharp.Domain.Map;
 
 namespace Sharp.Domain.Robot;
 
+/// <summary>
+/// Robot
+/// </summary>
 public class Robot : IIdentifiable<string>, IFieldLocatable
 {
     public Robot(string id, bool alive, RobotAttributes attributes, Field field)
@@ -22,17 +25,33 @@ public class Robot : IIdentifiable<string>, IFieldLocatable
 
     public string Id { get; }
 
+    /// <summary>
+    /// Updates robots energy
+    /// </summary>
+    /// <param name="energy">Energy Amount</param>
+    /// <exception cref="DeadRobotActionException">If robot is dead</exception>
     public void UpdateEnergy(uint energy)
     {
+        if (!Alive)
+            throw new DeadRobotActionException();
         Attributes.Energy = energy;
     }
 
+    /// <summary>
+    /// Kills the robot
+    /// </summary>
     public void Kill()
     {
         Alive = false;
     }
 
-    public void SetField(Field field)
+    /// <summary>
+    /// Moves the robot to the specified field
+    /// </summary>
+    /// <param name="field">Field to move to</param>
+    /// <exception cref="DeadRobotActionException">If the robot is dead</exception>
+    /// <exception cref="IllegalRobotMovementException">If the field is not reachable for the robot</exception>
+    public void Move(Field field)
     {
         if (!Alive)
             throw new DeadRobotActionException();

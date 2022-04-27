@@ -63,7 +63,7 @@ public class RobotManager : IRobotManager
         if (field == null)
             throw new Exception($"Could not find Field with ID ${field}");
         
-        robot.SetField(field);
+        robot.Move(field);
     }
 
     public bool HasAnyAliveRobot() => _robotFleetStore.Get().Any(robot => robot.Alive);
