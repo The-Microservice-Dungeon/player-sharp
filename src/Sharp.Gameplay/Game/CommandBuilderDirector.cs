@@ -13,10 +13,11 @@ public class CommandBuilderDirector
         _gameId = gameId;
         _playerToken = playerToken;
     }
-    
-    public BuyCommandBuilder BuyCommand => new(new BaseCommand(_gameId, _playerToken, CommandType.Buying));
-    public MovementCommandBuilder MovementCommand => new(new BaseCommand(_gameId, _playerToken, CommandType.Movement));
 
-    public RegenerateCommandBuilder RegenerateCommand =>
-        new(new BaseCommand(_gameId, _playerToken, CommandType.Regeneration));
+    private BaseCommand BuildBaseCommand(CommandType type) => new(_gameId, _playerToken, type);
+    
+    public BuyCommandBuilder BuyCommand => new(BuildBaseCommand(CommandType.Buying));
+    public MovementCommandBuilder MovementCommand => new(BuildBaseCommand(CommandType.Movement));
+
+    public RegenerateCommandBuilder RegenerateCommand => new(BuildBaseCommand(CommandType.Regeneration));
 }
