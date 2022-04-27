@@ -6,156 +6,32 @@
     <StartupCommand>set BROWSER=none&amp;&amp;npm start</StartupCommand>
     <JavaScriptTestRoot>src\</JavaScriptTestRoot>
     <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
-    <SpaRoot>./</SpaRoot>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-    <SpaProxyServerUrl>https://localhost:44467</SpaProxyServerUrl>
+    <DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup>
     <Script Include="**" Exclude="*.esproj;**\node_modules\**" />
   </ItemGroup>
-  <ItemGroup>
-    <Script Remove=".env" />
-    <Script Remove=".env.development" />
-    <Script Remove=".env.production" />
-    <Script Remove="src\App.css" />
-    <Script Remove="src\App.tsx" />
-    <Script Remove="src\assets\logo.svg" />
-    <Script Remove="src\client\game.client.ts" />
-    <Script Remove="src\client\index.ts" />
-    <Script Remove="src\client\map.client.ts" />
-    <Script Remove="src\components\Elements\Button\Button.tsx" />
-    <Script Remove="src\components\Elements\Button\index.ts" />
-    <Script Remove="src\components\Elements\ConfirmationDialog\ConfirmationDialog.tsx" />
-    <Script Remove="src\components\Elements\ConfirmationDialog\index.ts" />
-    <Script Remove="src\components\Elements\Dialog\Dialog.tsx" />
-    <Script Remove="src\components\Elements\Dialog\index.ts" />
-    <Script Remove="src\components\Elements\index.ts" />
-    <Script Remove="src\components\Elements\Link\index.ts" />
-    <Script Remove="src\components\Elements\Link\Link.tsx" />
-    <Script Remove="src\components\Elements\Spinner\index.ts" />
-    <Script Remove="src\components\Elements\Spinner\Spinner.tsx" />
-    <Script Remove="src\components\Elements\Table\index.ts" />
-    <Script Remove="src\components\Elements\Table\Table.tsx" />
-    <Script Remove="src\components\Head\Head.tsx" />
-    <Script Remove="src\components\Head\index.ts" />
-    <Script Remove="src\components\Layout\ContentLayout.tsx" />
-    <Script Remove="src\components\Layout\index.ts" />
-    <Script Remove="src\components\Navbar\index.ts" />
-    <Script Remove="src\components\Navbar\Navbar.tsx" />
-    <Script Remove="src\components\Notifications\index.ts" />
-    <Script Remove="src\components\Notifications\Notification.tsx" />
-    <Script Remove="src\components\Notifications\Notifications.tsx" />
-    <Script Remove="src\config\config.ts" />
-    <Script Remove="src\features\game\game.tsx" />
-    <Script Remove="src\features\game\index.ts" />
-    <Script Remove="src\features\map\index.ts" />
-    <Script Remove="src\features\map\map.tsx" />
-    <Script Remove="src\features\misc\index.ts" />
-    <Script Remove="src\features\misc\routes\index.tsx" />
-    <Script Remove="src\features\misc\routes\Landing.tsx" />
-    <Script Remove="src\features\misc\routes\NotFound.tsx" />
-    <Script Remove="src\hooks\useDisclosure.ts" />
-    <Script Remove="src\index.css" />
-    <Script Remove="src\index.tsx" />
-    <Script Remove="src\lib\axios.ts" />
-    <Script Remove="src\lib\react-query.ts" />
-    <Script Remove="src\lib\signalr.ts" />
-    <Script Remove="src\providers\app.tsx" />
-    <Script Remove="src\react-app-env.d.ts" />
-    <Script Remove="src\reportWebVitals.ts" />
-    <Script Remove="src\routes\index.tsx" />
-    <Script Remove="src\setupTests.ts" />
-    <Script Remove="src\stores\notifications.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".env" />
-    <None Include=".env.development" />
-    <None Include=".env.production" />
-    <None Include="postcss.config.js" />
-    <None Include="public\favicon.ico" />
-    <None Include="public\index.html" />
-    <None Include="public\logo192.png" />
-    <None Include="public\logo512.png" />
-    <None Include="public\manifest.json" />
-    <None Include="public\robots.txt" />
-    <None Include="src\App.css" />
-    <None Include="src\App.tsx" />
-    <None Include="src\assets\logo.svg" />
-    <None Include="src\client\game.client.ts" />
-    <None Include="src\client\index.ts" />
-    <None Include="src\client\map.client.ts" />
-    <None Include="src\components\Elements\Button\Button.tsx" />
-    <None Include="src\components\Elements\Button\index.ts" />
-    <None Include="src\components\Elements\ConfirmationDialog\ConfirmationDialog.tsx" />
-    <None Include="src\components\Elements\ConfirmationDialog\index.ts" />
-    <None Include="src\components\Elements\Dialog\Dialog.tsx" />
-    <None Include="src\components\Elements\Dialog\index.ts" />
-    <None Include="src\components\Elements\index.ts" />
-    <None Include="src\components\Elements\Link\index.ts" />
-    <None Include="src\components\Elements\Link\Link.tsx" />
-    <None Include="src\components\Elements\Spinner\index.ts" />
-    <None Include="src\components\Elements\Spinner\Spinner.tsx" />
-    <None Include="src\components\Elements\Table\index.ts" />
-    <None Include="src\components\Elements\Table\Table.tsx" />
-    <None Include="src\components\Head\Head.tsx" />
-    <None Include="src\components\Head\index.ts" />
-    <None Include="src\components\Layout\ContentLayout.tsx" />
-    <None Include="src\components\Layout\index.ts" />
-    <None Include="src\components\Navbar\index.ts" />
-    <None Include="src\components\Navbar\Navbar.tsx" />
-    <None Include="src\components\Notifications\index.ts" />
-    <None Include="src\components\Notifications\Notification.tsx" />
-    <None Include="src\components\Notifications\Notifications.tsx" />
-    <None Include="src\config\config.ts" />
-    <None Include="src\features\game\game.tsx" />
-    <None Include="src\features\game\index.ts" />
-    <None Include="src\features\map\index.ts" />
-    <None Include="src\features\map\map.tsx" />
-    <None Include="src\features\misc\index.ts" />
-    <None Include="src\features\misc\routes\index.tsx" />
-    <None Include="src\features\misc\routes\Landing.tsx" />
-    <None Include="src\features\misc\routes\NotFound.tsx" />
-    <None Include="src\hooks\useDisclosure.ts" />
-    <None Include="src\index.css" />
-    <None Include="src\index.tsx" />
-    <None Include="src\lib\axios.ts" />
-    <None Include="src\lib\react-query.ts" />
-    <None Include="src\lib\signalr.ts" />
-    <None Include="src\providers\app.tsx" />
-    <None Include="src\react-app-env.d.ts" />
-    <None Include="src\reportWebVitals.ts" />
-    <None Include="src\routes\index.tsx" />
-    <None Include="src\setupTests.ts" />
-    <None Include="src\stores\notifications.ts" />
-    <None Include="tailwind.config.js" />
-  </ItemGroup>
-  
-  <!-- This target is copied from the ASP.NET SPA template in order to ensure node_modules are in place. -->
-  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
-    <!-- Ensure Node.js is installed -->
+
+  <Target Name="NpmInstall" Inputs="package.json" Outputs="node_modules/.install-stamp">
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" />
-  </Target>
-  
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+    
+    <Exec Command="npm ci" Condition="'$(RestorePackagesWithLockFile)' == 'true'" />
+    <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" />
 
-    <!-- Include the newly-built files in the publish output -->
+    <!-- Write the stamp file, so incremental builds work -->
+    <Touch Files="node_modules/.install-stamp" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="NpmRunBuild" DependsOnTargets="NpmInstall" BeforeTargets="BeforeBuild">
+    <Exec Command="npm run build" />
     <ItemGroup>
-      <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
+      <DistFiles Include="build\**" />
     </ItemGroup>
   </Target>
 </Project>
